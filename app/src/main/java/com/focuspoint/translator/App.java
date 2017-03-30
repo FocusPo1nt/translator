@@ -4,9 +4,11 @@ import android.app.Application;
 import android.content.Context;
 import android.support.annotation.NonNull;
 
+
 import com.focuspoint.translator.di.components.DaggerTranslateAppComponent;
 import com.focuspoint.translator.di.components.TranslateAppComponent;
-import com.focuspoint.translator.di.modules.ApiModule;
+import com.focuspoint.translator.di.modules.DataModule;
+import com.focuspoint.translator.di.modules.AppModule;
 
 /**
  * Created by v_banko on 3/29/2017.
@@ -21,9 +23,10 @@ public class App extends Application{
         super.onCreate();
 
         component = DaggerTranslateAppComponent.builder()
-                .apiModule(new ApiModule())
+                .dataModule(new DataModule(this))
+                .appModule(new AppModule(this))
                 .build();
-        System.out.println("skdlf");
+
     }
 
     public TranslateAppComponent getComponent() {

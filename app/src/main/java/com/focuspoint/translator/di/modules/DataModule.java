@@ -1,7 +1,12 @@
 package com.focuspoint.translator.di.modules;
 
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
+
+import com.focuspoint.translator.App;
 import com.focuspoint.translator.network.TranslateApiService;
 
+import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import dagger.Module;
@@ -16,7 +21,20 @@ import retrofit2.converter.gson.GsonConverterFactory;
  */
 
 @Module
-public class ApiModule {
+public class DataModule {
+
+    private App application;
+
+    public DataModule(App application) {
+        this.application = application;
+    }
+
+
+    @Provides
+    @Singleton
+    SharedPreferences providesSharedPreferences() {
+        return PreferenceManager.getDefaultSharedPreferences(application);
+    }
 
     @Provides
     @Singleton
