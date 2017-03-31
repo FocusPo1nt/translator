@@ -7,7 +7,7 @@ import com.focuspoint.translator.views.BaseView;
  * Created by v_banko on 3/30/2017.
  */
 
-public class MainScreenContract {
+public class TranslateScreenContract {
 
     interface View extends BaseView {
         void showResult();
@@ -17,6 +17,5 @@ public class MainScreenContract {
     interface Presenter extends BasePresenter {
         void translate();
         void loadLast();
-
     }
 }
