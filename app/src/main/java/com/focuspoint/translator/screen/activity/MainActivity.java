@@ -13,6 +13,7 @@ import com.focuspoint.translator.App;
 import com.focuspoint.translator.R;
 import com.focuspoint.translator.models.responseModels.LanguagesRM;
 import com.focuspoint.translator.network.TranslateApiService;
+import com.focuspoint.translator.screen.fragment.HistoryFragment;
 import com.focuspoint.translator.screen.fragment.TranslateFragment;
 
 import java.util.ArrayList;
@@ -56,21 +57,9 @@ public class MainActivity extends AppCompatActivity {
         tabLayout.getTabAt(1).setIcon(R.drawable.menu);
 
 
-        retrofit.create(TranslateApiService.class)
-                .getLangs("en")
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .map(LanguagesRM::obtainLanguages)
 
 
 
-                .subscribe(languagesResponseModel -> {
-                    System.out.println(languagesResponseModel.get("ru").getCode());
-
-
-                }, throwable -> {
-                    System.out.println(throwable.toString());
-                });
 
     }
 
@@ -84,7 +73,10 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public Fragment getItem(int position) {
-            return TranslateFragment.newInstance();
+
+            if (position == 0) return TranslateFragment.newInstance();
+            else return HistoryFragment.newInstance();
+
         }
 
         @Override
