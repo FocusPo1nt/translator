@@ -1,4 +1,4 @@
-package com.focuspoint.translator.screen;
+package com.focuspoint.translator.screen.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -9,11 +9,15 @@ import android.view.ViewGroup;
 
 import com.focuspoint.translator.R;
 
+import java.lang.annotation.RetentionPolicy;
+import java.sql.Statement;
+import java.util.ArrayList;
+
 /**
  * Created by v_banko on 3/31/2017.
  */
 
-public class TranslateFragment extends Fragment{
+public class HistoryFragment extends Fragment{
 
     @Nullable
     @Override

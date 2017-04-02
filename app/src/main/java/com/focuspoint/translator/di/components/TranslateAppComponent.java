@@ -1,6 +1,6 @@
 package com.focuspoint.translator.di.components;
 
-import com.focuspoint.translator.MainActivity;
+import com.focuspoint.translator.screen.activity.MainActivity;
 import com.focuspoint.translator.di.modules.DataModule;
 import com.focuspoint.translator.di.modules.AppModule;
 

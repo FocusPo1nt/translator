@@ -1,6 +1,6 @@
 package com.focuspoint.translator.network;
 
-import com.focuspoint.translator.models.responseModels.LanguagesResponseModel;
+import com.focuspoint.translator.models.responseModels.LanguagesRM;
 import com.focuspoint.translator.models.responseModels.TranslationRM;
 
 import retrofit2.http.GET;
@@ -18,7 +18,7 @@ public interface TranslateApiService {
     String API_KEY_REST = Values.KEY + "=" + API_KEY;
 
     @GET("getLangs?" + API_KEY_REST)
-    Observable<LanguagesResponseModel> getLangs(
+    Observable<LanguagesRM> getLangs(
             @Query(Values.UI) String language);
 
     @GET("detect?" + API_KEY_REST)
