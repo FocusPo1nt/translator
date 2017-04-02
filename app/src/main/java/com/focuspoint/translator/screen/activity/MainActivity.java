@@ -11,8 +11,10 @@ import android.support.v7.app.AppCompatActivity;
 
 import com.focuspoint.translator.App;
 import com.focuspoint.translator.R;
+import com.focuspoint.translator.models.Translation;
 import com.focuspoint.translator.models.responseModels.LanguagesRM;
 import com.focuspoint.translator.network.TranslateApiService;
+import com.focuspoint.translator.screen.fragment.FavoritesFragment;
 import com.focuspoint.translator.screen.fragment.HistoryFragment;
 import com.focuspoint.translator.screen.fragment.TranslateFragment;
 
@@ -53,8 +55,9 @@ public class MainActivity extends AppCompatActivity {
         viewPager.setAdapter(pagerAdapter);
 
         tabLayout.setupWithViewPager(viewPager, true);
-        tabLayout.getTabAt(0).setIcon(R.drawable.search_black);
-        tabLayout.getTabAt(1).setIcon(R.drawable.menu);
+        tabLayout.getTabAt(0).setIcon(R.drawable.translate);
+        tabLayout.getTabAt(1).setIcon(R.drawable.history);
+        tabLayout.getTabAt(2).setIcon(R.drawable.star);
 
 
 
@@ -75,13 +78,14 @@ public class MainActivity extends AppCompatActivity {
         public Fragment getItem(int position) {
 
             if (position == 0) return TranslateFragment.newInstance();
-            else return HistoryFragment.newInstance();
+            if (position == 1) return HistoryFragment.newInstance();
+            return TranslateFragment.newInstance();
 
         }
 
         @Override
         public int getCount() {
-            return 2;
+            return 3;
         }
     }
 
