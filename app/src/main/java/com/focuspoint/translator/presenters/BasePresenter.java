@@ -7,5 +7,5 @@ package com.focuspoint.translator.presenters;
 public interface BasePresenter {
     void subscribe();
 
-    void unsubscribe();
+    void unSubscribe();
 }

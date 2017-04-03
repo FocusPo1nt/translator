@@ -1,5 +1,6 @@
 package com.focuspoint.translator.screen;
 
+import com.focuspoint.translator.presenters.BasePresenter;
 import com.focuspoint.translator.views.BaseView;
 
 /**
@@ -13,7 +14,7 @@ public class FavoriteScreenContract {
         void showFavorite();
     }
 
-    interface Presenter extends BaseView {
+    interface Presenter extends BasePresenter {
 
         void addFavorite();
 

@@ -1,5 +1,6 @@
 package com.focuspoint.translator.screen;
 
+import com.focuspoint.translator.presenters.BasePresenter;
 import com.focuspoint.translator.views.*;
 
 /**
@@ -12,7 +13,7 @@ public class HistoryScreenContract {
         void showHistory();
     }
 
-    interface Presenter extends BaseView {
+    interface Presenter extends BasePresenter {
 
         void addFavorite();
 

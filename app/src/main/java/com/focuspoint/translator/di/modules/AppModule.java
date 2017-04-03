@@ -26,4 +26,11 @@ public class AppModule {
     Application provideApplication() {
         return application;
     }
+
+    @Provides
+    @Singleton
+    Application provideApplication() {
+        return application;
+    }
+
 }

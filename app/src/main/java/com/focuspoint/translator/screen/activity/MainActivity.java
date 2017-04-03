@@ -58,12 +58,6 @@ public class MainActivity extends AppCompatActivity {
         tabLayout.getTabAt(0).setIcon(R.drawable.translate);
         tabLayout.getTabAt(1).setIcon(R.drawable.history);
         tabLayout.getTabAt(2).setIcon(R.drawable.star);
-
-
-
-
-
-
     }
 
     class TranslatePagerAdapter extends FragmentPagerAdapter{

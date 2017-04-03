@@ -30,7 +30,7 @@ public class MainScreenContract {
         void showShare();
     }
 
-    interface Presenter extends BasePresenter {
+    public interface Presenter extends BasePresenter {
 
         void translate(String text);
 
