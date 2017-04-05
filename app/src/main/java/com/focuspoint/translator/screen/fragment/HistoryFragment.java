@@ -40,7 +40,6 @@ public class HistoryFragment extends Fragment{
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_history, container, false);
         ButterKnife.bind(this,v);
-        ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
 
         toolbar.setTitle("TEST");
         return v;
@@ -50,14 +49,6 @@ public class HistoryFragment extends Fragment{
         HistoryFragment historyFragment = new HistoryFragment();
         return historyFragment;
     }
-
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        super.onCreateOptionsMenu(menu, inflater);
-        getActivity().getMenuInflater().inflate(R.menu.menu_main, menu);
-    }
-
 
 
 }

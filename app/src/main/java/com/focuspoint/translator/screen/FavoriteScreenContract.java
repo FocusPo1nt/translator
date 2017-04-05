@@ -14,7 +14,7 @@ public class FavoriteScreenContract {
         void showFavorite();
     }
 
-    interface Presenter extends BasePresenter {
+    interface Presenter extends BasePresenter <View> {
 
         void addFavorite();
 

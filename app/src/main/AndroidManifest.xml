@@ -2,12 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.focuspoint.translator">
 
-    <uses-permission
-
-        android:name="android.permission.INTERNET">
-
-    </uses-permission>
-
+    <uses-permission android:name="android.permission.INTERNET"></uses-permission>
 
     <application
         android:name=".App"
@@ -17,8 +12,6 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
-
         <activity
             android:name=".screen.activity.MainActivity"
             android:label="@string/app_name"
@@ -29,6 +22,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".screen.activity.LanguageActivity"
+            android:label="@string/title_activity_language"
+            android:theme="@style/AppTheme"></activity>
     </application>
 
 </manifest>

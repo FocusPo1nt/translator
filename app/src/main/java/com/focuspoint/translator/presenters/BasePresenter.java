@@ -1,11 +1,11 @@
 package com.focuspoint.translator.presenters;
 
 /**
- * Created by v_banko on 3/30/2017.
+ * Base presenter;
  */
 
-public interface BasePresenter {
-    void subscribe();
+public interface BasePresenter<V>  {
+    void subscribe(V view);
 
     void unSubscribe();
 }

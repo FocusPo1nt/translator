@@ -9,7 +9,7 @@ import com.focuspoint.translator.views.BaseView;
 
 public class MainScreenContract {
 
-    interface View extends BaseView {
+    public interface View extends BaseView {
 
         void showInput(String text);
 
@@ -30,7 +30,7 @@ public class MainScreenContract {
         void showShare();
     }
 
-    public interface Presenter extends BasePresenter {
+    public interface Presenter extends BasePresenter <View>{
 
         void translate(String text);
 

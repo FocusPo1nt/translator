@@ -13,7 +13,7 @@ public class HistoryScreenContract {
         void showHistory();
     }
 
-    interface Presenter extends BasePresenter {
+    interface Presenter extends BasePresenter <View> {
 
         void addFavorite();
 

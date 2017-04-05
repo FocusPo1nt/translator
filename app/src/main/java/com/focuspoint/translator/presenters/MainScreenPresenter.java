@@ -3,15 +3,16 @@ package com.focuspoint.translator.presenters;
 import com.focuspoint.translator.screen.MainScreenContract;
 
 /**
- * Created by root on 03.04.17.
+ * Implementation of MainScreenPresenter interface;
  */
 
 public class MainScreenPresenter implements MainScreenContract.Presenter {
 
     @Override
-    public void subscribe() {
+    public void subscribe(MainScreenContract.View view) {
 
     }
+
 
     @Override
     public void unSubscribe() {
