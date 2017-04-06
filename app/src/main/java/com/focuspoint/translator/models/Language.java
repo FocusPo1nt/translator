@@ -30,6 +30,10 @@ public class Language {
         this.description = description;
     }
 
+    public String getDescription() {
+        return description;
+    }
+
     public String getCode() {
         return code;
     }

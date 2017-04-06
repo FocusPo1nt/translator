@@ -11,7 +11,7 @@ import com.focuspoint.translator.di.modules.DataModule;
 import com.focuspoint.translator.di.modules.AppModule;
 
 /**
- * Created by v_banko on 3/29/2017.
+ * Custom application class;
  */
 
 public class App extends Application{

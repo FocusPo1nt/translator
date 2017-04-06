@@ -3,16 +3,17 @@ package com.focuspoint.translator.screen.activity;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.widget.Toast;
 
 
 import com.focuspoint.translator.App;
 import com.focuspoint.translator.R;
-import com.focuspoint.translator.interactors.interfaces.ILanguageInteractor;
+import com.focuspoint.translator.models.Language;
 import com.focuspoint.translator.screen.LanguageScreenContract;
 
-import javax.inject.Inject;
+import java.util.List;
 
-import retrofit2.Retrofit;
+import javax.inject.Inject;
 
 public class LanguageActivity extends AppCompatActivity implements LanguageScreenContract.View{
 
@@ -26,19 +27,20 @@ public class LanguageActivity extends AppCompatActivity implements LanguageScree
         initViews();
 
         presenter.attach(this);
-        presenter.loadLanguages();
+        presenter.loadSourceLanguages();
 
     }
 
     @Override
     public void showError(Throwable e) {
-
+        Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
     }
 
     @Override
-    public void showLanguages() {
-
+    public void showLanguages(List<Language> list) {
+        Toast.makeText(this, list.get(5).getDescription(), Toast.LENGTH_SHORT).show();
     }
+
 
     private void initViews(){
         setContentView(R.layout.activity_language);
