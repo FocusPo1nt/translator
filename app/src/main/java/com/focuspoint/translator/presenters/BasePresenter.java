@@ -5,7 +5,7 @@ package com.focuspoint.translator.presenters;
  */
 
 public interface BasePresenter<V>  {
-    void subscribe(V view);
+    void attach(V view);
 
-    void unSubscribe();
+    void detach();
 }

@@ -10,12 +10,12 @@ import com.focuspoint.translator.views.BaseView;
 public class LanguageScreenContract {
 
 
-    interface View extends BaseView {
+    public interface View extends BaseView {
 
         void showLanguages();
     }
 
-    interface Presenter extends BasePresenter <View>  {
+    public interface Presenter extends BasePresenter <View>  {
 
        void loadLanguages();
 

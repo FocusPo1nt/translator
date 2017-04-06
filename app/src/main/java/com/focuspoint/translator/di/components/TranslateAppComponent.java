@@ -1,5 +1,6 @@
 package com.focuspoint.translator.di.components;
 
+import com.focuspoint.translator.screen.activity.LanguageActivity;
 import com.focuspoint.translator.screen.activity.MainActivity;
 import com.focuspoint.translator.di.modules.DataModule;
 import com.focuspoint.translator.di.modules.AppModule;
@@ -19,4 +20,5 @@ import dagger.Component;
 
 public interface TranslateAppComponent {
     void inject(MainActivity mainActivity);
+    void inject(LanguageActivity languageActivity);
 }

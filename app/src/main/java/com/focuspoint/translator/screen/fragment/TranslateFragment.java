@@ -1,6 +1,7 @@
 package com.focuspoint.translator.screen.fragment;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -15,34 +16,37 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.focuspoint.translator.R;
+import com.focuspoint.translator.screen.activity.LanguageActivity;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
- * Created by v_banko on 3/31/2017.
+ * Main view, where you can translate your sentence;
  */
 
 public class TranslateFragment extends Fragment{
 
 
-    @BindView(R.id.toolbar)
-    Toolbar toolbar;
+    @BindView(R.id.toolbar) Toolbar toolbar;
+    @BindView(R.id.from_language) TextView fromTextView;
+    @BindView(R.id.to_language) TextView toTextView;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_translation, container, false);
-        ButterKnife.bind(this,v);
+        ButterKnife.bind(this, v);
 
-        toolbar.inflateMenu(R.menu.menu_language_choose);
-        Toast.makeText(getContext(), "" + ((TextView)toolbar.findViewById(R.id.first_language)).getText().toString(), Toast.LENGTH_SHORT).show();
+        fromTextView.setOnClickListener(v1 -> {
+            Intent intent = new Intent(getContext(), LanguageActivity.class);
+            getActivity().startActivity(intent);
+        });
         return v;
     }
 
     public static TranslateFragment newInstance(){
-        TranslateFragment translateFragment = new TranslateFragment();
-        return translateFragment;
+        return new TranslateFragment();
     }
 
 

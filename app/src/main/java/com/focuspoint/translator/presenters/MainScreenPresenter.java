@@ -9,13 +9,13 @@ import com.focuspoint.translator.screen.MainScreenContract;
 public class MainScreenPresenter implements MainScreenContract.Presenter {
 
     @Override
-    public void subscribe(MainScreenContract.View view) {
+    public void attach(MainScreenContract.View view) {
 
     }
 
 
     @Override
-    public void unSubscribe() {
+    public void detach() {
 
     }
 
