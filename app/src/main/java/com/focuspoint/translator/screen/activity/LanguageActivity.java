@@ -70,7 +70,5 @@ public class LanguageActivity extends AppCompatActivity implements LanguageScree
     protected void onDestroy() {
         super.onDestroy();
         unbinder.unbind();
-
-
     }
 }

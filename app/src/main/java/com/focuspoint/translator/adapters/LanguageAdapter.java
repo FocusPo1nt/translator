@@ -9,7 +9,6 @@ import android.widget.TextView;
 import com.focuspoint.translator.R;
 import com.focuspoint.translator.models.Language;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**

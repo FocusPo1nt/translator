@@ -1,5 +1,6 @@
 package com.focuspoint.translator.models;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 /**
@@ -7,6 +8,17 @@ import lombok.Data;
  */
 @Data
 public class Translation {
-    private String from;
-    private String to;
+
+
+    private String input;
+    private Language sourceLanguage;
+    private Language targetLanguage;
+    private String output;
+
+
+    public Translation(Language sourceLanguage, Language targetLanguage){
+        this.sourceLanguage = sourceLanguage;
+        this.targetLanguage = targetLanguage;
+    }
+
 }

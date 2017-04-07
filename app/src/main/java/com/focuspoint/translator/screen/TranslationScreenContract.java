@@ -1,5 +1,6 @@
 package com.focuspoint.translator.screen;
 
+import com.focuspoint.translator.models.Language;
 import com.focuspoint.translator.presenters.BasePresenter;
 import com.focuspoint.translator.views.BaseView;
 
@@ -7,7 +8,7 @@ import com.focuspoint.translator.views.BaseView;
  * View & Presenter interfaces for main screen
  */
 
-public class MainScreenContract {
+public class TranslationScreenContract {
 
     public interface View extends BaseView {
 
@@ -15,7 +16,9 @@ public class MainScreenContract {
 
         void showOutput(String text);
 
-        void showError();
+        void showSource(Language language);
+
+        void showTarget(Language language);
 
         void showFullScreen();
 
@@ -34,6 +37,6 @@ public class MainScreenContract {
 
         void translate(String text);
 
-        void loadLast();
+        void loadTranslation();
     }
 }

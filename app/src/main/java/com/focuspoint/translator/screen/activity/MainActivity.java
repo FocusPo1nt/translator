@@ -11,9 +11,9 @@ import android.support.v7.app.AppCompatActivity;
 
 import com.focuspoint.translator.App;
 import com.focuspoint.translator.R;
-import com.focuspoint.translator.models.Translation;
-import com.focuspoint.translator.models.responseModels.LanguagesRM;
-import com.focuspoint.translator.network.TranslateApiService;
+import com.focuspoint.translator.adapters.TranslatePagerAdapter;
+import com.focuspoint.translator.models.Language;
+import com.focuspoint.translator.screen.TranslationScreenContract;
 import com.focuspoint.translator.screen.fragment.FavoritesFragment;
 import com.focuspoint.translator.screen.fragment.HistoryFragment;
 import com.focuspoint.translator.screen.fragment.TranslateFragment;
@@ -27,13 +27,12 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import retrofit2.Retrofit;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
 
 
 public class MainActivity extends AppCompatActivity {
 
     @Inject Retrofit retrofit;
+
 
 
     @BindView(R.id.view_pager) ViewPager viewPager;
@@ -46,8 +45,19 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
 
+        initViews();
+    }
+
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unbinder.unbind();
+    }
+
+    private void initViews(){
+        setContentView(R.layout.activity_main);
         unbinder = ButterKnife.bind(this);
         App.from(this).getComponent().inject(this);
 
@@ -60,32 +70,4 @@ public class MainActivity extends AppCompatActivity {
         tabLayout.getTabAt(2).setIcon(R.drawable.star);
     }
 
-    class TranslatePagerAdapter extends FragmentPagerAdapter{
-        private List<Fragment> fragments;
-
-        public TranslatePagerAdapter(FragmentManager fm, List<Fragment> myFrags) {
-            super(fm);
-            fragments = myFrags;
-        }
-
-        @Override
-        public Fragment getItem(int position) {
-
-            if (position == 0) return TranslateFragment.newInstance();
-            if (position == 1) return HistoryFragment.newInstance();
-            return TranslateFragment.newInstance();
-
-        }
-
-        @Override
-        public int getCount() {
-            return 3;
-        }
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        unbinder.unbind();
-    }
 }

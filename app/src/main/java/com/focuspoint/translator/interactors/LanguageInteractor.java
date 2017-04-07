@@ -7,8 +7,11 @@ import com.focuspoint.translator.network.TranslateApiService;
 
 import java.util.Map;
 
+import javax.inject.Inject;
+
 import retrofit2.Retrofit;
 import rx.Observable;
+import rx.functions.Action1;
 import rx.functions.Func1;
 
 /**
@@ -17,16 +20,26 @@ import rx.functions.Func1;
 
 public class LanguageInteractor implements ILanguageInteractor {
     private Retrofit retrofit;
+    private Map<String, Language> languageMap;
 
+    @Inject
     public LanguageInteractor(Retrofit retrofit){
         this.retrofit = retrofit;
     }
 
     @Override
     public Observable<Map<String, Language>> loadLanguages() {
-
-        return retrofit.create(TranslateApiService.class)
-                .getLangs("ru") //TODO add user language
-                .map(LanguagesRM::obtainLanguages);
+        if (languageMap != null){
+            return Observable.just(languageMap);
+        }else {
+            return retrofit.create(TranslateApiService.class)
+                    .getLangs("ru") //TODO add user language
+                    .map(LanguagesRM::obtainLanguages)
+                    .doOnNext(map -> this.languageMap = map);
+        }
     }
+
+
+
+
 }
