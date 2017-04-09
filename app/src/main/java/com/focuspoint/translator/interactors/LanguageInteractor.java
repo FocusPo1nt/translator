@@ -11,8 +11,9 @@ import javax.inject.Inject;
 
 import retrofit2.Retrofit;
 import rx.Observable;
-import rx.functions.Action1;
-import rx.functions.Func1;
+import rx.Subscriber;
+import rx.subjects.PublishSubject;
+
 
 /**
  * Interactor implementation dealing with Language objects;
@@ -40,6 +41,30 @@ public class LanguageInteractor implements ILanguageInteractor {
     }
 
 
+    @Override
+    public void changeSource(Language source) {
+        sourceSubject.onNext(source);
+    }
+
+    @Override
+    public void changeTarget(Language target) {
+        targetSubject.onNext(target);
+    }
+
+    @Override
+    public Observable<Language> getSourceSubject() {
+        return sourceSubject;
+    }
+
+    @Override
+    public Observable<Language> getTargetSubject() {
+        return targetSubject;
+    }
 
 
+
+    private PublishSubject<Language> sourceSubject =  PublishSubject.create();
+
+
+    private PublishSubject<Language> targetSubject =  PublishSubject.create();
 }

@@ -76,7 +76,7 @@ public class TranslateFragment extends Fragment implements TranslationScreenCont
 
     @Override
     public void showInput(String text) {
-
+        inputEditText.setText(text);
     }
 
     @Override

@@ -1,6 +1,8 @@
 package com.focuspoint.translator.presenters;
 
+import com.focuspoint.translator.interactors.LanguageInteractor;
 import com.focuspoint.translator.interactors.interfaces.TranslationInteractor;
+import com.focuspoint.translator.models.Language;
 import com.focuspoint.translator.models.Translation;
 import com.focuspoint.translator.screen.TranslationScreenContract;
 
@@ -9,6 +11,7 @@ import java.util.concurrent.TimeUnit;
 
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 
@@ -21,13 +24,15 @@ import rx.subscriptions.CompositeSubscription;
 public class MainScreenPresenter implements TranslationScreenContract.Presenter {
 
     private TranslationInteractor translationInteractor;
+    private LanguageInteractor languageInteractor;
     private CompositeSubscription subscriptions;
     private WeakReference<TranslationScreenContract.View> view;
     private Translation currentTranslation;
 
 
-    public MainScreenPresenter(TranslationInteractor interactor){
-        this.translationInteractor = interactor;
+    public MainScreenPresenter(TranslationInteractor translationInteractor, LanguageInteractor languageInteractor){
+        this.translationInteractor = translationInteractor;
+        this.languageInteractor = languageInteractor;
     }
 
     @Override
@@ -35,6 +40,8 @@ public class MainScreenPresenter implements TranslationScreenContract.Presenter 
         if (subscriptions!= null)  subscriptions.unsubscribe();
         subscriptions = new CompositeSubscription();
         this.view = new WeakReference<>(view);
+        subscriptions.add(languageInteractor.getSourceSubject().subscribe(this::onSourceChanged));
+        subscriptions.add(languageInteractor.getTargetSubject().subscribe(this::onTargetChange));
     }
 
 
@@ -51,6 +58,7 @@ public class MainScreenPresenter implements TranslationScreenContract.Presenter 
                 .doOnNext(translation -> {if (text.isEmpty()) view.get().showOutput("");})
                 .filter(translation -> !text.isEmpty())
                 .flatMap(translation -> translationInteractor.translate(translation))
+                .map(Translation::addWatermark)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(translation -> {
                     view.get().showSource(translation.getSourceLanguage());
@@ -64,6 +72,7 @@ public class MainScreenPresenter implements TranslationScreenContract.Presenter 
         subscriptions.add(getCurrentTranslation()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
+                .map(Translation::addWatermark)
                 .subscribe(translation -> {
                     view.get().showSource(translation.getSourceLanguage());
                     view.get().showTarget(translation.getTargetLanguage());
@@ -73,6 +82,16 @@ public class MainScreenPresenter implements TranslationScreenContract.Presenter 
         );
     }
 
+
+    @Override
+    public void onSourceChanged(Language language) {
+        view.get().showSource(language);
+    }
+
+    @Override
+    public void onTargetChange(Language language) {
+        view.get().showTarget(language);
+    }
 
     /**If current translation state is null -> return last or default state;*/
     private Observable<Translation> getCurrentTranslation(){

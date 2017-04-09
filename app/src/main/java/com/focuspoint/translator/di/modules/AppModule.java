@@ -62,8 +62,8 @@ public class AppModule {
 
     @Provides
     @Singleton
-    TranslationScreenContract.Presenter provideTranslationPresenter (TranslationInteractor interactor) {
-        return new MainScreenPresenter(interactor);
+    TranslationScreenContract.Presenter provideTranslationPresenter (TranslationInteractor interactor, LanguageInteractor languageInteractor) {
+        return new MainScreenPresenter(interactor, languageInteractor);
     }
 
 

@@ -57,13 +57,19 @@ public class Translation {
     }
 
     public String getOutput() {
-        if (!output.isEmpty()){
-            output = output + "\n\nПереведено сервисом «Яндекс.Переводчик»\nhttp://translate.yandex.ru/";
-        }
         return output;
     }
 
-    public void setOutput(String output) {
+    public Translation setOutput(String output) {
         this.output = output;
+        return this;
+    }
+
+    public Translation addWatermark(){
+        String watermark = "\n\nПереведено сервисом «Яндекс.Переводчик»\nhttp://translate.yandex.ru/";
+        if (!output.isEmpty() && !output.contains(watermark)){
+            output = output + watermark;
+        }
+        return this;
     }
 }

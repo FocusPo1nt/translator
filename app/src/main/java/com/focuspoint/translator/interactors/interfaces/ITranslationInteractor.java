@@ -13,4 +13,5 @@ public interface ITranslationInteractor {
     Observable <Translation> getLastTranslation();
 
     Observable <Translation> translate(Translation translation);
+
 }

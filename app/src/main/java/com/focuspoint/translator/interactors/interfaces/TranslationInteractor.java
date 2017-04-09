@@ -8,8 +8,10 @@ import javax.inject.Inject;
 
 import retrofit2.Retrofit;
 import rx.Observable;
+import rx.functions.Action1;
 import rx.functions.Func1;
 import rx.schedulers.Schedulers;
+import rx.subjects.PublishSubject;
 
 /**
  * Interactor implementation;
@@ -20,6 +22,7 @@ public class TranslationInteractor implements ITranslationInteractor {
 
     private ILanguageInteractor languageInteractor;
     private Retrofit retrofit;
+
 
 
     @Inject
@@ -42,11 +45,12 @@ public class TranslationInteractor implements ITranslationInteractor {
         return retrofit.create(TranslateApiService.class)
                 .translate(translation.getInput(), translation.getDirection())
                 .subscribeOn(Schedulers.io())
-                .map(translationRM -> {
-                    translation.setOutput(translationRM.text.get(0));
-                    return translation;
-                });
-
-
+                .map(translationRM -> translation.setOutput(translationRM.text.get(0)))
+                .doOnNext(translation1 -> translateSubject.onNext(translation1));
     }
+
+
+    private PublishSubject <Translation> translateSubject = PublishSubject.create();
+
+
 }
