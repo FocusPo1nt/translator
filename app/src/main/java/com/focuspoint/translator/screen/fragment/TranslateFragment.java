@@ -8,6 +8,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -16,16 +17,20 @@ import com.focuspoint.translator.R;
 import com.focuspoint.translator.models.Language;
 import com.focuspoint.translator.screen.TranslationScreenContract;
 import com.focuspoint.translator.screen.activity.LanguageActivity;
+import com.jakewharton.rxbinding.widget.RxTextView;
+
 
 import java.net.UnknownHostException;
+import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import rx.subscriptions.CompositeSubscription;
 
 /**
- * Main view, where you can translate your sentence;
+ * Main view, where you can translate your word/sentence;
  */
 
 public class TranslateFragment extends Fragment implements TranslationScreenContract.View{
@@ -34,25 +39,25 @@ public class TranslateFragment extends Fragment implements TranslationScreenCont
     @BindView(R.id.toolbar) Toolbar toolbar;
     @BindView(R.id.from_language) TextView sourceLanguageView;
     @BindView(R.id.to_language) TextView targetLanguageView;
+    @BindView(R.id.input_edit_text) EditText inputEditText;
+    @BindView(R.id.output_text_view) TextView outputTextView;
 
     @Inject TranslationScreenContract.Presenter presenter;
+    private CompositeSubscription subscriptions;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_translation, container, false);
-        ButterKnife.bind(this, v);
+
         App.from(getContext()).getComponent().inject(this);
+        subscriptions = new CompositeSubscription();
+        View view = inflater.inflate(R.layout.fragment_translation, container, false);
+        ButterKnife.bind(this, view);
+
+        initViews();
 
 
-        presenter.attach(this);
-        presenter.loadTranslation();
-
-        sourceLanguageView.setOnClickListener(v1 -> {
-            Intent intent = new Intent(getContext(), LanguageActivity.class);
-            getActivity().startActivity(intent);
-        });
-        return v;
+        return view;
     }
 
     public static TranslateFragment newInstance(){
@@ -75,7 +80,7 @@ public class TranslateFragment extends Fragment implements TranslationScreenCont
 
     @Override
     public void showOutput(String text) {
-
+        outputTextView.setText(text);
     }
 
     @Override
@@ -87,8 +92,6 @@ public class TranslateFragment extends Fragment implements TranslationScreenCont
     public void showTarget(Language language) {
         targetLanguageView.setText(language.getDescription());
     }
-
-
 
     @Override
     public void showFullScreen() {
@@ -119,4 +122,30 @@ public class TranslateFragment extends Fragment implements TranslationScreenCont
     public void showShare() {
 
     }
+
+    private void initViews(){
+
+        presenter.attach(this);
+        presenter.loadTranslation();
+
+
+        //There is some input logic
+        subscriptions.add(RxTextView.textChanges(inputEditText)
+                .debounce(1, TimeUnit.SECONDS)
+                .subscribe(text -> presenter.onInputChanged(text.toString()))
+        );
+
+
+        sourceLanguageView.setOnClickListener(v1 -> {
+            Intent intent = new Intent(getContext(), LanguageActivity.class);
+            getActivity().startActivity(intent);
+        });
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        subscriptions.unsubscribe();
+    }
+
 }

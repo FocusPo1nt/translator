@@ -46,8 +46,8 @@ public class AppModule {
 
     @Provides
     @Singleton
-    ITranslationInteractor provideTranslationInteractor(ILanguageInteractor interactor) {
-        return new TranslationInteractor( interactor);
+    ITranslationInteractor provideTranslationInteractor(ILanguageInteractor interactor, Retrofit retrofit) {
+        return new TranslationInteractor( interactor, retrofit);
     }
 
     //endregion

@@ -10,8 +10,7 @@ import rx.Observable;
 
 public interface ITranslationInteractor {
 
-    Observable <Translation> getCurrentTranslation();
+    Observable <Translation> getLastTranslation();
 
-    void setCurrentTranslation(Translation translation);
-
+    Observable <Translation> translate(Translation translation);
 }

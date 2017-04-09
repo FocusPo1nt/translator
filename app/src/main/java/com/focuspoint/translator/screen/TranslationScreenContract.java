@@ -35,8 +35,10 @@ public class TranslationScreenContract {
 
     public interface Presenter extends BasePresenter <View>{
 
-        void translate(String text);
+        /**if input is not empty -> try to translate text*/
+        void onInputChanged(String text);
 
+        /**presenter fills view with last translation data;*/
         void loadTranslation();
     }
 }

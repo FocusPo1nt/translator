@@ -1,12 +1,10 @@
 package com.focuspoint.translator.models;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
 
 /**
  * Created by v_banko on 3/29/2017.
  */
-@Data
+
 public class Translation {
 
 
@@ -21,4 +19,48 @@ public class Translation {
         this.targetLanguage = targetLanguage;
     }
 
+    public String getDirection(){
+        if (sourceLanguage == null
+                || targetLanguage == null
+                || sourceLanguage.getCode().isEmpty()
+                || targetLanguage.getCode().isEmpty()){
+            throw new IllegalStateException("Translation does not have source or target language");
+        }
+        return sourceLanguage.getCode() + "-" + targetLanguage.getCode();
+    }
+
+
+
+    public String getInput() {
+        return input;
+    }
+
+    public Translation setInput(String input) {
+        this.input = input;
+        return this;
+    }
+
+    public Language getSourceLanguage() {
+        return sourceLanguage;
+    }
+
+    public void setSourceLanguage(Language sourceLanguage) {
+        this.sourceLanguage = sourceLanguage;
+    }
+
+    public Language getTargetLanguage() {
+        return targetLanguage;
+    }
+
+    public void setTargetLanguage(Language targetLanguage) {
+        this.targetLanguage = targetLanguage;
+    }
+
+    public String getOutput() {
+        return output;
+    }
+
+    public void setOutput(String output) {
+        this.output = output;
+    }
 }
