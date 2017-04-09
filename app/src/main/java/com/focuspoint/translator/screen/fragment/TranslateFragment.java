@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.Toolbar;
+import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -134,7 +135,6 @@ public class TranslateFragment extends Fragment implements TranslationScreenCont
                 .debounce(1, TimeUnit.SECONDS)
                 .subscribe(text -> presenter.onInputChanged(text.toString()))
         );
-
 
         sourceLanguageView.setOnClickListener(v1 -> {
             Intent intent = new Intent(getContext(), LanguageActivity.class);

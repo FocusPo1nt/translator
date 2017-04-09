@@ -57,6 +57,9 @@ public class Translation {
     }
 
     public String getOutput() {
+        if (!output.isEmpty()){
+            output = output + "\n\nПереведено сервисом «Яндекс.Переводчик»\nhttp://translate.yandex.ru/";
+        }
         return output;
     }
 

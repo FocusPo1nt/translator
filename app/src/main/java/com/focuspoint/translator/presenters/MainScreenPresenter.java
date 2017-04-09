@@ -83,4 +83,5 @@ public class MainScreenPresenter implements TranslationScreenContract.Presenter 
                     .doOnNext(translation -> currentTranslation = translation);
         }
     }
+
 }
