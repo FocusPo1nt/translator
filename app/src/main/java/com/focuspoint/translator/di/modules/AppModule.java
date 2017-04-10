@@ -4,9 +4,10 @@ import android.app.Application;
 
 import com.focuspoint.translator.App;
 import com.focuspoint.translator.interactors.LanguageInteractor;
+import com.focuspoint.translator.interactors.TranslationInteractor;
 import com.focuspoint.translator.interactors.interfaces.ILanguageInteractor;
 import com.focuspoint.translator.interactors.interfaces.ITranslationInteractor;
-import com.focuspoint.translator.interactors.interfaces.TranslationInteractor;
+import com.focuspoint.translator.models.Model;
 import com.focuspoint.translator.presenters.LanguageScreenPresenter;
 import com.focuspoint.translator.presenters.MainScreenPresenter;
 import com.focuspoint.translator.screen.LanguageScreenContract;
@@ -46,8 +47,8 @@ public class AppModule {
 
     @Provides
     @Singleton
-    ITranslationInteractor provideTranslationInteractor(ILanguageInteractor interactor, Retrofit retrofit) {
-        return new TranslationInteractor( interactor, retrofit);
+    ITranslationInteractor provideTranslationInteractor(ILanguageInteractor interactor, Retrofit retrofit, Model model) {
+        return new TranslationInteractor( interactor, retrofit, model);
     }
 
     //endregion
@@ -55,8 +56,8 @@ public class AppModule {
     //region Presenters
     @Provides
     @Singleton
-    LanguageScreenContract.Presenter provideLanguagePresenter (ILanguageInteractor interactor) {
-        return new LanguageScreenPresenter(interactor);
+    LanguageScreenContract.Presenter provideLanguagePresenter (ILanguageInteractor interactor, ITranslationInteractor translationInteractor) {
+        return new LanguageScreenPresenter(interactor, translationInteractor);
     }
 
 

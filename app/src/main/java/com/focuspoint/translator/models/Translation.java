@@ -60,16 +60,27 @@ public class Translation {
         return output;
     }
 
+
+    public String getOutputWithWatermark(){
+        String watermark = "\n\nПереведено сервисом «Яндекс.Переводчик»\nhttp://translate.yandex.ru/";
+        String result = "";
+        if (!output.isEmpty() && !output.contains(watermark)){
+            result = output + watermark;
+        }
+        return result;
+    }
+
     public Translation setOutput(String output) {
         this.output = output;
         return this;
     }
 
-    public Translation addWatermark(){
-        String watermark = "\n\nПереведено сервисом «Яндекс.Переводчик»\nhttp://translate.yandex.ru/";
-        if (!output.isEmpty() && !output.contains(watermark)){
-            output = output + watermark;
-        }
-        return this;
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        if (input !=null) sb.append(input).append(" ");
+        if (sourceLanguage!= null && targetLanguage != null) sb.append(getDirection()).append(" ");
+        if (output!= null) sb.append(output);
+        return sb.toString();
     }
 }

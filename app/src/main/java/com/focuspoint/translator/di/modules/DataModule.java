@@ -4,6 +4,7 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
 import com.focuspoint.translator.App;
+import com.focuspoint.translator.models.Model;
 import com.focuspoint.translator.network.TranslateApiService;
 
 import javax.inject.Inject;
@@ -17,7 +18,7 @@ import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
- * Created by v_banko on 3/29/2017.
+ *
  */
 
 @Module
@@ -53,5 +54,12 @@ public class DataModule {
                 .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
                 .client(okHttpClient)
                 .build();
+    }
+
+
+    @Provides
+    @Singleton
+    Model providesModel() {
+        return new Model();
     }
 }

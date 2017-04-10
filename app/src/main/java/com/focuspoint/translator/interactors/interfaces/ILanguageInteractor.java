@@ -16,12 +16,4 @@ public interface ILanguageInteractor {
 
     Observable <Map<String, Language>> loadLanguages();
 
-
-    void changeSource(Language source);
-
-    void changeTarget(Language target);
-
-    PublishSubject<Language> getSourceSubject();
-
-    Observable <Language> getTargetSubject();
 }

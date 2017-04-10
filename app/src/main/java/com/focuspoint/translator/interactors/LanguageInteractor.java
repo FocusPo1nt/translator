@@ -1,7 +1,9 @@
 package com.focuspoint.translator.interactors;
 
 import com.focuspoint.translator.interactors.interfaces.ILanguageInteractor;
+import com.focuspoint.translator.interactors.interfaces.ITranslationInteractor;
 import com.focuspoint.translator.models.Language;
+import com.focuspoint.translator.models.Translation;
 import com.focuspoint.translator.models.responseModels.LanguagesRM;
 import com.focuspoint.translator.network.TranslateApiService;
 
@@ -24,9 +26,11 @@ public class LanguageInteractor implements ILanguageInteractor {
     private Retrofit retrofit;
     private Map<String, Language> languageMap;
 
+
     @Inject
     public LanguageInteractor(Retrofit retrofit){
         this.retrofit = retrofit;
+
     }
 
     @Override
@@ -41,26 +45,6 @@ public class LanguageInteractor implements ILanguageInteractor {
         }
     }
 
-
-    @Override
-    public void changeSource(Language source) {
-        sourceSubject.onNext(source);
-    }
-
-    @Override
-    public void changeTarget(Language target) {
-        targetSubject.onNext(target);
-    }
-
-    @Override
-    public PublishSubject<Language> getSourceSubject() {
-        return sourceSubject;
-    }
-
-    @Override
-    public Observable<Language> getTargetSubject() {
-        return targetSubject;
-    }
 
 
 

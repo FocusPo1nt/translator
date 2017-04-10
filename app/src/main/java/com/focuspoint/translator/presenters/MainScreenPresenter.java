@@ -1,17 +1,13 @@
 package com.focuspoint.translator.presenters;
 
-import android.widget.Toast;
-
 import com.focuspoint.translator.interactors.LanguageInteractor;
-import com.focuspoint.translator.interactors.interfaces.TranslationInteractor;
+import com.focuspoint.translator.interactors.TranslationInteractor;
 import com.focuspoint.translator.models.Language;
 import com.focuspoint.translator.models.Translation;
 import com.focuspoint.translator.screen.TranslationScreenContract;
 
 import java.lang.ref.WeakReference;
-import java.util.concurrent.TimeUnit;
 
-import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.schedulers.Schedulers;
@@ -19,8 +15,6 @@ import rx.subscriptions.CompositeSubscription;
 
 /**
  * Implementation of TranslationScreenContract interface;
- * Holds current Translation state;
- * getCurrentTranslation is the main method to work with state;
  */
 
 public class MainScreenPresenter implements TranslationScreenContract.Presenter {
@@ -29,7 +23,7 @@ public class MainScreenPresenter implements TranslationScreenContract.Presenter 
     private LanguageInteractor languageInteractor;
     private CompositeSubscription subscriptions;
     private WeakReference<TranslationScreenContract.View> view;
-    private Translation currentTranslation;
+
 
 
     public MainScreenPresenter(TranslationInteractor translationInteractor, LanguageInteractor languageInteractor){
@@ -38,14 +32,21 @@ public class MainScreenPresenter implements TranslationScreenContract.Presenter 
     }
 
     @Override
-    public void attach(TranslationScreenContract.View view) {
+    public void attach(TranslationScreenContract.View v) {
         if (subscriptions!= null)  subscriptions.unsubscribe();
         subscriptions = new CompositeSubscription();
-        this.view = new WeakReference<>(view);
-        subscriptions.add(languageInteractor.getSourceSubject().subscribe(this::onSourceChanged));
+        this.view = new WeakReference<>(v);
 
 
-        subscriptions.add(languageInteractor.getTargetSubject().subscribe(this::onTargetChange));
+        subscriptions.add(translationInteractor.getOnTranslateSubject()
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(translation -> view.get().showOutput(translation.getOutputWithWatermark())));
+
+        subscriptions.add(translationInteractor.getOnSourceSubject()
+                .subscribe(translation -> view.get().showSource(translation.getSourceLanguage())));
+
+        subscriptions.add(translationInteractor.getOnTargetSubject()
+                .subscribe(translation -> view.get().showTarget(translation.getTargetLanguage())));
     }
 
 
@@ -57,34 +58,25 @@ public class MainScreenPresenter implements TranslationScreenContract.Presenter 
 
     @Override
     public void onInputChanged(String text) {
-
-
-        getCurrentTranslation()
-                .map(translation -> translation.setInput(text))
-                .doOnNext(translation -> {if (text.isEmpty()) view.get().showOutput("");})
-                .filter(translation -> !text.isEmpty())
-                .flatMap(translation -> translationInteractor.translate(translation))
-                .map(Translation::addWatermark)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(translation -> {
-                    view.get().showSource(translation.getSourceLanguage());
-                    view.get().showTarget(translation.getTargetLanguage());
-                    view.get().showOutput(translation.getOutput());
-                }, throwable -> view.get().showError(throwable));
+        subscriptions.add(translationInteractor.onInputChanged(text)
+                .subscribe(
+                        translation -> {},
+                        throwable -> System.out.println(throwable.toString())));
     }
 
     @Override
     public void loadTranslation() {
-        subscriptions.add(getCurrentTranslation()
+        subscriptions.add(translationInteractor.getLastTranslation()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .map(Translation::addWatermark)
-                .subscribe(translation -> {
-                    view.get().showSource(translation.getSourceLanguage());
-                    view.get().showTarget(translation.getTargetLanguage());
-                    view.get().showInput(translation.getInput());
-                    view.get().showOutput(translation.getOutput());
-                }, throwable -> view.get().showError(throwable))
+                .subscribe(
+                        translation -> {
+                            view.get().showSource(translation.getSourceLanguage());
+                            view.get().showTarget(translation.getTargetLanguage());
+                            view.get().showInput(translation.getInput());
+                            view.get().showOutput(translation.getOutputWithWatermark());
+                        },
+                        throwable -> view.get().showError(throwable))
         );
     }
 
@@ -92,7 +84,6 @@ public class MainScreenPresenter implements TranslationScreenContract.Presenter 
     @Override
     public void onSourceChanged(Language language) {
         view.get().showSource(language);
-        currentTranslation.setSourceLanguage(language);
     }
 
     @Override
@@ -100,15 +91,7 @@ public class MainScreenPresenter implements TranslationScreenContract.Presenter 
         view.get().showTarget(language);
     }
 
-    /**If current translation state is null -> return last or default state;*/
-    private Observable<Translation> getCurrentTranslation(){
-        if (currentTranslation != null) {
-            return Observable.just(currentTranslation);
-        }else{
-            return translationInteractor.getLastTranslation()
-                    .doOnNext(translation -> currentTranslation = translation);
 
-        }
-    }
+
 
 }
