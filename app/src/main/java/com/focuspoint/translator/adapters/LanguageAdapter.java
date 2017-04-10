@@ -11,6 +11,9 @@ import com.focuspoint.translator.models.Language;
 
 import java.util.List;
 
+import rx.Observable;
+import rx.subjects.PublishSubject;
+
 /**
  * Adapter for show language item from list(Language);
  */
@@ -34,6 +37,7 @@ public class LanguageAdapter extends RecyclerView.Adapter {
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         TextView languageText = (TextView) (holder.itemView.findViewById(R.id.language_text_view));
         languageText.setText(list.get(position).getDescription());
+        holder.itemView.setOnClickListener(v -> onClickSubject.onNext(list.get(position)));
     }
 
     @Override
@@ -47,4 +51,11 @@ public class LanguageAdapter extends RecyclerView.Adapter {
         notifyDataSetChanged();
     }
 
+
+    private final PublishSubject<Language> onClickSubject = PublishSubject.create();
+
+
+    public Observable<Language> getPositionClicks(){
+        return onClickSubject.asObservable();
+    }
 }

@@ -59,4 +59,15 @@ public class LanguageScreenPresenter implements LanguageScreenContract.Presenter
     public void loadTargetLanguages() {
 
     }
+
+
+    @Override
+    public void onSourceChanged(Language language) {
+        interactor.changeSource(language);
+    }
+
+    @Override
+    public void onTargetChanged(Language language) {
+        interactor.changeTarget(language);
+    }
 }

@@ -26,5 +26,9 @@ public class LanguageScreenContract {
         /**Obtain list of target languages, which will be presented for choose in view;*/
         void loadTargetLanguages();
 
+        void onSourceChanged(Language language);
+
+        void onTargetChanged(Language language);
+
     }
 }

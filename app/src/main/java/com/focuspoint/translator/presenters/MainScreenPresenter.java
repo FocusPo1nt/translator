@@ -1,5 +1,7 @@
 package com.focuspoint.translator.presenters;
 
+import android.widget.Toast;
+
 import com.focuspoint.translator.interactors.LanguageInteractor;
 import com.focuspoint.translator.interactors.interfaces.TranslationInteractor;
 import com.focuspoint.translator.models.Language;
@@ -41,6 +43,8 @@ public class MainScreenPresenter implements TranslationScreenContract.Presenter 
         subscriptions = new CompositeSubscription();
         this.view = new WeakReference<>(view);
         subscriptions.add(languageInteractor.getSourceSubject().subscribe(this::onSourceChanged));
+
+
         subscriptions.add(languageInteractor.getTargetSubject().subscribe(this::onTargetChange));
     }
 
@@ -53,6 +57,8 @@ public class MainScreenPresenter implements TranslationScreenContract.Presenter 
 
     @Override
     public void onInputChanged(String text) {
+
+
         getCurrentTranslation()
                 .map(translation -> translation.setInput(text))
                 .doOnNext(translation -> {if (text.isEmpty()) view.get().showOutput("");})
@@ -86,6 +92,7 @@ public class MainScreenPresenter implements TranslationScreenContract.Presenter 
     @Override
     public void onSourceChanged(Language language) {
         view.get().showSource(language);
+        currentTranslation.setSourceLanguage(language);
     }
 
     @Override
@@ -100,6 +107,7 @@ public class MainScreenPresenter implements TranslationScreenContract.Presenter 
         }else{
             return translationInteractor.getLastTranslation()
                     .doOnNext(translation -> currentTranslation = translation);
+
         }
     }
 

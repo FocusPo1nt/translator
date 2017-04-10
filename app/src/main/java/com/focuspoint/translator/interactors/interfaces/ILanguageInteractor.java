@@ -5,6 +5,7 @@ import com.focuspoint.translator.models.Language;
 import java.util.Map;
 
 import rx.Observable;
+import rx.subjects.PublishSubject;
 import rx.subjects.Subject;
 
 /**
@@ -20,7 +21,7 @@ public interface ILanguageInteractor {
 
     void changeTarget(Language target);
 
-    Observable <Language> getSourceSubject();
+    PublishSubject<Language> getSourceSubject();
 
     Observable <Language> getTargetSubject();
 }

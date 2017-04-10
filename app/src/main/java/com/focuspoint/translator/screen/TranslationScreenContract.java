@@ -38,10 +38,10 @@ public class TranslationScreenContract {
         /**if input is not empty -> try to translate text;*/
         void onInputChanged(String text);
 
-        /**change view when source change;*/
+        /**change view when source change -> try to translate text;*/
         void onSourceChanged(Language language);
 
-        /**change view when target change;*/
+        /**change view when target change -> try to translate text;*/
         void onTargetChange(Language language);
 
         /**presenter fills view with last translation data;*/

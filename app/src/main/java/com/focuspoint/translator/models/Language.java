@@ -1,5 +1,6 @@
 package com.focuspoint.translator.models;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 /**
@@ -7,7 +8,7 @@ import java.util.List;
  */
 
 
-public class Language {
+public class Language{
     private String description;
     private String code;
     private List<Language> dirs;
@@ -39,5 +40,8 @@ public class Language {
     }
 
 
-
+    //TODO private collection;
+    public List<Language> getDirs() {
+        return dirs;
+    }
 }

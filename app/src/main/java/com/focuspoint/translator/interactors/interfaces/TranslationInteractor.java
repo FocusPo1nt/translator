@@ -1,5 +1,6 @@
 package com.focuspoint.translator.interactors.interfaces;
 
+import com.focuspoint.translator.models.Language;
 import com.focuspoint.translator.models.Translation;
 import com.focuspoint.translator.models.responseModels.TranslationRM;
 import com.focuspoint.translator.network.TranslateApiService;
@@ -41,6 +42,8 @@ public class TranslationInteractor implements ITranslationInteractor {
 
     @Override
     public Observable<Translation> translate(Translation translation) {
+
+
 
         return retrofit.create(TranslateApiService.class)
                 .translate(translation.getInput(), translation.getDirection())

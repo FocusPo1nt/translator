@@ -12,6 +12,7 @@ import javax.inject.Inject;
 import retrofit2.Retrofit;
 import rx.Observable;
 import rx.Subscriber;
+import rx.functions.Action1;
 import rx.subjects.PublishSubject;
 
 
@@ -52,7 +53,7 @@ public class LanguageInteractor implements ILanguageInteractor {
     }
 
     @Override
-    public Observable<Language> getSourceSubject() {
+    public PublishSubject<Language> getSourceSubject() {
         return sourceSubject;
     }
 

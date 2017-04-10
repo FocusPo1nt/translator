@@ -45,6 +45,7 @@ public class TranslateFragment extends Fragment implements TranslationScreenCont
 
     @Inject TranslationScreenContract.Presenter presenter;
     private CompositeSubscription subscriptions;
+    private int SOURCE_LANGUAGE_REQUEST = 1;
 
     @Nullable
     @Override
@@ -138,7 +139,7 @@ public class TranslateFragment extends Fragment implements TranslationScreenCont
 
         sourceLanguageView.setOnClickListener(v1 -> {
             Intent intent = new Intent(getContext(), LanguageActivity.class);
-            getActivity().startActivity(intent);
+            getActivity().startActivityForResult(intent, SOURCE_LANGUAGE_REQUEST);
         });
     }
 
