@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.focuspoint.translator">
 
-    <uses-permission android:name="android.permission.INTERNET"></uses-permission>
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:name=".App"
@@ -23,8 +23,12 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".screen.activity.LanguageActivity"
+            android:name=".screen.activity.SourceLanguageActivity"
             android:label="@string/title_activity_language"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name=".screen.activity.TargetLanguageActivity"
+            android:label="@string/title_activity_target_language"
             android:theme="@style/AppTheme"></activity>
     </application>
 

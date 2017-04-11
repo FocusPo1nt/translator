@@ -31,7 +31,7 @@ public class LanguagesRM {
     }
 
 
-    /**Convert 'dirs' array to link between Languages*/
+    /**Convert 'dirs' array to link between Languages;*/
     private void makeDirs (Map<String, Language> map){
         if (dirs != null){
             for (String dir : dirs){

@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.Toolbar;
-import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,7 +16,8 @@ import com.focuspoint.translator.App;
 import com.focuspoint.translator.R;
 import com.focuspoint.translator.models.Language;
 import com.focuspoint.translator.screen.TranslationScreenContract;
-import com.focuspoint.translator.screen.activity.LanguageActivity;
+import com.focuspoint.translator.screen.activity.SourceLanguageActivity;
+import com.focuspoint.translator.screen.activity.TargetLanguageActivity;
 import com.jakewharton.rxbinding.widget.RxTextView;
 
 
@@ -121,6 +121,11 @@ public class TranslateFragment extends Fragment implements TranslationScreenCont
     }
 
     @Override
+    public String getInput() {
+        return inputEditText == null ? "" : inputEditText.getEditableText().toString();
+    }
+
+    @Override
     public void showShare() {
 
     }
@@ -137,9 +142,14 @@ public class TranslateFragment extends Fragment implements TranslationScreenCont
                 .subscribe(text -> presenter.onInputChanged(text.toString()))
         );
 
-        sourceLanguageView.setOnClickListener(v1 -> {
-            Intent intent = new Intent(getContext(), LanguageActivity.class);
-            getActivity().startActivityForResult(intent, SOURCE_LANGUAGE_REQUEST);
+        sourceLanguageView.setOnClickListener(v -> {
+            Intent intent = new Intent(getContext(), SourceLanguageActivity.class);
+            getActivity().startActivity(intent);
+        });
+
+        targetLanguageView.setOnClickListener(v -> {
+            Intent intent = new Intent(getContext(), TargetLanguageActivity.class);
+            getActivity().startActivity(intent);
         });
     }
 

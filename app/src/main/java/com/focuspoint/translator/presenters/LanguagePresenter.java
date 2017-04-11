@@ -8,24 +8,29 @@ import com.focuspoint.translator.screen.LanguageScreenContract;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
+import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
+import rx.functions.Func1;
+import rx.functions.Func2;
 import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 
 /**
- * Created by root on 06.04.17.
+ *
  */
 
-public class LanguageScreenPresenter implements LanguageScreenContract.Presenter {
+public class LanguagePresenter implements LanguageScreenContract.Presenter {
 
     private CompositeSubscription subscriptions;
     private ILanguageInteractor languageInteractor;
     private WeakReference<LanguageScreenContract.View> view;
     private ITranslationInteractor translationInteractor;
 
-    public LanguageScreenPresenter(ILanguageInteractor languageInteractor, ITranslationInteractor translationInteractor){
+    public LanguagePresenter(ILanguageInteractor languageInteractor, ITranslationInteractor translationInteractor){
         this.languageInteractor = languageInteractor;
         this.translationInteractor = translationInteractor;
     }
@@ -58,6 +63,25 @@ public class LanguageScreenPresenter implements LanguageScreenContract.Presenter
     @Override
     public void loadTargetLanguages() {
 
+        subscriptions.add(languageInteractor.loadLanguages()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .map(map -> new ArrayList<>(map.values()))
+                .subscribe(
+                        languages -> view.get().showLanguages(languages),
+                        throwable -> view.get().showError(throwable))
+        );
+
+
+//        subscriptions.add(languageInteractor.loadLanguages()
+//                .subscribeOn(Schedulers.io())
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .withLatestFrom(translationInteractor.getLastTranslation(), (map, translation)
+//                        -> map.get(translation.getSourceLanguage().getCode()).getDirs())
+//                .subscribe(
+//                        languages -> view.get().showLanguages(languages),
+//                        throwable -> view.get().showError(throwable))
+//        );
     }
 
 

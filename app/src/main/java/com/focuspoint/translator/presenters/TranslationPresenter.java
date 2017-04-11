@@ -9,6 +9,7 @@ import com.focuspoint.translator.screen.TranslationScreenContract;
 import java.lang.ref.WeakReference;
 
 import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action0;
 import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
@@ -17,7 +18,7 @@ import rx.subscriptions.CompositeSubscription;
  * Implementation of TranslationScreenContract interface;
  */
 
-public class MainScreenPresenter implements TranslationScreenContract.Presenter {
+public class TranslationPresenter implements TranslationScreenContract.Presenter {
 
     private TranslationInteractor translationInteractor;
     private LanguageInteractor languageInteractor;
@@ -26,7 +27,7 @@ public class MainScreenPresenter implements TranslationScreenContract.Presenter 
 
 
 
-    public MainScreenPresenter(TranslationInteractor translationInteractor, LanguageInteractor languageInteractor){
+    public TranslationPresenter(TranslationInteractor translationInteractor, LanguageInteractor languageInteractor){
         this.translationInteractor = translationInteractor;
         this.languageInteractor = languageInteractor;
     }
@@ -40,7 +41,19 @@ public class MainScreenPresenter implements TranslationScreenContract.Presenter 
 
         subscriptions.add(translationInteractor.getOnTranslateSubject()
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(translation -> view.get().showOutput(translation.getOutputWithWatermark())));
+                .doOnNext(new Action1<Translation>() {
+                    @Override
+                    public void call(Translation translation) {
+                        System.out.println("I NEED THIS");
+                    }
+                })
+                .subscribe(translation -> view.get().showOutput(translation.getOutputWithWatermark()),
+
+                        throwable -> {
+
+                        }, () -> {
+                            System.out.println("ON COMPLETED");
+                        }));
 
         subscriptions.add(translationInteractor.getOnSourceSubject()
                 .subscribe(translation -> view.get().showSource(translation.getSourceLanguage())));

@@ -31,6 +31,8 @@ public class TranslationScreenContract {
         void showAddToFavorites();
 
         void showShare();
+
+        String getInput();
     }
 
     public interface Presenter extends BasePresenter <View>{

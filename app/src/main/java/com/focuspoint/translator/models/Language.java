@@ -1,17 +1,16 @@
 package com.focuspoint.translator.models;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 /**
- * Created by root on 01.04.17.
+ *
  */
 
 
 public class Language{
     private String description;
     private String code;
-    private List<Language> dirs;
+    private List<Language> dirs; // but api can translate without dirs;
 
     public Language(){
         dirs = new ArrayList<>();

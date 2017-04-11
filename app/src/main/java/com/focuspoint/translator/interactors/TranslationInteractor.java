@@ -12,6 +12,7 @@ import javax.inject.Inject;
 
 import retrofit2.Retrofit;
 import rx.Observable;
+import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.functions.Func1;
 import rx.schedulers.Schedulers;
@@ -63,7 +64,13 @@ public class TranslationInteractor implements ITranslationInteractor {
                 .translate(translation.getInput(), translation.getDirection())
                 .subscribeOn(Schedulers.io())
                 .map(translationRM -> translation.setOutput(translationRM.text.get(0)))
-                .doOnNext(result -> translateSubject.onNext(result));
+//                .flatMap(translation1 -> translateSubject)
+
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnNext(result -> {
+                    System.out.println("WHY NOT");
+                    translateSubject.onNext(result);
+                    System.out.println("EVEN THIS");});
     }
 
 

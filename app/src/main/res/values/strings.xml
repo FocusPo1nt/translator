@@ -4,4 +4,5 @@
     <string name="delete">delete</string>
     <string name="title_activity_language">LanguageActivity</string>
     <string name="choose_language">choose_language</string>
+    <string name="title_activity_target_language">TargetLanguageActivity</string>
 </resources>
