@@ -41,7 +41,7 @@ public class TranslationPresenter implements TranslationScreenContract.Presenter
 
         subscriptions.add(translationInteractor.getOnTranslateSubject()
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(translation -> view.get().showOutput(translation.getOutputWithWatermark())));
+                .subscribe(this::showTranslation));
 
         subscriptions.add(translationInteractor.getOnSourceSubject()
                 .subscribe(translation -> view.get().showSource(translation.getSourceLanguage())));
@@ -61,8 +61,7 @@ public class TranslationPresenter implements TranslationScreenContract.Presenter
     public void onInputChanged(String text) {
         subscriptions.add(translationInteractor.onInputChanged(text)
                 .subscribe(
-                        translation -> {
-                            System.out.println(translationInteractor.getOnTranslateSubject().toString());},
+                        translation -> {},
                         throwable -> System.out.println(throwable.toString())));
     }
 
@@ -72,12 +71,7 @@ public class TranslationPresenter implements TranslationScreenContract.Presenter
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
-                        translation -> {
-                            view.get().showSource(translation.getSourceLanguage());
-                            view.get().showTarget(translation.getTargetLanguage());
-                            view.get().showInput(translation.getInput());
-                            view.get().showOutput(translation.getOutputWithWatermark());
-                        },
+                        this::showTranslation,
                         throwable -> view.get().showError(throwable))
         );
     }
@@ -93,7 +87,18 @@ public class TranslationPresenter implements TranslationScreenContract.Presenter
         view.get().showTarget(language);
     }
 
+    @Override
+    public void reverseLanguages() {
+        translationInteractor.revereLanguages()
+            .subscribe(
+                translation -> {},
+                throwable -> System.out.println(throwable.toString()));
+    }
 
-
-
+    private void showTranslation(Translation translation){
+        view.get().showInput(translation.getInput());
+        view.get().showOutput(translation.getOutputWithWatermark());
+        view.get().showSource(translation.getSourceLanguage());
+        view.get().showTarget(translation.getTargetLanguage());
+    }
 }

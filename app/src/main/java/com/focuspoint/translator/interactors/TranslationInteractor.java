@@ -43,20 +43,18 @@ public class TranslationInteractor implements ITranslationInteractor {
             return Observable.just(model.getCurrentTranslation());
         } else {
             return languageInteractor.loadLanguages()
-                    .flatMap((map) -> Observable.just(new Translation(map.get("en"), map.get("ru"))))
-                    .doOnNext(translation -> {
-                        model.setCurrentTranslation(translation);
-                    });
+                    .flatMap((map) -> Observable.just(new Translation(
+                            map.get("en"),
+                            map.get("ru"),
+                            Translation.DEFAULT_INPUT,
+                            Translation.DEFAULT_OUTPUT)))
+                    .doOnNext(translation -> model.setCurrentTranslation(translation));
         }
-
-
     }
 
 
     @Override
     public Observable<Translation> translate(Translation translation) {
-        System.out.println("TRANSLATE ON "  + this.toString());
-
         return retrofit.create(TranslateApiService.class)
                 .translate(translation.getInput(), translation.getDirection())
                 .subscribeOn(Schedulers.io())
@@ -99,7 +97,6 @@ public class TranslationInteractor implements ITranslationInteractor {
 
     @Override
     public Observable<Translation> getOnTranslateSubject() {
-        System.out.println("GET SUBJECT " + translationSubject.toString());
         return translationSubject;
     }
 
@@ -111,5 +108,14 @@ public class TranslationInteractor implements ITranslationInteractor {
     @Override
     public PublishSubject<Translation> getOnTargetSubject() {
         return targetSubject;
+    }
+
+    @Override
+    public Observable<Translation> revereLanguages() {
+        return getLastTranslation()
+                .doOnNext(Translation::reverseLanguages)
+                .doOnNext(translation -> targetSubject.onNext(translation))
+                .doOnNext(translation -> sourceSubject.onNext(translation))
+                .flatMap(this::translate);
     }
 }

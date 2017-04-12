@@ -29,4 +29,5 @@ public interface ITranslationInteractor {
 
     PublishSubject <Translation> getOnTargetSubject();
 
+    Observable <Translation> revereLanguages();
 }

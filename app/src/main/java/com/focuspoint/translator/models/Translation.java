@@ -1,24 +1,29 @@
 package com.focuspoint.translator.models;
 
 
-/**
- * Created by v_banko on 3/29/2017.
+/** Object which contains basic information about the act of translation;
  */
 
 public class Translation {
-
 
     private String input;
     private Language sourceLanguage;
     private Language targetLanguage;
     private String output;
 
+    public static final String DEFAULT_INPUT = "«Hello world!»";
+    public static final String DEFAULT_OUTPUT= "«Здравствуй, мир!»";
 
-    public Translation(Language sourceLanguage, Language targetLanguage){
+
+    public Translation(Language sourceLanguage, Language targetLanguage, String input, String output){
         this.sourceLanguage = sourceLanguage;
         this.targetLanguage = targetLanguage;
+        this.input = input;
+        this.output = output;
     }
 
+    /**Return String pair of languages
+     * from source to target;*/
     public String getDirection(){
         if (sourceLanguage == null
                 || targetLanguage == null
@@ -61,8 +66,9 @@ public class Translation {
     }
 
 
+    /**Add constant text to the end of translation result;*/
     public String getOutputWithWatermark(){
-        String watermark = "\n\nПереведено сервисом «Яндекс.Переводчик»\nhttp://translate.yandex.ru/";
+        String watermark = "\n\nПереведено сервисом «Яндекс Переводчик»\nhttp://translate.yandex.ru/";
         String result = "";
         if (!output.isEmpty() && !output.contains(watermark)){
             result = output + watermark;
@@ -83,4 +89,16 @@ public class Translation {
         if (output!= null) sb.append(output);
         return sb.toString();
     }
+
+
+    /**input <-> output   source <-> target*/
+    public void reverseLanguages(){
+        Language bufferLanguage = sourceLanguage;
+        sourceLanguage = targetLanguage;
+        targetLanguage = bufferLanguage;
+        String buffer = input;
+        input = output;
+        output = buffer;
+    }
+
 }

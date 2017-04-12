@@ -33,9 +33,10 @@
                 android:text="Russian"/>
 
             <ImageView
-
-                android:layout_width="10dp"
-                android:layout_height="10dp"
+                android:id="@+id/reverse_image_view"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_margin="5dp"
                 android:src="@drawable/menu"/>
 
             <TextView

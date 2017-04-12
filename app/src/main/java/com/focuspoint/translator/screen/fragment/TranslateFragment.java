@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -28,8 +29,6 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import rx.Observable;
-import rx.observables.ConnectableObservable;
 import rx.subscriptions.CompositeSubscription;
 
 /**
@@ -44,10 +43,11 @@ public class TranslateFragment extends Fragment implements TranslationScreenCont
     @BindView(R.id.to_language) TextView targetLanguageView;
     @BindView(R.id.input_edit_text) EditText inputEditText;
     @BindView(R.id.output_text_view) TextView outputTextView;
+    @BindView(R.id.reverse_image_view) ImageView reverseImageView;
 
     @Inject TranslationScreenContract.Presenter presenter;
     private CompositeSubscription subscriptions;
-    private int SOURCE_LANGUAGE_REQUEST = 1;
+    private boolean ignoreInput = false; //flag to prevent api call when change input programmatically
 
     @Nullable
     @Override
@@ -79,7 +79,12 @@ public class TranslateFragment extends Fragment implements TranslationScreenCont
 
     @Override
     public void showInput(String text) {
-        inputEditText.setText(text);
+        if (!inputEditText.getText().toString().equals(text)){
+            int cursor = inputEditText.getSelectionStart();
+            ignoreInput = true;
+            inputEditText.setText(text);
+            inputEditText.setSelection(Math.min(text.length(), cursor));
+        }
     }
 
     @Override
@@ -141,6 +146,7 @@ public class TranslateFragment extends Fragment implements TranslationScreenCont
         //There is some input logic
         subscriptions.add(RxTextView.textChanges(inputEditText)
                 .debounce(1, TimeUnit.SECONDS)
+                .filter(charSequence -> validateLastInput())
                 .subscribe(text -> presenter.onInputChanged(text.toString()))
         );
 
@@ -153,12 +159,21 @@ public class TranslateFragment extends Fragment implements TranslationScreenCont
             Intent intent = new Intent(getContext(), TargetLanguageActivity.class);
             getActivity().startActivity(intent);
         });
+
+        reverseImageView.setOnClickListener(v -> presenter.reverseLanguages());
+
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
         subscriptions.unsubscribe();
+    }
+
+    private boolean validateLastInput(){
+        boolean filter = !ignoreInput;
+        ignoreInput = false;
+        return filter;
     }
 
 }
