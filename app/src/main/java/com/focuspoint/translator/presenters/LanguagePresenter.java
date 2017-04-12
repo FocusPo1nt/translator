@@ -88,8 +88,12 @@ public class LanguagePresenter implements LanguageScreenContract.Presenter {
     @Override
     public void onSourceChanged(Language language) {
         translationInteractor.onSourceChanged(language)
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
-                        translation -> {},
+                        translation -> {
+                            System.out.println(translationInteractor.getOnTranslateSubject().toString());
+                        },
+
                         System.out::println);
     }
 

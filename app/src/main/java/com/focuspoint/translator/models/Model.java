@@ -24,4 +24,27 @@ public class Model {
     public void setCurrentTranslation(Translation currentTranslation) {
         this.currentTranslation = currentTranslation;
     }
+
+    public void setCurrentOutput(String output){}
+
+    public void setCurrentInput(String input){}
+
+    public void setCurrentSource(Language source){}
+
+    public void setCurrentTarget(Language target){}
+
+
+
+    public void getCurrentOutput(String output){}
+
+    public void getCurrentInput(String input){}
+
+    public void getCurrentSource(Language source){}
+
+    public void getCurrentTarget(Language target){}
+
+
+
+
+
 }

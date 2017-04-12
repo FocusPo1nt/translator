@@ -4,6 +4,7 @@ import com.focuspoint.translator.models.Language;
 import com.focuspoint.translator.models.Translation;
 
 import rx.Observable;
+import rx.observables.ConnectableObservable;
 import rx.subjects.PublishSubject;
 
 /**
@@ -22,7 +23,7 @@ public interface ITranslationInteractor {
 
     Observable <Translation> onTargetChanged (Language language);
 
-    PublishSubject <Translation> getOnTranslateSubject();
+    Observable <Translation> getOnTranslateSubject();
 
     PublishSubject <Translation> getOnSourceSubject();
 

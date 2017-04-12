@@ -28,6 +28,8 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import rx.Observable;
+import rx.observables.ConnectableObservable;
 import rx.subscriptions.CompositeSubscription;
 
 /**

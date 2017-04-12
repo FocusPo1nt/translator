@@ -2,6 +2,8 @@ package com.focuspoint.translator.presenters;
 
 import com.focuspoint.translator.interactors.LanguageInteractor;
 import com.focuspoint.translator.interactors.TranslationInteractor;
+import com.focuspoint.translator.interactors.interfaces.ILanguageInteractor;
+import com.focuspoint.translator.interactors.interfaces.ITranslationInteractor;
 import com.focuspoint.translator.models.Language;
 import com.focuspoint.translator.models.Translation;
 import com.focuspoint.translator.screen.TranslationScreenContract;
@@ -9,7 +11,6 @@ import com.focuspoint.translator.screen.TranslationScreenContract;
 import java.lang.ref.WeakReference;
 
 import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action0;
 import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
@@ -20,14 +21,14 @@ import rx.subscriptions.CompositeSubscription;
 
 public class TranslationPresenter implements TranslationScreenContract.Presenter {
 
-    private TranslationInteractor translationInteractor;
-    private LanguageInteractor languageInteractor;
+    private ITranslationInteractor translationInteractor;
+    private ILanguageInteractor languageInteractor;
     private CompositeSubscription subscriptions;
     private WeakReference<TranslationScreenContract.View> view;
 
 
 
-    public TranslationPresenter(TranslationInteractor translationInteractor, LanguageInteractor languageInteractor){
+    public TranslationPresenter(ITranslationInteractor translationInteractor, ILanguageInteractor languageInteractor){
         this.translationInteractor = translationInteractor;
         this.languageInteractor = languageInteractor;
     }
@@ -38,22 +39,9 @@ public class TranslationPresenter implements TranslationScreenContract.Presenter
         subscriptions = new CompositeSubscription();
         this.view = new WeakReference<>(v);
 
-
         subscriptions.add(translationInteractor.getOnTranslateSubject()
                 .observeOn(AndroidSchedulers.mainThread())
-                .doOnNext(new Action1<Translation>() {
-                    @Override
-                    public void call(Translation translation) {
-                        System.out.println("I NEED THIS");
-                    }
-                })
-                .subscribe(translation -> view.get().showOutput(translation.getOutputWithWatermark()),
-
-                        throwable -> {
-
-                        }, () -> {
-                            System.out.println("ON COMPLETED");
-                        }));
+                .subscribe(translation -> view.get().showOutput(translation.getOutputWithWatermark())));
 
         subscriptions.add(translationInteractor.getOnSourceSubject()
                 .subscribe(translation -> view.get().showSource(translation.getSourceLanguage())));
@@ -73,7 +61,8 @@ public class TranslationPresenter implements TranslationScreenContract.Presenter
     public void onInputChanged(String text) {
         subscriptions.add(translationInteractor.onInputChanged(text)
                 .subscribe(
-                        translation -> {},
+                        translation -> {
+                            System.out.println(translationInteractor.getOnTranslateSubject().toString());},
                         throwable -> System.out.println(throwable.toString())));
     }
 

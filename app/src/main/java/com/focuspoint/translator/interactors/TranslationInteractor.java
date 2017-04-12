@@ -7,14 +7,13 @@ import com.focuspoint.translator.models.Model;
 import com.focuspoint.translator.models.Translation;
 import com.focuspoint.translator.models.responseModels.TranslationRM;
 import com.focuspoint.translator.network.TranslateApiService;
+import com.focuspoint.translator.screen.fragment.TranslateFragment;
 
 import javax.inject.Inject;
 
 import retrofit2.Retrofit;
 import rx.Observable;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
-import rx.functions.Func1;
+
 import rx.schedulers.Schedulers;
 import rx.subjects.PublishSubject;
 
@@ -30,20 +29,19 @@ public class TranslationInteractor implements ITranslationInteractor {
     private Model model;
 
 
-
     @Inject
-    public TranslationInteractor(ILanguageInteractor languageInteractor,  Retrofit retrofit, Model model){
+    public TranslationInteractor(ILanguageInteractor languageInteractor, Retrofit retrofit, Model model) {
         this.languageInteractor = languageInteractor;
         this.retrofit = retrofit;
         this.model = model;
     }
 
     @Override
-    public Observable <Translation> getLastTranslation() {
+    public Observable<Translation> getLastTranslation() {
 
-        if (model.getCurrentTranslation() != null){
+        if (model.getCurrentTranslation() != null) {
             return Observable.just(model.getCurrentTranslation());
-        }else{
+        } else {
             return languageInteractor.loadLanguages()
                     .flatMap((map) -> Observable.just(new Translation(map.get("en"), map.get("ru"))))
                     .doOnNext(translation -> {
@@ -55,26 +53,16 @@ public class TranslationInteractor implements ITranslationInteractor {
     }
 
 
-
     @Override
     public Observable<Translation> translate(Translation translation) {
-
+        System.out.println("TRANSLATE ON "  + this.toString());
 
         return retrofit.create(TranslateApiService.class)
                 .translate(translation.getInput(), translation.getDirection())
                 .subscribeOn(Schedulers.io())
                 .map(translationRM -> translation.setOutput(translationRM.text.get(0)))
-//                .flatMap(translation1 -> translateSubject)
-
-                .observeOn(AndroidSchedulers.mainThread())
-                .doOnNext(result -> {
-                    System.out.println("WHY NOT");
-                    translateSubject.onNext(result);
-                    System.out.println("EVEN THIS");});
+                .doOnNext(result -> translationSubject.onNext(result));
     }
-
-
-
 
 
     @Override
@@ -102,19 +90,17 @@ public class TranslationInteractor implements ITranslationInteractor {
                 .flatMap(this::translate);
     }
 
+    private PublishSubject<Translation> translationSubject = PublishSubject.create();
 
-    private PublishSubject <Translation> translateSubject = PublishSubject.create();
+    private PublishSubject<Translation> sourceSubject = PublishSubject.create();
 
-    private PublishSubject <Translation> sourceSubject = PublishSubject.create();
-
-    private PublishSubject <Translation> targetSubject = PublishSubject.create();
-
-
+    private PublishSubject<Translation> targetSubject = PublishSubject.create();
 
 
     @Override
-    public PublishSubject<Translation> getOnTranslateSubject() {
-        return translateSubject;
+    public Observable<Translation> getOnTranslateSubject() {
+        System.out.println("GET SUBJECT " + translationSubject.toString());
+        return translationSubject;
     }
 
     @Override
