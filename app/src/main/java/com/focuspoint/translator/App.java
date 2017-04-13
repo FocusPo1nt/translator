@@ -7,6 +7,7 @@ import android.support.annotation.NonNull;
 
 import com.focuspoint.translator.di.components.DaggerTranslateAppComponent;
 import com.focuspoint.translator.di.components.TranslateAppComponent;
+import com.focuspoint.translator.di.modules.DBModule;
 import com.focuspoint.translator.di.modules.DataModule;
 import com.focuspoint.translator.di.modules.AppModule;
 
@@ -25,6 +26,7 @@ public class App extends Application{
         component = DaggerTranslateAppComponent.builder()
                 .dataModule(new DataModule(this))
                 .appModule(new AppModule(this))
+                .dBModule(new DBModule(this))
                 .build();
 
     }

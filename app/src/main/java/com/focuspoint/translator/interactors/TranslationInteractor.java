@@ -1,5 +1,6 @@
 package com.focuspoint.translator.interactors;
 
+import com.focuspoint.translator.database.DB;
 import com.focuspoint.translator.interactors.interfaces.ILanguageInteractor;
 import com.focuspoint.translator.interactors.interfaces.ITranslationInteractor;
 import com.focuspoint.translator.models.Language;
@@ -9,11 +10,14 @@ import com.focuspoint.translator.models.responseModels.TranslationRM;
 import com.focuspoint.translator.network.TranslateApiService;
 import com.focuspoint.translator.screen.fragment.TranslateFragment;
 
+import java.util.List;
+
 import javax.inject.Inject;
 
 import retrofit2.Retrofit;
 import rx.Observable;
 
+import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 import rx.subjects.PublishSubject;
 
@@ -27,13 +31,15 @@ public class TranslationInteractor implements ITranslationInteractor {
     private ILanguageInteractor languageInteractor;
     private Retrofit retrofit;
     private Model model;
+    private DB database;
 
 
     @Inject
-    public TranslationInteractor(ILanguageInteractor languageInteractor, Retrofit retrofit, Model model) {
+    public TranslationInteractor(ILanguageInteractor languageInteractor, Retrofit retrofit, Model model, DB database) {
         this.languageInteractor = languageInteractor;
         this.retrofit = retrofit;
         this.model = model;
+        this.database = database;
     }
 
     @Override
@@ -55,11 +61,35 @@ public class TranslationInteractor implements ITranslationInteractor {
 
     @Override
     public Observable<Translation> translate(Translation translation) {
+
+        database.getTranslations()
+                .doOnNext(translations -> System.out.println("sd;lkjf")).subscribe(new Action1<List<Translation>>() {
+            @Override
+            public void call(List<Translation> translations) {
+                System.out.println("sdfoiasjdf");
+            }
+        }, new Action1<Throwable>() {
+            @Override
+            public void call(Throwable throwable) {
+                System.out.println(throwable.toString());
+            }
+        })
+
+        ;
+
+
+
+
+
         return retrofit.create(TranslateApiService.class)
                 .translate(translation.getInput(), translation.getDirection())
                 .subscribeOn(Schedulers.io())
                 .map(translationRM -> translation.setOutput(translationRM.text.get(0)))
-                .doOnNext(result -> translationSubject.onNext(result));
+                .doOnNext(result -> {
+                    result.setDate(System.currentTimeMillis());
+                    database.saveDB(translation);//TODO
+                    translationSubject.onNext(result);
+                });
     }
 
 

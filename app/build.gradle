@@ -45,8 +45,14 @@ dependencies {
     compile 'com.google.dagger:dagger:2.9'
     compile 'com.squareup.retrofit2:converter-gson:2.1.0'
     compile 'com.jakewharton.rxbinding:rxbinding:1.0.1'
+    compile 'com.pushtorefresh.storio:sqlite:1.12.3'
+    compile 'com.pushtorefresh.storio:content-resolver:1.12.3'
+    compile 'com.pushtorefresh.storio:sqlite-annotations:1.12.3'
+
+
     testCompile 'junit:junit:4.12'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.4.0'
     annotationProcessor 'com.google.dagger:dagger-compiler:2.9'
+    annotationProcessor 'com.pushtorefresh.storio:sqlite-annotations-processor:1.12.3'
     provided 'javax.annotation:jsr250-api:1.0'
 }

@@ -11,6 +11,8 @@ public class Translation {
     private Language targetLanguage;
     private String output;
     private long date;
+    private String direction;
+
 
     public static final String DEFAULT_INPUT = "«Hello world!»";
     public static final String DEFAULT_OUTPUT= "«Здравствуй, мир!»";
@@ -32,7 +34,9 @@ public class Translation {
                 || targetLanguage.getCode().isEmpty()){
             throw new IllegalStateException("Translation does not have source or target language");
         }
-        return sourceLanguage.getCode() + "-" + targetLanguage.getCode();
+
+        direction = sourceLanguage.getCode() + "-" + targetLanguage.getCode();
+        return direction;
     }
 
 
@@ -102,4 +106,7 @@ public class Translation {
         output = buffer;
     }
 
+    public void setDate(long date) {
+        this.date = date;
+    }
 }

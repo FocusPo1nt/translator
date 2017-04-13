@@ -142,6 +142,8 @@ public class TranslateFragment extends Fragment implements TranslationScreenCont
         presenter.loadTranslation();
 
 
+
+
         //There is some input logic
         subscriptions.add(RxTextView.textChanges(inputEditText)
                 .debounce(1, TimeUnit.SECONDS)

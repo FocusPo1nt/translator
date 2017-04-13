@@ -1,5 +1,6 @@
 package com.focuspoint.translator.di.components;
 
+import com.focuspoint.translator.di.modules.DBModule;
 import com.focuspoint.translator.screen.activity.SourceLanguageActivity;
 import com.focuspoint.translator.screen.activity.MainActivity;
 import com.focuspoint.translator.di.modules.DataModule;
@@ -16,8 +17,8 @@ import dagger.Component;
 @Singleton
 @Component(modules = {
         AppModule.class,
-        DataModule.class
-//        DbModule.class
+        DataModule.class,
+        DBModule.class
 })
 
 public interface TranslateAppComponent {

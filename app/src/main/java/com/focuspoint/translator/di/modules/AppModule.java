@@ -3,6 +3,7 @@ package com.focuspoint.translator.di.modules;
 import android.app.Application;
 
 import com.focuspoint.translator.App;
+import com.focuspoint.translator.database.DB;
 import com.focuspoint.translator.interactors.LanguageInteractor;
 import com.focuspoint.translator.interactors.TranslationInteractor;
 import com.focuspoint.translator.interactors.interfaces.ILanguageInteractor;
@@ -47,8 +48,8 @@ public class AppModule {
 
     @Provides
     @Singleton
-    ITranslationInteractor provideTranslationInteractor(ILanguageInteractor interactor, Retrofit retrofit, Model model) {
-        return new TranslationInteractor( interactor, retrofit, model);
+    ITranslationInteractor provideTranslationInteractor(ILanguageInteractor interactor, Retrofit retrofit, Model model, DB db) {
+        return new TranslationInteractor( interactor, retrofit, model, db);
     }
 
     //endregion
