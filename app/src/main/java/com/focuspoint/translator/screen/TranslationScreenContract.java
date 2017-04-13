@@ -49,7 +49,7 @@ public class TranslationScreenContract {
         /**presenter fills view with last translation data;*/
         void loadTranslation();
 
-        /**on reverse source and target languages;*/
+        /**on change source and target languages;*/
         void reverseLanguages();
 
     }

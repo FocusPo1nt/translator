@@ -10,6 +10,7 @@ public class Translation {
     private Language sourceLanguage;
     private Language targetLanguage;
     private String output;
+    private long date;
 
     public static final String DEFAULT_INPUT = "«Hello world!»";
     public static final String DEFAULT_OUTPUT= "«Здравствуй, мир!»";
