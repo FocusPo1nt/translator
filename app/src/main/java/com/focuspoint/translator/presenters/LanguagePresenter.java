@@ -3,19 +3,12 @@ package com.focuspoint.translator.presenters;
 import com.focuspoint.translator.interactors.interfaces.ILanguageInteractor;
 import com.focuspoint.translator.interactors.interfaces.ITranslationInteractor;
 import com.focuspoint.translator.models.Language;
-import com.focuspoint.translator.models.Translation;
 import com.focuspoint.translator.screen.LanguageScreenContract;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 
-import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
-import rx.functions.Func1;
-import rx.functions.Func2;
 import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 

@@ -18,6 +18,7 @@ public class DBOpenHelper extends SQLiteOpenHelper{
     @Inject
     public DBOpenHelper(Context context) {
         super(context, DB.NAME, null, DB.VERSION);
+        getWritableDatabase();
     }
 
     @Override
@@ -38,7 +39,6 @@ public class DBOpenHelper extends SQLiteOpenHelper{
         db.execSQL("create table " + DB.Translations.TABLE + " ("
                 + DB.Translations.INPUT + " TEXT, "
                 + DB.Translations.DIRECTION  + " TEXT, "
-                + DB.Translations.INPUT  + " TEXT, "
                 + DB.Translations.OUTPUT     + " TEXT, "
                 + DB.Translations.FAVORITE     + " INTEGER, "
                 + DB.Translations.DATE   + " INTEGER);");

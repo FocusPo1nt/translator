@@ -36,6 +36,7 @@ public class DB {
                 .listOfObjects(Translation.class)
                 .withQuery(Query.builder()
                         .table(Translations.TABLE)
+                        .where(Translations.FAVORITE + " = 0")
                         .build())
                 .prepare()
                 .asRxObservable();
