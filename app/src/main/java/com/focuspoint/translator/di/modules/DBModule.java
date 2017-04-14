@@ -9,6 +9,7 @@ import com.focuspoint.translator.models.Language;
 import com.focuspoint.translator.models.LanguageStorIOSQLiteDeleteResolver;
 import com.focuspoint.translator.models.LanguageStorIOSQLiteGetResolver;
 import com.focuspoint.translator.models.LanguageStorIOSQLitePutResolver;
+import com.focuspoint.translator.models.Translation;
 import com.pushtorefresh.storio.sqlite.SQLiteTypeMapping;
 import com.pushtorefresh.storio.sqlite.StorIOSQLite;
 import com.pushtorefresh.storio.sqlite.impl.DefaultStorIOSQLite;
@@ -45,6 +46,11 @@ public class DBModule {
                         .getResolver(new LanguageStorIOSQLiteGetResolver())
                         .deleteResolver(new LanguageStorIOSQLiteDeleteResolver())
                         .build())
+//                .addTypeMapping(Translation.class, SQLiteTypeMapping.<Translation>builder()
+//                        .putResolver(new Transput)
+//                        .getResolver(new LanguageStorIOSQLiteGetResolver())
+//                        .deleteResolver(new LanguageStorIOSQLiteDeleteResolver())
+//                        .build())
                 .build();
 
 

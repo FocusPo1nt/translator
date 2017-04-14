@@ -1,17 +1,32 @@
 package com.focuspoint.translator.models;
 
 
+import com.focuspoint.translator.database.DB;
+import com.pushtorefresh.storio.sqlite.annotations.StorIOSQLiteColumn;
+import com.pushtorefresh.storio.sqlite.annotations.StorIOSQLiteType;
+
 /** Object which contains basic information about the act of translation;
  */
 
+@StorIOSQLiteType(table = DB.Translations.TABLE)
 public class Translation {
 
-    private String input;
+    @StorIOSQLiteColumn(name = DB.Translations.INPUT, key = true)
+    String input;
+
     private Language sourceLanguage;
+
+
     private Language targetLanguage;
-    private String output;
-    private long date;
-    private String direction;
+
+    @StorIOSQLiteColumn(name = DB.Translations.OUTPUT)
+    String output;
+
+    @StorIOSQLiteColumn(name = DB.Translations.DATE)
+    long date;
+
+    @StorIOSQLiteColumn(name = DB.Translations.DIRECTION)
+    String direction;
 
 
     public static final String DEFAULT_INPUT = "«Hello world!»";
