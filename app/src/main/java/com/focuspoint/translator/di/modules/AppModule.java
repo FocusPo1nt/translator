@@ -9,8 +9,10 @@ import com.focuspoint.translator.interactors.TranslationInteractor;
 import com.focuspoint.translator.interactors.interfaces.ILanguageInteractor;
 import com.focuspoint.translator.interactors.interfaces.ITranslationInteractor;
 import com.focuspoint.translator.models.Model;
+import com.focuspoint.translator.presenters.HistoryPresenter;
 import com.focuspoint.translator.presenters.LanguagePresenter;
 import com.focuspoint.translator.presenters.TranslationPresenter;
+import com.focuspoint.translator.screen.HistoryScreenContract;
 import com.focuspoint.translator.screen.LanguageScreenContract;
 import com.focuspoint.translator.screen.TranslationScreenContract;
 
@@ -67,6 +69,15 @@ public class AppModule {
     TranslationScreenContract.Presenter provideTranslationPresenter (ITranslationInteractor interactor, ILanguageInteractor languageInteractor) {
         return new TranslationPresenter(interactor, languageInteractor);
     }
+
+
+
+    @Provides
+    @Singleton
+    HistoryScreenContract.Presenter provideHistoryPresenter (ITranslationInteractor interactor) {
+        return new HistoryPresenter(interactor);
+    }
+
 
 
     //endregion

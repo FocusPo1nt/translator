@@ -16,6 +16,7 @@ import java.util.Map;
 import java.util.function.Consumer;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
 import retrofit2.Retrofit;
 import rx.Observable;
@@ -31,6 +32,7 @@ import rx.subjects.PublishSubject;
  * handles current Translation state;
  */
 
+
 public class TranslationInteractor implements ITranslationInteractor {
 
     private ILanguageInteractor languageInteractor;
@@ -38,9 +40,9 @@ public class TranslationInteractor implements ITranslationInteractor {
     private Model model;
     private DB database;
 
-
     @Inject
     public TranslationInteractor(ILanguageInteractor languageInteractor, Retrofit retrofit, Model model, DB database) {
+        System.out.println("CONSTRUCTOR " + hashCode());
         this.languageInteractor = languageInteractor;
         this.retrofit = retrofit;
         this.model = model;
@@ -51,6 +53,7 @@ public class TranslationInteractor implements ITranslationInteractor {
     public Observable<Translation> getLastTranslation() {
 
         if (model.getCurrentTranslation() != null) {
+
             return Observable.just(model.getCurrentTranslation());
         } else {
             return languageInteractor.loadLanguages()
@@ -65,27 +68,24 @@ public class TranslationInteractor implements ITranslationInteractor {
 
     @Override
     public Observable<Translation> translate(Translation translation) {
+        System.out.println("to translate " + translation);
 
-        Observable.combineLatest(
-                database.getTranslations(),
-                languageInteractor.loadLanguages(),
-                (translations, map) -> {
-                    translations.forEach(translation1 -> {
-                        translation1.setSourceLanguage(map.get(translation1.getSource()));
-                        translation1.setTargetLanguage(map.get(translation1.getTarget()));
-                    });
-                    return Observable.just(translations);
-                }).subscribe();
+        return Observable.concat(
+                translateFromDB(translation),
+                translateFromApi(translation))
 
-
-        return retrofit.create(TranslateApiService.class)
-                .translate(translation.getInput(), translation.getDirection())
-                .subscribeOn(Schedulers.io())
-                .map(translationRM -> translation.setOutput(translationRM.text.get(0)))
+                .first(raw -> raw != null)
+                .withLatestFrom(languageInteractor.loadLanguages(), (result, map) -> {
+                    result.setSourceLanguage(map.get(result.getSource()));
+                    result.setTargetLanguage(map.get(result.getTarget()));
+                    return result;
+                })
                 .doOnNext(result -> {
-                    result.setDate(System.currentTimeMillis());
+                    translation.setDate(System.currentTimeMillis());
+                    model.setCurrentTranslation(result);
+                    database.saveDB(result);
                     translationSubject.onNext(result);
-                    database.saveDB(translation);
+                    System.out.println("----------------");
                 });
     }
 
@@ -124,7 +124,11 @@ public class TranslationInteractor implements ITranslationInteractor {
 
     @Override
     public Observable<Translation> getOnTranslateSubject() {
-        return translationSubject;
+        System.out.println("FROM " + this.hashCode());
+        System.out.println("GET TRANSLATION SUBJECT " + targetSubject.hashCode());
+        Observable<Translation> observable = translationSubject;//.doOnNext(translation -> System.out.println("DOONEXT TRANSLATION " + translationSubject.hashCode()));
+        System.out.println("GET TRANSLATION OBSERVABLE " + observable.hashCode());
+        return observable;
     }
 
     @Override
@@ -138,13 +142,40 @@ public class TranslationInteractor implements ITranslationInteractor {
     }
 
     @Override
-    public Observable<Translation> revereLanguages() {
+    public Observable<Translation> reverseLanguages() {
         return getLastTranslation()
                 .doOnNext(Translation::reverseLanguages)
+                .doOnNext(translation -> model.setCurrentTranslation(translation))
                 .doOnNext(translation -> targetSubject.onNext(translation))
                 .doOnNext(translation -> sourceSubject.onNext(translation))
                 .flatMap(this::translate);
     }
 
 
+
+    private Observable<Translation> translateFromDB(Translation translation) {
+        return database.translate(translation)
+                .first();
+    }
+
+    private Observable<Translation> translateFromApi(Translation translation){
+        return retrofit.create(TranslateApiService.class)
+                .translate(translation.getInput(), translation.getDirection())
+                .subscribeOn(Schedulers.io())
+                .map(translationRM -> translation.setOutput(translationRM.text.get(0)));
+    }
+
+
+    @Override
+    public Observable<List<Translation>> getHistory() {
+        return database.getTranslations()
+                .withLatestFrom(languageInteractor.loadLanguages(), (list, map) -> {
+                    list.forEach(translation -> {
+                        translation.setSourceLanguage(map.get(translation.getSource()));
+                        translation.setTargetLanguage(map.get(translation.getTarget()));
+                    });
+                    return list;
+                })
+                .first();
+    }
 }

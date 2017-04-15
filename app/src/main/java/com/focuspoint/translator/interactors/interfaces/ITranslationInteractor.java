@@ -3,6 +3,8 @@ package com.focuspoint.translator.interactors.interfaces;
 import com.focuspoint.translator.models.Language;
 import com.focuspoint.translator.models.Translation;
 
+import java.util.List;
+
 import rx.Observable;
 import rx.observables.ConnectableObservable;
 import rx.subjects.PublishSubject;
@@ -14,6 +16,8 @@ import rx.subjects.PublishSubject;
 public interface ITranslationInteractor {
 
     Observable <Translation> getLastTranslation();
+
+    Observable <List<Translation>> getHistory();
 
     Observable <Translation> translate(Translation translation);
 
@@ -29,5 +33,5 @@ public interface ITranslationInteractor {
 
     PublishSubject <Translation> getOnTargetSubject();
 
-    Observable <Translation> revereLanguages();
+    Observable <Translation> reverseLanguages();
 }

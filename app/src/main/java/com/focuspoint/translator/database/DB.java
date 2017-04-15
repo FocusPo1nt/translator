@@ -40,10 +40,27 @@ public class DB {
                 .listOfObjects(Translation.class)
                 .withQuery(Query.builder()
                         .table(Translations.TABLE)
+                        .orderBy(Translations.DATE + " DESC")
                         .build())
                 .prepare()
                 .asRxObservable();
     }
+
+    public Observable <Translation> translate(Translation translation){
+        System.out.println("db request " + translation);
+        return database.get()
+                .object(Translation.class)
+                .withQuery(Query.builder()
+                        .table(Translations.TABLE)
+                        .where(Translations.INPUT + " = '" + translation.getInput()
+                                + "' AND " + Translations.DIRECTION + " = '" + translation.getDirection() + "'")
+                        .build())
+                .prepare()
+                .asRxObservable()
+                .doOnNext(translation1 -> System.out.println("db result " + translation1));
+    }
+
+
 
     public Observable<Translation> getLastTranslation(){
         return database.get()

@@ -18,10 +18,12 @@ public class Model {
 
 
     public Translation getCurrentTranslation() {
+        System.out.println("get current translation = " + currentTranslation);
         return currentTranslation;
     }
 
     public void setCurrentTranslation(Translation currentTranslation) {
+        System.out.println("set current translation = " + currentTranslation);
         this.currentTranslation = currentTranslation;
     }
 

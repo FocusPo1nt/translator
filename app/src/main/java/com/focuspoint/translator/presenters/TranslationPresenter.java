@@ -1,7 +1,5 @@
 package com.focuspoint.translator.presenters;
 
-import com.focuspoint.translator.interactors.LanguageInteractor;
-import com.focuspoint.translator.interactors.TranslationInteractor;
 import com.focuspoint.translator.interactors.interfaces.ILanguageInteractor;
 import com.focuspoint.translator.interactors.interfaces.ITranslationInteractor;
 import com.focuspoint.translator.models.Language;
@@ -11,7 +9,6 @@ import com.focuspoint.translator.screen.TranslationScreenContract;
 import java.lang.ref.WeakReference;
 
 import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 
@@ -89,7 +86,7 @@ public class TranslationPresenter implements TranslationScreenContract.Presenter
 
     @Override
     public void reverseLanguages() {
-        translationInteractor.revereLanguages()
+        translationInteractor.reverseLanguages()
             .subscribe(
                 translation -> {},
                 throwable -> System.out.println(throwable.toString()));

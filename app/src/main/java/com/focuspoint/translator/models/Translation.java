@@ -20,7 +20,7 @@ public class Translation {
     @StorIOSQLiteColumn(name = DB.Translations.DATE)
     long date;
 
-    @StorIOSQLiteColumn(name = DB.Translations.DIRECTION)
+    @StorIOSQLiteColumn(name = DB.Translations.DIRECTION, key = true)
     String direction;
 
     @StorIOSQLiteColumn(name = DB.Translations.SOURCE)
@@ -56,14 +56,14 @@ public class Translation {
     /**Return String pair of languages
      * from source to target;*/
     public String getDirection(){
-        if (sourceLanguage == null
-                || targetLanguage == null
-                || sourceLanguage.getCode().isEmpty()
-                || targetLanguage.getCode().isEmpty()){
-            throw new IllegalStateException("Translation does not have source or target language");
+        if (sourceLanguage!=null && targetLanguage!=null){
+            direction = sourceLanguage.getCode() + "-" + targetLanguage.getCode();
+        }else if (source != null && target != null){
+            direction =source + "-" + target;
+        }else {
+            direction = "unknown - unknown";
         }
 
-        direction = sourceLanguage.getCode() + "-" + targetLanguage.getCode();
         return direction;
     }
 
@@ -120,20 +120,28 @@ public class Translation {
     public String toString() {
         StringBuilder sb = new StringBuilder();
         if (input !=null) sb.append(input).append(" ");
-        if (sourceLanguage!= null && targetLanguage != null) sb.append(getDirection()).append(" ");
-        if (output!= null) sb.append(output);
+
+        sb.append(getDirection()).append(" ");
+        if (output!= null) sb.append(output).append(" ");
+        sb.append(this.hashCode());
         return sb.toString();
     }
 
 
     /**input <-> output   source <-> target*/
     public void reverseLanguages(){
+        System.out.println("before native reverse " + this.toString());
         Language bufferLanguage = sourceLanguage;
         sourceLanguage = targetLanguage;
         targetLanguage = bufferLanguage;
         String buffer = input;
         input = output;
         output = buffer;
+        String bufferCode = source;
+        source = target;
+        target = bufferCode;
+        getDirection();
+        System.out.println("after native reverse " + this.toString());
     }
 
     public void setDate(long date) {

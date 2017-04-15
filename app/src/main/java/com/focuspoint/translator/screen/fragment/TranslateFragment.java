@@ -170,6 +170,7 @@ public class TranslateFragment extends Fragment implements TranslationScreenCont
     public void onDestroy() {
         super.onDestroy();
         subscriptions.unsubscribe();
+        presenter.detach();
     }
 
     private boolean validateLastInput(){

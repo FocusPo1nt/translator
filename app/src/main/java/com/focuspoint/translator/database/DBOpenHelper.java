@@ -39,7 +39,7 @@ public class DBOpenHelper extends SQLiteOpenHelper{
         db.execSQL("CREATE TABLE " + DB.Translations.TABLE + " ("
                 + DB.Translations.INPUT + " TEXT KEY, "
                 + DB.Translations.SOURCE + " TEXT, "
-                + DB.Translations.DIRECTION  + " TEXT, "
+                + DB.Translations.DIRECTION  + " TEXT KEY, "
                 + DB.Translations.TARGET + " TEXT, "
                 + DB.Translations.OUTPUT     + " TEXT, "
                 + DB.Translations.FAVORITE     + " INTEGER, "
