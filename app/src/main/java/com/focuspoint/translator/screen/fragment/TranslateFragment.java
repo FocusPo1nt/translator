@@ -71,6 +71,7 @@ public class TranslateFragment extends Fragment implements TranslationScreenCont
 
     @Override
     public void showError(Throwable e) {
+        System.out.println(e);
         if (e instanceof UnknownHostException){
             Toast.makeText(getContext(), "отсутствует связь с сервером", Toast.LENGTH_LONG).show();
         }

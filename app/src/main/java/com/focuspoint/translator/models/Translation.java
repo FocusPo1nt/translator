@@ -14,11 +14,6 @@ public class Translation {
     @StorIOSQLiteColumn(name = DB.Translations.INPUT, key = true)
     String input;
 
-    private Language sourceLanguage;
-
-
-    private Language targetLanguage;
-
     @StorIOSQLiteColumn(name = DB.Translations.OUTPUT)
     String output;
 
@@ -28,6 +23,20 @@ public class Translation {
     @StorIOSQLiteColumn(name = DB.Translations.DIRECTION)
     String direction;
 
+    @StorIOSQLiteColumn(name = DB.Translations.SOURCE)
+    String source;
+
+    @StorIOSQLiteColumn(name = DB.Translations.TARGET)
+    String target;
+
+    @StorIOSQLiteColumn(name = DB.Translations.FAVORITE)
+    int favorite;
+
+
+    private Language sourceLanguage;
+
+    private Language targetLanguage;
+
 
     public static final String DEFAULT_INPUT = "«Hello world!»";
     public static final String DEFAULT_OUTPUT= "«Здравствуй, мир!»";
@@ -36,9 +45,13 @@ public class Translation {
     public Translation(Language sourceLanguage, Language targetLanguage, String input, String output){
         this.sourceLanguage = sourceLanguage;
         this.targetLanguage = targetLanguage;
+        this.source = sourceLanguage.getCode();
+        this.target = targetLanguage.getCode();
         this.input = input;
         this.output = output;
     }
+
+    public Translation(){}
 
     /**Return String pair of languages
      * from source to target;*/
@@ -70,6 +83,7 @@ public class Translation {
     }
 
     public void setSourceLanguage(Language sourceLanguage) {
+        source = sourceLanguage.code; // set code from Language object
         this.sourceLanguage = sourceLanguage;
     }
 
@@ -78,6 +92,7 @@ public class Translation {
     }
 
     public void setTargetLanguage(Language targetLanguage) {
+        target = targetLanguage.getCode(); // set code from Language object
         this.targetLanguage = targetLanguage;
     }
 
@@ -123,5 +138,14 @@ public class Translation {
 
     public void setDate(long date) {
         this.date = date;
+    }
+
+
+    public String getSource() {
+        return source;
+    }
+
+    public String getTarget() {
+        return target;
     }
 }

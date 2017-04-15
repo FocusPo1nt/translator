@@ -20,12 +20,15 @@ public class LanguagesRM {
 
     public Map<String, Language> obtainLanguages(){
         Map <String, Language> map = new LinkedTreeMap<>() ;
-        for (String code: descriptions.keySet()){
+
+        descriptions.keySet().forEach(code -> {
             Language language = new Language();
             language.setCode(code);
             language.setDescription(descriptions.get(code));
             map.put(code, language);
-        }
+        });
+
+
         makeDirs(map);
         return map;
     }
@@ -35,10 +38,10 @@ public class LanguagesRM {
     private void makeDirs (Map<String, Language> map){
         if (dirs != null){
             for (String dir : dirs){
-                String pair[] = dir.split("-");
-                if (pair.length == 2){
-                    map.get(pair[0]).addDir(map.get(pair[1]));
-                }
+                String source = Language.sourceCodeFromDirection(dir);
+                String target = Language.targetCodeFromDirection(dir);
+
+                map.get(source).addDir(map.get(target));
             }
         }
     }

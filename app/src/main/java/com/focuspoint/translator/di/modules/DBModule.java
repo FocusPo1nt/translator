@@ -10,9 +10,13 @@ import com.focuspoint.translator.models.LanguageStorIOSQLiteDeleteResolver;
 import com.focuspoint.translator.models.LanguageStorIOSQLiteGetResolver;
 import com.focuspoint.translator.models.LanguageStorIOSQLitePutResolver;
 import com.focuspoint.translator.models.Translation;
+import com.focuspoint.translator.models.TranslationStorIOSQLiteDeleteResolver;
+import com.focuspoint.translator.models.TranslationStorIOSQLiteGetResolver;
+import com.focuspoint.translator.models.TranslationStorIOSQLitePutResolver;
 import com.pushtorefresh.storio.sqlite.SQLiteTypeMapping;
 import com.pushtorefresh.storio.sqlite.StorIOSQLite;
 import com.pushtorefresh.storio.sqlite.impl.DefaultStorIOSQLite;
+
 
 import javax.inject.Singleton;
 
@@ -46,11 +50,11 @@ public class DBModule {
                         .getResolver(new LanguageStorIOSQLiteGetResolver())
                         .deleteResolver(new LanguageStorIOSQLiteDeleteResolver())
                         .build())
-//                .addTypeMapping(Translation.class, SQLiteTypeMapping.<Translation>builder()
-//                        .putResolver(new Transput)
-//                        .getResolver(new LanguageStorIOSQLiteGetResolver())
-//                        .deleteResolver(new LanguageStorIOSQLiteDeleteResolver())
-//                        .build())
+                .addTypeMapping(Translation.class, SQLiteTypeMapping.<Translation>builder()
+                        .putResolver(new TranslationStorIOSQLitePutResolver())
+                        .getResolver(new TranslationStorIOSQLiteGetResolver())
+                        .deleteResolver(new TranslationStorIOSQLiteDeleteResolver())
+                        .build())
                 .build();
 
 

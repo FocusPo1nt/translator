@@ -42,8 +42,8 @@ public class AppModule {
     //region Interactors
     @Provides
     @Singleton
-    ILanguageInteractor provideLanguageInteractor(Retrofit retrofit) {
-        return new LanguageInteractor(retrofit);
+    ILanguageInteractor provideLanguageInteractor(Retrofit retrofit, DB database) {
+        return new LanguageInteractor(retrofit, database);
     }
 
     @Provides

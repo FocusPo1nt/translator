@@ -50,6 +50,18 @@ public class Language{
         return code;
     }
 
+    public static String sourceCodeFromDirection(String direction){
+        if (direction == null) return "";
+        String pair[] = direction.split("-");
+        return pair.length > 0 ? pair[0] : "";
+    }
+
+    public static String targetCodeFromDirection(String direction){
+        if (direction == null) return "";
+        String pair[] = direction.split("-");
+        return pair.length > 1 ? pair[1] : "";
+    }
+
 
     //TODO private collection;
     public List<Language> getDirs() {

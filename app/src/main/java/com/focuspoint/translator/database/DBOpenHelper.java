@@ -8,7 +8,7 @@ import javax.inject.Inject;
 
 /**
  * OpenHelper class;
- * Init database;
+ * Database contract;
  * Database version control;
  */
 
@@ -36,15 +36,17 @@ public class DBOpenHelper extends SQLiteOpenHelper{
                 + DB.Languages.CODE + " TEXT PRIMARY KEY, "
                 + DB.Languages.DESCRIPTION    + " TEXT);");
 
-        db.execSQL("create table " + DB.Translations.TABLE + " ("
-                + DB.Translations.INPUT + " TEXT, "
+        db.execSQL("CREATE TABLE " + DB.Translations.TABLE + " ("
+                + DB.Translations.INPUT + " TEXT KEY, "
+                + DB.Translations.SOURCE + " TEXT, "
                 + DB.Translations.DIRECTION  + " TEXT, "
+                + DB.Translations.TARGET + " TEXT, "
                 + DB.Translations.OUTPUT     + " TEXT, "
                 + DB.Translations.FAVORITE     + " INTEGER, "
                 + DB.Translations.DATE   + " INTEGER);");
 
-
-        db.execSQL("create table " + DB.LangDirs.TABLE + " ("
+        //no need;
+        db.execSQL("CREATE TABLE " + DB.LangDirs.TABLE + " ("
                 + DB.LangDirs.SOURCE + " TEXT, "
                 + DB.LangDirs.TARGET  + " TEXT);");
     }
