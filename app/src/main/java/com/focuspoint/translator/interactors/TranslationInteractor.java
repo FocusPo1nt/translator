@@ -36,15 +36,15 @@ import rx.subjects.PublishSubject;
 public class TranslationInteractor implements ITranslationInteractor {
 
     private ILanguageInteractor languageInteractor;
-    private Retrofit retrofit;
+    private TranslateApiService apiService;
     private Model model;
     private DB database;
 
     @Inject
-    public TranslationInteractor(ILanguageInteractor languageInteractor, Retrofit retrofit, Model model, DB database) {
+    public TranslationInteractor(ILanguageInteractor languageInteractor, TranslateApiService apiService, Model model, DB database) {
         System.out.println("CONSTRUCTOR " + hashCode());
         this.languageInteractor = languageInteractor;
-        this.retrofit = retrofit;
+        this.apiService = apiService;
         this.model = model;
         this.database = database;
     }
@@ -55,10 +55,12 @@ public class TranslationInteractor implements ITranslationInteractor {
         return Observable.concat(
                 Observable.just(model.getCurrentTranslation()),
                 getLastFromDB(),
-                Observable.just(Translation.obtainDefault())
-                        .doOnNext(t -> model.setCurrentTranslation(t))
-        ).first(translation -> translation != null)
+                Observable.just(Translation.obtainDefault()))
+                .first(translation -> translation != null)
+                .doOnNext(result -> model.setCurrentTranslation(result))
+
                 .doOnNext(translation -> System.out.println("FINAL LAST TRANSLATION = " +translation));
+
 
     }
 
@@ -167,7 +169,7 @@ public class TranslationInteractor implements ITranslationInteractor {
     }
 
     private Observable<Translation> translateFromApi(Translation translation){
-        return retrofit.create(TranslateApiService.class)
+        return apiService
                 .translate(translation.getInput(), translation.getDirection())
                 .subscribeOn(Schedulers.io())
                 .map(translationRM -> translation
@@ -181,12 +183,13 @@ public class TranslationInteractor implements ITranslationInteractor {
         return Observable.combineLatest(
                 database.getLastTranslation().first(),
                 languageInteractor.loadLanguages(), (result, map) ->{
-                    result.setSourceLanguage(map.get(result.getSource()));
-                    result.setTargetLanguage(map.get(result.getTarget()));
+                    if (result != null) {
+                        result.setSourceLanguage(map.get(result.getSource()));
+                        result.setTargetLanguage(map.get(result.getTarget()));
+                    }
                     return result;
-                })     .doOnNext(translation -> System.out.println("LAST DB IN INTERACTOR " + translation
-        ))
-                .doOnNext(translation -> model.setCurrentTranslation(translation));
+                })
+                .first();
 
     }
 

@@ -69,6 +69,7 @@ public class TranslationPresenter implements TranslationScreenContract.Presenter
         subscriptions.add(translationInteractor.getLastTranslation()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
+                .doOnNext(translation -> System.out.println("load in presenter " + translation))
                 .subscribe(
                         this::showTranslation,
                         throwable -> view.get().showError(throwable))

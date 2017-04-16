@@ -53,8 +53,8 @@ public class AppModule {
 
     @Provides
     @Singleton
-    ITranslationInteractor provideTranslationInteractor(ILanguageInteractor interactor, Retrofit retrofit, Model model, DB db) {
-        return new TranslationInteractor( interactor, retrofit, model, db);
+    ITranslationInteractor provideTranslationInteractor(ILanguageInteractor interactor, TranslateApiService apiService, Model model, DB db) {
+        return new TranslationInteractor( interactor, apiService, model, db);
     }
 
     //endregion
