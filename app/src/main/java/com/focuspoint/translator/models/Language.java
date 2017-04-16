@@ -1,11 +1,14 @@
 package com.focuspoint.translator.models;
 
 import com.focuspoint.translator.database.DB;
+import com.google.gson.internal.LinkedTreeMap;
 import com.pushtorefresh.storio.sqlite.annotations.StorIOSQLiteColumn;
 import com.pushtorefresh.storio.sqlite.annotations.StorIOSQLiteType;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+
 /**
  *
  */
@@ -18,6 +21,9 @@ public class Language{
 
     @StorIOSQLiteColumn(name = DB.Languages.DESCRIPTION)
     String description;
+
+    public static final String DEFAULT_SOURCE_CODE = "en";
+    public static final String DEFAULT_TARGET_CODE = "ru";
 
 
 
@@ -66,5 +72,29 @@ public class Language{
     //TODO private collection;
     public List<Language> getDirs() {
         return dirs;
+    }
+
+    public static Language obtainDefaultSource(){
+        Language source = new Language();
+        source.code = DEFAULT_SOURCE_CODE;
+        source.description = "Английский";
+        return source;
+    }
+
+    public static Language obtainDefaultTarget(){
+        Language source = new Language();
+        source.code = DEFAULT_TARGET_CODE;
+        source.description = "Русский";
+        return source;
+    }
+
+    public static Map<String, Language> obtainDefaultMap(){
+        Map <String, Language> map = new LinkedTreeMap<>() ;
+        Language source = obtainDefaultSource();
+        Language target = obtainDefaultTarget();
+
+        map.put(source.getCode(), source);
+        map.put(target.getCode(), target);
+        return map;
     }
 }

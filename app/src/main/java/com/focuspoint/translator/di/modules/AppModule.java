@@ -9,9 +9,12 @@ import com.focuspoint.translator.interactors.TranslationInteractor;
 import com.focuspoint.translator.interactors.interfaces.ILanguageInteractor;
 import com.focuspoint.translator.interactors.interfaces.ITranslationInteractor;
 import com.focuspoint.translator.models.Model;
+import com.focuspoint.translator.network.TranslateApiService;
+import com.focuspoint.translator.presenters.FavoritePresenter;
 import com.focuspoint.translator.presenters.HistoryPresenter;
 import com.focuspoint.translator.presenters.LanguagePresenter;
 import com.focuspoint.translator.presenters.TranslationPresenter;
+import com.focuspoint.translator.screen.FavoriteScreenContract;
 import com.focuspoint.translator.screen.HistoryScreenContract;
 import com.focuspoint.translator.screen.LanguageScreenContract;
 import com.focuspoint.translator.screen.TranslationScreenContract;
@@ -44,8 +47,8 @@ public class AppModule {
     //region Interactors
     @Provides
     @Singleton
-    ILanguageInteractor provideLanguageInteractor(Retrofit retrofit, DB database) {
-        return new LanguageInteractor(retrofit, database);
+    ILanguageInteractor provideLanguageInteractor(TranslateApiService apiService, DB database) {
+        return new LanguageInteractor(apiService, database);
     }
 
     @Provides
@@ -78,7 +81,11 @@ public class AppModule {
         return new HistoryPresenter(interactor);
     }
 
-
+    @Provides
+    @Singleton
+    FavoriteScreenContract.Presenter provideFavoritePresenter (ITranslationInteractor interactor) {
+        return new FavoritePresenter(interactor);
+    }
 
     //endregion
 }

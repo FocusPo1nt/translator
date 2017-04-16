@@ -52,41 +52,44 @@ public class TranslationInteractor implements ITranslationInteractor {
     @Override
     public Observable<Translation> getLastTranslation() {
 
-        if (model.getCurrentTranslation() != null) {
+        return Observable.concat(
+                Observable.just(model.getCurrentTranslation()),
+                getLastFromDB(),
+                Observable.just(Translation.obtainDefault())
+                        .doOnNext(t -> model.setCurrentTranslation(t))
+        ).first(translation -> translation != null)
+                .doOnNext(translation -> System.out.println("FINAL LAST TRANSLATION = " +translation));
 
-            return Observable.just(model.getCurrentTranslation());
-        } else {
-            return languageInteractor.loadLanguages()
-                    .flatMap((map) -> Observable.just(new Translation(
-                            map.get("en"),
-                            map.get("ru"),
-                            Translation.DEFAULT_INPUT,
-                            Translation.DEFAULT_OUTPUT)))
-                    .doOnNext(translation -> model.setCurrentTranslation(translation));
-        }
     }
 
+
+   /**Translate from DB if exist
+    * Translate from Network
+    * Fill raw Translation with Language objects
+    * */
     @Override
     public Observable<Translation> translate(Translation translation) {
         System.out.println("to translate " + translation);
 
-        return Observable.concat(
+        Observable<Translation> rawTranslationObserver =  Observable.concat(
                 translateFromDB(translation),
-                translateFromApi(translation))
+                translateFromApi(translation)) //if network error -> doesn't get from DB
+                .first(raw -> raw != null);
 
-                .first(raw -> raw != null)
-                .withLatestFrom(languageInteractor.loadLanguages(), (result, map) -> {
+
+        return Observable.combineLatest(
+                rawTranslationObserver, languageInteractor.loadLanguages(), (result, map) ->{
                     result.setSourceLanguage(map.get(result.getSource()));
                     result.setTargetLanguage(map.get(result.getTarget()));
                     return result;
                 })
                 .doOnNext(result -> {
-                    translation.setDate(System.currentTimeMillis());
+                    result.setDate(System.currentTimeMillis());
                     model.setCurrentTranslation(result);
                     database.saveDB(result);
                     translationSubject.onNext(result);
                     System.out.println("----------------");
-                });
+        });
     }
 
 
@@ -121,6 +124,8 @@ public class TranslationInteractor implements ITranslationInteractor {
 
     private PublishSubject<Translation> targetSubject = PublishSubject.create();
 
+    private PublishSubject<Translation> favoriteSubject = PublishSubject.create();
+
 
     @Override
     public Observable<Translation> getOnTranslateSubject() {
@@ -142,6 +147,11 @@ public class TranslationInteractor implements ITranslationInteractor {
     }
 
     @Override
+    public PublishSubject<Translation> getOnFavoriteSubject() {
+        return favoriteSubject;
+    }
+
+    @Override
     public Observable<Translation> reverseLanguages() {
         return getLastTranslation()
                 .doOnNext(Translation::reverseLanguages)
@@ -150,8 +160,6 @@ public class TranslationInteractor implements ITranslationInteractor {
                 .doOnNext(translation -> sourceSubject.onNext(translation))
                 .flatMap(this::translate);
     }
-
-
 
     private Observable<Translation> translateFromDB(Translation translation) {
         return database.translate(translation)
@@ -162,7 +170,24 @@ public class TranslationInteractor implements ITranslationInteractor {
         return retrofit.create(TranslateApiService.class)
                 .translate(translation.getInput(), translation.getDirection())
                 .subscribeOn(Schedulers.io())
-                .map(translationRM -> translation.setOutput(translationRM.text.get(0)));
+                .map(translationRM -> translation
+                        .setOutput(translationRM.text.get(0))
+                        .setFavorite(false));
+    }
+
+
+    private Observable<Translation> getLastFromDB(){
+
+        return Observable.combineLatest(
+                database.getLastTranslation().first(),
+                languageInteractor.loadLanguages(), (result, map) ->{
+                    result.setSourceLanguage(map.get(result.getSource()));
+                    result.setTargetLanguage(map.get(result.getTarget()));
+                    return result;
+                })     .doOnNext(translation -> System.out.println("LAST DB IN INTERACTOR " + translation
+        ))
+                .doOnNext(translation -> model.setCurrentTranslation(translation));
+
     }
 
 
@@ -170,12 +195,47 @@ public class TranslationInteractor implements ITranslationInteractor {
     public Observable<List<Translation>> getHistory() {
         return database.getTranslations()
                 .withLatestFrom(languageInteractor.loadLanguages(), (list, map) -> {
-                    list.forEach(translation -> {
+
+                    for (Translation translation: list){
                         translation.setSourceLanguage(map.get(translation.getSource()));
                         translation.setTargetLanguage(map.get(translation.getTarget()));
-                    });
+                    }
                     return list;
-                })
-                .first();
+                });
+//                .first();
+    }
+
+    @Override
+    public Observable<List<Translation>> getFavorites() {
+        return database.getFavorites()
+                .withLatestFrom(languageInteractor.loadLanguages(), (list, map) -> {
+                    for (Translation translation: list){
+                        translation.setSourceLanguage(map.get(translation.getSource()));
+                        translation.setTargetLanguage(map.get(translation.getTarget()));
+                    }
+                    return list;
+                });
+//                .first();
+    }
+
+    @Override
+    public void setFavorite(Translation translation, boolean favorite) {
+
+        translation.setFavorite(favorite);
+        database.saveDB(translation);
+
+        if (model.getCurrentTranslation()!=null){
+            if (model.getCurrentTranslation().equals(translation))
+            favoriteSubject.onNext(translation);
+        }
+    }
+
+
+    @Override
+    public Observable<Boolean> changeCurrentFavorite() {
+        return getLastTranslation()
+                .doOnNext(translation -> translation.setFavorite(!translation.isFavorite()))
+                .doOnNext(translation -> database.saveDB(translation))
+                .map(Translation::isFavorite);
     }
 }

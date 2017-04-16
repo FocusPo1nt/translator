@@ -19,6 +19,8 @@ public interface ITranslationInteractor {
 
     Observable <List<Translation>> getHistory();
 
+    Observable <List<Translation>> getFavorites();
+
     Observable <Translation> translate(Translation translation);
 
     Observable <Translation> onInputChanged(String input);
@@ -33,5 +35,11 @@ public interface ITranslationInteractor {
 
     PublishSubject <Translation> getOnTargetSubject();
 
+    PublishSubject <Translation> getOnFavoriteSubject();
+
     Observable <Translation> reverseLanguages();
+
+    void setFavorite(Translation translation, boolean favorite);
+
+    Observable<Boolean> changeCurrentFavorite();
 }

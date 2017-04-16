@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -44,6 +45,12 @@ public class TranslateFragment extends Fragment implements TranslationScreenCont
     @BindView(R.id.input_edit_text) EditText inputEditText;
     @BindView(R.id.output_text_view) TextView outputTextView;
     @BindView(R.id.reverse_image_view) ImageView reverseImageView;
+    @BindView(R.id.star_image) ImageView starImageView;
+    @BindView(R.id.favorite_frame) FrameLayout favoriteFrame;
+
+
+
+
 
     @Inject TranslationScreenContract.Presenter presenter;
     private CompositeSubscription subscriptions;
@@ -123,8 +130,8 @@ public class TranslateFragment extends Fragment implements TranslationScreenCont
     }
 
     @Override
-    public void showAddToFavorites() {
-
+    public void showAddToFavorites(boolean favorite) {
+        starImageView.setImageResource(favorite ? R.drawable.star_a : R.drawable.star_p);
     }
 
     @Override
@@ -161,6 +168,8 @@ public class TranslateFragment extends Fragment implements TranslationScreenCont
             Intent intent = new Intent(getContext(), TargetLanguageActivity.class);
             getActivity().startActivity(intent);
         });
+
+        favoriteFrame.setOnClickListener(v -> presenter.changeFavorites());
 
         reverseImageView.setOnClickListener(v -> presenter.reverseLanguages());
 

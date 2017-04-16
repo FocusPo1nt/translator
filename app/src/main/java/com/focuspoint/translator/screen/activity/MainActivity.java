@@ -66,6 +66,7 @@ public class MainActivity extends AppCompatActivity {
 
         pagerAdapter = new TranslatePagerAdapter(getSupportFragmentManager(), new ArrayList<>());
         viewPager.setAdapter(pagerAdapter);
+        viewPager.setOffscreenPageLimit(2);
 
         tabLayout.setupWithViewPager(viewPager, true);
         tabLayout.getTabAt(0).setIcon(R.drawable.translate);

@@ -1,25 +1,26 @@
 package com.focuspoint.translator.presenters;
 
-
 import com.focuspoint.translator.interactors.interfaces.ITranslationInteractor;
 import com.focuspoint.translator.models.Translation;
-import com.focuspoint.translator.screen.HistoryScreenContract;
+import com.focuspoint.translator.screen.FavoriteScreenContract;
+
 import java.lang.ref.WeakReference;
+
 import rx.android.schedulers.AndroidSchedulers;
 import rx.subscriptions.CompositeSubscription;
 
 /**
- * Created by root on 15.04.17.
+ *
  */
 
-public class HistoryPresenter implements HistoryScreenContract.Presenter{
+public class FavoritePresenter implements FavoriteScreenContract.Presenter{
 
     private CompositeSubscription subscriptions;
 
-    private WeakReference<HistoryScreenContract.View> view;
+    private WeakReference<FavoriteScreenContract.View> view;
     private ITranslationInteractor translationInteractor;
 
-    public HistoryPresenter(ITranslationInteractor translationInteractor){
+    public FavoritePresenter(ITranslationInteractor translationInteractor){
         this.translationInteractor = translationInteractor;
     }
 
@@ -31,26 +32,22 @@ public class HistoryPresenter implements HistoryScreenContract.Presenter{
     }
 
     @Override
-    public void attach(HistoryScreenContract.View view) {
+    public void attach(FavoriteScreenContract.View view) {
         if (subscriptions!= null)  subscriptions.unsubscribe();
         subscriptions = new CompositeSubscription();
         this.view = new WeakReference<>(view);
-//        subscriptions.add(translationInteractor.getOnTranslateSubject()
+        //        subscriptions.add(translationInteractor.getOnTranslateSubject()
 //                .subscribe(
 //                        t -> {},//load(),
 //                        this::handleError));
 //
 
         subscriptions.add(translationInteractor
-                .getHistory()
+                .getFavorites()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
-                        translations -> this.view.get().showHistory(translations),
-                        this::handleError)
-        );
-
-
-
+                        translations -> this.view.get().showFavorites(translations),
+                        this::handleError));
     }
 
     private void handleError(Throwable error) {
@@ -64,7 +61,6 @@ public class HistoryPresenter implements HistoryScreenContract.Presenter{
 
     @Override
     public void load() {
-
     }
 
 

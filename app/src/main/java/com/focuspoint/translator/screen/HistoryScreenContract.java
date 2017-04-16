@@ -14,14 +14,25 @@ public class HistoryScreenContract {
     public interface View extends BaseView {
 
         void showHistory(List<Translation> translations);
+
+        String getSearch();
+
+        void goTo (Navigator screen);
+
     }
 
     public interface Presenter extends BasePresenter <View> {
 
-        void addFavorite();
-
-        void removeFavorite();
+        void setFavorite(Translation translation, boolean favorite);
 
         void load();
+
+        void choose(Translation translation);
+
+        void onSearchChanged(String text);
+
+        void deleteAll();
+
+        void deleteTranslation();
     }
 }

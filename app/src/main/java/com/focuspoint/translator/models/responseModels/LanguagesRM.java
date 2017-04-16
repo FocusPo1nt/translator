@@ -21,12 +21,13 @@ public class LanguagesRM {
     public Map<String, Language> obtainLanguages(){
         Map <String, Language> map = new LinkedTreeMap<>() ;
 
-        descriptions.keySet().forEach(code -> {
+
+        for (String code : descriptions.keySet()){
             Language language = new Language();
             language.setCode(code);
             language.setDescription(descriptions.get(code));
             map.put(code, language);
-        });
+        }
 
 
         makeDirs(map);

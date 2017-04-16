@@ -45,8 +45,10 @@ public class TranslationPresenter implements TranslationScreenContract.Presenter
 
         subscriptions.add(translationInteractor.getOnTargetSubject()
                 .subscribe(translation -> view.get().showTarget(translation.getTargetLanguage())));
-    }
 
+        subscriptions.add(translationInteractor.getOnFavoriteSubject()
+                .subscribe(translation -> view.get().showAddToFavorites(translation.isFavorite())));
+    }
 
     @Override
     public void detach() {
@@ -97,5 +99,22 @@ public class TranslationPresenter implements TranslationScreenContract.Presenter
         view.get().showOutput(translation.getOutputWithWatermark());
         view.get().showSource(translation.getSourceLanguage());
         view.get().showTarget(translation.getTargetLanguage());
+        view.get().showAddToFavorites(translation.isFavorite());
+    }
+
+
+    @Override
+    public void changeFavorites() {
+        subscriptions.add(translationInteractor
+                .changeCurrentFavorite()
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                        favorite -> view.get().showAddToFavorites(favorite),
+                        this::handleError));
+    }
+
+
+    private void handleError(Throwable error){
+        System.out.println(error);
     }
 }

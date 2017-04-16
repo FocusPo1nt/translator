@@ -46,6 +46,22 @@ public class DB {
                 .asRxObservable();
     }
 
+
+    public Observable <List<Translation>> getFavorites(){
+        return database.get()
+                .listOfObjects(Translation.class)
+                .withQuery(Query.builder()
+                        .table(Translations.TABLE)
+                        .where(Translations.FAVORITE + " = 1")
+                        .orderBy(Translations.DATE + " DESC")
+                        .build())
+                .prepare()
+                .asRxObservable();
+    }
+
+
+
+
     public Observable <Translation> translate(Translation translation){
         System.out.println("db request " + translation);
         return database.get()
@@ -64,15 +80,13 @@ public class DB {
 
     public Observable<Translation> getLastTranslation(){
         return database.get()
-             .listOfObjects(Translation.class)
+             .object(Translation.class)
                 .withQuery(Query.builder()
                         .table(Translations.TABLE)
-                        .where( "MAX(" + Translations.DATE + ")")
+                        .where(Translations.DATE + " = (SELECT MAX (" + Translations.DATE + ") FROM " + Translations.TABLE + ")")
                         .build())
                 .prepare()
-                .asRxObservable()
-                .flatMap(translations -> translations.size() > 0 ?
-                        Observable.from(translations).first() : Observable.empty());
+                .asRxObservable();
     }
 
     public void saveDB(Translation translation){
@@ -96,7 +110,9 @@ public class DB {
                 .asRxObservable()
                 .map(languages -> {
                     Map <String, Language> map = new LinkedTreeMap<>() ;
-                    languages.forEach(language -> map.put(language.getCode(), language));
+                    for (Language language : languages){
+                        map.put(language.getCode(), language);
+                    }
                     return map;
                 });
     }

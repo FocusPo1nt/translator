@@ -30,7 +30,7 @@ public class Translation {
     String target;
 
     @StorIOSQLiteColumn(name = DB.Translations.FAVORITE)
-    int favorite;
+    boolean favorite;
 
 
     private Language sourceLanguage;
@@ -123,7 +123,9 @@ public class Translation {
 
         sb.append(getDirection()).append(" ");
         if (output!= null) sb.append(output).append(" ");
-        sb.append(this.hashCode());
+        sb.append("soutce = " + sourceLanguage).append(" ");
+        sb.append("target = " + targetLanguage);
+
         return sb.toString();
     }
 
@@ -148,6 +150,9 @@ public class Translation {
         this.date = date;
     }
 
+    public long getDate() {
+        return date;
+    }
 
     public String getSource() {
         return source;
@@ -156,4 +161,41 @@ public class Translation {
     public String getTarget() {
         return target;
     }
+
+
+    public Translation setFavorite(boolean favorite) {
+        this.favorite = favorite;
+        return this;
+    }
+
+    public boolean isFavorite() {
+        return favorite;
+    }
+
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof Translation){
+            Translation translation = (Translation) obj;
+            return  (translation.input.equals(input)
+                    && translation.output.equals(output)
+                    && translation.direction.equals(direction));
+        }else{
+            return super.equals(obj);
+        }
+
+
+    }
+
+
+    public static Translation obtainDefault(){
+        Translation translation = new Translation();
+        translation.setDate(System.currentTimeMillis());
+        translation.setSourceLanguage(Language.obtainDefaultSource());
+        translation.setTargetLanguage(Language.obtainDefaultTarget());
+        translation.setInput(DEFAULT_INPUT);
+        translation.setOutput(DEFAULT_OUTPUT);
+        return translation;
+    }
+
 }

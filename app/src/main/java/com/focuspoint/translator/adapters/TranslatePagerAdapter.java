@@ -20,6 +20,7 @@ public class TranslatePagerAdapter extends FragmentPagerAdapter {
     public TranslatePagerAdapter(FragmentManager fm, List<Fragment> myFrags) {
         super(fm);
         fragments = myFrags;
+
     }
 
     @Override

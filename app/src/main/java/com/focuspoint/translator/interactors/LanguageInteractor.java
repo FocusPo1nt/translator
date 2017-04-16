@@ -7,6 +7,7 @@ import com.focuspoint.translator.models.Language;
 import com.focuspoint.translator.models.Translation;
 import com.focuspoint.translator.models.responseModels.LanguagesRM;
 import com.focuspoint.translator.network.TranslateApiService;
+import com.google.gson.internal.LinkedTreeMap;
 
 import java.util.ArrayList;
 import java.util.Map;
@@ -26,36 +27,44 @@ import rx.subjects.PublishSubject;
  */
 
 public class LanguageInteractor implements ILanguageInteractor {
-    private Retrofit retrofit;
-    private Map<String, Language> languageMap;
+    private TranslateApiService apiService;
     private DB database;
+    private Map<String, Language> languageMap;
+    private Map<String, Language> defaultMap;
 
 
     @Inject
-    public LanguageInteractor(Retrofit retrofit, DB database){
-        this.retrofit = retrofit;
+    public LanguageInteractor(TranslateApiService apiService, DB database){
+        this.apiService = apiService;
         this.database = database;
+        defaultMap = Language.obtainDefaultMap();
 
     }
 
+
+    /**If in memory -> return from memory  else
+     * If in database -> return from database and cache memory else
+     * If in network -> return form network and cache in memory and database
+     * If network error -> return default Map of languages without caching;
+     * */
     @Override
     public Observable<Map<String, Language>> loadLanguages() {
-
         return Observable.concat(
                 Observable.just(languageMap),
                 database.getLanguages().first().doOnNext(map -> languageMap = map),
-                loadFromApi()
-        )
-                .first(map -> map!= null && !map.isEmpty());
+                loadFromApi().onErrorResumeNext(throwable -> Observable.just(defaultMap).doOnNext(map -> System.out.println("ON ERROR LANGUAGE " + map))))
+                .first(map -> map!= null && !map.isEmpty())
+                .doOnNext(map -> System.out.println("MAP FINAL RESULT " + map));
     }
 
     private Observable<Map<String, Language>> loadFromApi(){
-        return retrofit.create(TranslateApiService.class)
+        return apiService
                 .getLangs("ru") //TODO add user language
                 .map(LanguagesRM::obtainLanguages)
                 .doOnNext(map -> database.saveDB(new ArrayList<>(map.values())))
                 .doOnNext(map -> this.languageMap = map);
     }
+
 
 
     private PublishSubject<Language> sourceSubject =  PublishSubject.create();

@@ -56,6 +56,12 @@ public class DataModule {
                 .build();
     }
 
+    @Provides
+    @Singleton
+    TranslateApiService provideTranslationService(Retrofit retrofit){
+        return retrofit.create(TranslateApiService.class);
+    }
+
 
     @Provides
     @Singleton

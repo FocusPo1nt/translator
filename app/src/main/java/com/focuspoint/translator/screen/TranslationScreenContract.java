@@ -28,9 +28,10 @@ public class TranslationScreenContract {
 
         void showOutputTextToSpeech();
 
-        void showAddToFavorites();
+        void showAddToFavorites(boolean favorite);
 
         void showShare();
+
 
         String getInput();
     }
@@ -51,6 +52,9 @@ public class TranslationScreenContract {
 
         /**on change source and target languages;*/
         void reverseLanguages();
+
+        /**on add/remove favorite;*/
+        void changeFavorites();
 
     }
 }

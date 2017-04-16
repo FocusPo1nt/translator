@@ -19,6 +19,7 @@ import com.focuspoint.translator.adapters.HistoryAdapter;
 import com.focuspoint.translator.database.DB;
 import com.focuspoint.translator.models.Translation;
 import com.focuspoint.translator.screen.HistoryScreenContract;
+import com.focuspoint.translator.screen.Navigator;
 import com.google.gson.internal.LinkedTreeMap;
 
 import java.lang.annotation.RetentionPolicy;
@@ -72,7 +73,7 @@ public class HistoryFragment extends Fragment implements HistoryScreenContract.V
     private void initViews() {
 
         List <Translation> translations = new ArrayList<>();
-        adapter = new HistoryAdapter(translations);
+        adapter = new HistoryAdapter(translations, presenter);
 
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(adapter);
@@ -103,5 +104,16 @@ public class HistoryFragment extends Fragment implements HistoryScreenContract.V
     @Override
     public void showHistory(List<Translation> translations) {
         adapter.replaceData(translations);
+    }
+
+
+    @Override
+    public String getSearch() {
+        return null;
+    }
+
+    @Override
+    public void goTo(Navigator screen) {
+
     }
 }
