@@ -27,9 +27,18 @@ public class Model {
         this.currentTranslation = currentTranslation;
     }
 
-    public void setCurrentOutput(String output){}
+    public void setCurrentOutput(String output){
+        if (currentTranslation != null){
+            currentTranslation.setOutput(output);
+        }
 
-    public void setCurrentInput(String input){}
+    }
+
+    public void setCurrentInput(String input){
+        if (currentTranslation != null){
+            currentTranslation.setInput(input);
+        }
+    }
 
     public void setCurrentSource(Language source){}
 
@@ -46,7 +55,10 @@ public class Model {
     public void getCurrentTarget(Language target){}
 
 
+    public void setFavorite(boolean favorite) {
+        if (currentTranslation != null){
+            currentTranslation.setFavorite(favorite);
+        }
 
-
-
+    }
 }

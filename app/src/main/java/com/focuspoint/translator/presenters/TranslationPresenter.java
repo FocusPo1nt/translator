@@ -1,5 +1,7 @@
 package com.focuspoint.translator.presenters;
 
+import android.widget.Toast;
+
 import com.focuspoint.translator.interactors.interfaces.ILanguageInteractor;
 import com.focuspoint.translator.interactors.interfaces.ITranslationInteractor;
 import com.focuspoint.translator.models.Language;
@@ -7,6 +9,7 @@ import com.focuspoint.translator.models.Translation;
 import com.focuspoint.translator.screen.TranslationScreenContract;
 
 import java.lang.ref.WeakReference;
+import java.net.UnknownHostException;
 
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
@@ -59,9 +62,10 @@ public class TranslationPresenter implements TranslationScreenContract.Presenter
     @Override
     public void onInputChanged(String text) {
         subscriptions.add(translationInteractor.onInputChanged(text)
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                         translation -> {},
-                        throwable -> System.out.println(throwable.toString())));
+                        this::handleError));
     }
 
     @Override
@@ -70,9 +74,10 @@ public class TranslationPresenter implements TranslationScreenContract.Presenter
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnNext(translation -> System.out.println("load in presenter " + translation))
+                .doOnError(throwable -> System.out.println("presenter EROROR"))
                 .subscribe(
                         this::showTranslation,
-                        throwable -> view.get().showError(throwable))
+                        this::handleError)
         );
     }
 
@@ -115,7 +120,16 @@ public class TranslationPresenter implements TranslationScreenContract.Presenter
     }
 
 
-    private void handleError(Throwable error){
-        System.out.println(error);
+    private void handleError(Throwable e){
+        System.out.println("presenter" + e);
+        if (e instanceof UnknownHostException){
+            view.get().showConnectionError();
+        }
+    }
+
+
+    @Override
+    public void clear() {
+        translationInteractor.clearCurrent();
     }
 }

@@ -75,16 +75,20 @@ public class TranslationInteractor implements ITranslationInteractor {
 
         Observable<Translation> rawTranslationObserver =  Observable.concat(
                 translateFromDB(translation),
-                translateFromApi(translation)) //if network error -> doesn't get from DB
+                translateFromApi(translation))
+
                 .first(raw -> raw != null);
 
 
         return Observable.combineLatest(
                 rawTranslationObserver, languageInteractor.loadLanguages(), (result, map) ->{
-                    result.setSourceLanguage(map.get(result.getSource()));
-                    result.setTargetLanguage(map.get(result.getTarget()));
+                    if (result != null) {
+                        result.setSourceLanguage(map.get(result.getSource()));
+                        result.setTargetLanguage(map.get(result.getTarget()));
+                    }
                     return result;
                 })
+                .doOnError(throwable -> System.out.println("THROWABLE !!"))
                 .doOnNext(result -> {
                     result.setDate(System.currentTimeMillis());
                     model.setCurrentTranslation(result);
@@ -240,5 +244,14 @@ public class TranslationInteractor implements ITranslationInteractor {
                 .doOnNext(translation -> translation.setFavorite(!translation.isFavorite()))
                 .doOnNext(translation -> database.saveDB(translation))
                 .map(Translation::isFavorite);
+    }
+
+
+    @Override
+    public void clearCurrent() {
+        model.setCurrentInput("");
+        model.setCurrentOutput("");
+        model.setFavorite(false);
+        translationSubject.onNext(model.getCurrentTranslation());
     }
 }

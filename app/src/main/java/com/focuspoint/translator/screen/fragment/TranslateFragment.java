@@ -47,8 +47,8 @@ public class TranslateFragment extends Fragment implements TranslationScreenCont
     @BindView(R.id.reverse_image_view) ImageView reverseImageView;
     @BindView(R.id.star_image) ImageView starImageView;
     @BindView(R.id.favorite_frame) FrameLayout favoriteFrame;
-
-
+    @BindView(R.id.connection_error_view) TextView connectionErrorView;
+    @BindView(R.id.clear_frame) FrameLayout clearFrame;
 
 
 
@@ -77,12 +77,7 @@ public class TranslateFragment extends Fragment implements TranslationScreenCont
 
 
     @Override
-    public void showError(Throwable e) {
-        System.out.println(e);
-        if (e instanceof UnknownHostException){
-            Toast.makeText(getContext(), "отсутствует связь с сервером", Toast.LENGTH_LONG).show();
-        }
-    }
+    public void showError(Throwable e) {}
 
     @Override
     public void showInput(String text) {
@@ -97,6 +92,10 @@ public class TranslateFragment extends Fragment implements TranslationScreenCont
     @Override
     public void showOutput(String text) {
         outputTextView.setText(text);
+        connectionErrorView.setVisibility(View.GONE);
+        outputTextView.setVisibility(View.VISIBLE);
+        favoriteFrame.setClickable(true);
+        starImageView.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -173,6 +172,16 @@ public class TranslateFragment extends Fragment implements TranslationScreenCont
 
         reverseImageView.setOnClickListener(v -> presenter.reverseLanguages());
 
+        clearFrame.setOnClickListener(v -> presenter.clear());
+
+    }
+
+    @Override
+    public void showConnectionError() {
+        outputTextView.setVisibility(View.GONE);
+        connectionErrorView.setVisibility(View.VISIBLE);
+        favoriteFrame.setClickable(false);
+        starImageView.setVisibility(View.GONE);
     }
 
     @Override

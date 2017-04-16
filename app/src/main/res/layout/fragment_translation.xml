@@ -2,7 +2,6 @@
 <android.support.constraint.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -36,10 +35,10 @@
 
             <ImageView
                 android:id="@+id/reverse_image_view"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
                 android:layout_margin="5dp"
-                android:src="@drawable/menu"/>
+                android:src="@drawable/change"/>
 
             <TextView
                 android:id="@+id/to_language"
@@ -61,23 +60,54 @@
         app:layout_constraintDimensionRatio="3 : 1"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar" />
+        app:layout_constraintTop_toBottomOf="@+id/toolbar"
+        android:layout_marginTop="-2dp"
+        app:layout_constraintHorizontal_bias="1.0"
+        android:background="#00000000"/>
 
-
-    <TextView
-        android:id="@+id/output_text_view"
+    <ScrollView
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:textSize="20sp"
-        android:text="Hello Fragment"
+        android:layout_height="0dp"
         app:layout_constraintLeft_toLeftOf="parent"
-        android:autoLink="web"
-        android:textIsSelectable="true"
         app:layout_constraintTop_toBottomOf="@+id/input_edit_text"
         app:layout_constraintRight_toLeftOf="@+id/text_right_line"
-        android:layout_marginLeft="0dp"
-        android:layout_marginTop="-1dp"
-        android:layout_marginRight="8dp" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        >
+
+        <TextView
+            android:id="@+id/output_text_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="20sp"
+            android:text="Hello Fragment"
+            android:autoLink="web"
+            android:textIsSelectable="true" />
+
+
+    </ScrollView>
+
+
+    <FrameLayout
+        android:id="@+id/clear_frame"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="@+id/text_left_line"
+        app:layout_constraintBottom_toBottomOf="@+id/input_edit_text"
+        app:layout_constraintDimensionRatio="1 : 1"
+      />
+
+
+    <ImageView
+        android:id="@+id/clear_image"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:src="@drawable/clear"
+        app:layout_constraintLeft_toLeftOf="@+id/clear_left_line"
+        app:layout_constraintRight_toRightOf="@+id/clear_right_line"
+        app:layout_constraintTop_toTopOf="@+id/clear_frame"
+        app:layout_constraintBottom_toBottomOf="@+id/clear_frame"/>
+
 
 
     <FrameLayout
@@ -99,9 +129,45 @@
         app:layout_constraintLeft_toLeftOf="@+id/star_left_line"
         app:layout_constraintRight_toRightOf="@+id/star_right_line"
         app:layout_constraintTop_toTopOf="@+id/favorite_frame"
-        app:layout_constraintBottom_toBottomOf="@+id/favorite_frame"
+        app:layout_constraintBottom_toBottomOf="@+id/favorite_frame"/>
 
-        />
+    <TextView
+        android:visibility="gone"
+        android:id="@+id/connection_error_view"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/input_edit_text"
+        app:layout_constraintRight_toLeftOf="@+id/text_right_line"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:text="@string/connection_error"/>
+
+
+
+    <android.support.constraint.Guideline
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/text_left_line"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.10" />
+
+
+    <android.support.constraint.Guideline
+        android:id="@+id/clear_right_line"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.075" />
+
+
+    <android.support.constraint.Guideline
+        android:id="@+id/clear_left_line"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.02" />
+
+
 
 
 

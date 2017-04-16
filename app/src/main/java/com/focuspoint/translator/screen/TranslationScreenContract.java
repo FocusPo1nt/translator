@@ -32,6 +32,7 @@ public class TranslationScreenContract {
 
         void showShare();
 
+        void showConnectionError();
 
         String getInput();
     }
@@ -55,6 +56,9 @@ public class TranslationScreenContract {
 
         /**on add/remove favorite;*/
         void changeFavorites();
+
+
+        void clear();
 
     }
 }
