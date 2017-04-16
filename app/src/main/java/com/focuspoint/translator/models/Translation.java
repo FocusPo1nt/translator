@@ -103,7 +103,7 @@ public class Translation {
 
     /**Add constant text to the end of translation result;*/
     public String getOutputWithWatermark(){
-        String watermark = "\n\nПереведено сервисом «Яндекс Переводчик»\nhttp://translate.yandex.ru/";
+        String watermark = "\n\nПереведено сервисом\n«Яндекс Переводчик»\nhttp://translate.yandex.ru/";
         String result = "";
         if (!output.isEmpty() && !output.contains(watermark)){
             result = output + watermark;
