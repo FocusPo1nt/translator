@@ -106,6 +106,7 @@ public class TranslationPresenter implements TranslationScreenContract.Presenter
         view.get().showSource(translation.getSourceLanguage());
         view.get().showTarget(translation.getTargetLanguage());
         view.get().showAddToFavorites(translation.isFavorite());
+        if (translation.getOutput().isEmpty()) view.get().hideMenu();
     }
 
 

@@ -20,6 +20,7 @@ import com.focuspoint.translator.database.DB;
 import com.focuspoint.translator.models.Translation;
 import com.focuspoint.translator.screen.HistoryScreenContract;
 import com.focuspoint.translator.screen.Navigator;
+import com.focuspoint.translator.screen.activity.MainActivity;
 import com.google.gson.internal.LinkedTreeMap;
 
 import java.lang.annotation.RetentionPolicy;
@@ -114,6 +115,6 @@ public class HistoryFragment extends Fragment implements HistoryScreenContract.V
 
     @Override
     public void goTo(Navigator screen) {
-
+        MainActivity.from(this).goToFragment(Navigator.SCREEN_TRANSLATION);
     }
 }

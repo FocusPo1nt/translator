@@ -10,12 +10,14 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.Toast;
 
 import com.focuspoint.translator.App;
 import com.focuspoint.translator.R;
 import com.focuspoint.translator.adapters.TranslatePagerAdapter;
 import com.focuspoint.translator.models.Language;
+import com.focuspoint.translator.screen.Navigator;
 import com.focuspoint.translator.screen.TranslationScreenContract;
 import com.focuspoint.translator.screen.fragment.FavoritesFragment;
 import com.focuspoint.translator.screen.fragment.HistoryFragment;
@@ -74,4 +76,16 @@ public class MainActivity extends AppCompatActivity {
         tabLayout.getTabAt(2).setIcon(R.drawable.star);
     }
 
+
+
+    public void goToFragment(Navigator screen){
+        if (screen == Navigator.SCREEN_TRANSLATION){
+            viewPager.setCurrentItem(0, true);
+        }
+    }
+
+
+    public static MainActivity from(Fragment fragment){
+        return (MainActivity) fragment.getActivity();
+    }
 }

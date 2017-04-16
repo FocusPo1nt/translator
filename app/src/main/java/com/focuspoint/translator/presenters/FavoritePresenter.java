@@ -3,6 +3,7 @@ package com.focuspoint.translator.presenters;
 import com.focuspoint.translator.interactors.interfaces.ITranslationInteractor;
 import com.focuspoint.translator.models.Translation;
 import com.focuspoint.translator.screen.FavoriteScreenContract;
+import com.focuspoint.translator.screen.Navigator;
 
 import java.lang.ref.WeakReference;
 
@@ -66,8 +67,10 @@ public class FavoritePresenter implements FavoriteScreenContract.Presenter{
 
     @Override
     public void choose(Translation translation) {
-
+        translationInteractor.setCurrent(translation);
+        view.get().goTo(Navigator.SCREEN_TRANSLATION);
     }
+
 
 
     @Override

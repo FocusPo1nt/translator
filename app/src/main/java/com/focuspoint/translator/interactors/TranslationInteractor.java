@@ -254,4 +254,11 @@ public class TranslationInteractor implements ITranslationInteractor {
         model.setFavorite(false);
         translationSubject.onNext(model.getCurrentTranslation());
     }
+
+
+    @Override
+    public void setCurrent(Translation translation) {
+        model.setCurrentTranslation(translation);
+        translationSubject.onNext(model.getCurrentTranslation());
+    }
 }

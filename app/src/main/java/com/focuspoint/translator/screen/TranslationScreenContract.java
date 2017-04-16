@@ -35,6 +35,8 @@ public class TranslationScreenContract {
         void showConnectionError();
 
         String getInput();
+
+        void hideMenu();
     }
 
     public interface Presenter extends BasePresenter <View>{

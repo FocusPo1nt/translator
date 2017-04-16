@@ -21,6 +21,7 @@ import com.focuspoint.translator.models.Translation;
 import com.focuspoint.translator.screen.FavoriteScreenContract;
 import com.focuspoint.translator.screen.HistoryScreenContract;
 import com.focuspoint.translator.screen.Navigator;
+import com.focuspoint.translator.screen.activity.MainActivity;
 
 import java.lang.annotation.RetentionPolicy;
 import java.sql.Statement;
@@ -114,7 +115,7 @@ public class FavoritesFragment extends Fragment implements FavoriteScreenContrac
 
     @Override
     public void goTo(Navigator screen) {
-
+        MainActivity.from(this).goToFragment(screen);
     }
 
 

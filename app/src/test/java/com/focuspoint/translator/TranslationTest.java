@@ -101,9 +101,6 @@ public class TranslationTest {
                     Assert.assertNotNull(translation.getTargetLanguage());
 
                 }));
-        System.out.println("of");
-
-
     }
 
 

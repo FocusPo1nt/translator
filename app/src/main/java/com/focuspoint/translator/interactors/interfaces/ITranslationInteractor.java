@@ -44,4 +44,6 @@ public interface ITranslationInteractor {
     Observable<Boolean> changeCurrentFavorite();
 
     void clearCurrent();
+
+    void setCurrent(Translation translation);
 }

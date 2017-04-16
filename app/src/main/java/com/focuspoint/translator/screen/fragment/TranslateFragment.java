@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -139,6 +141,12 @@ public class TranslateFragment extends Fragment implements TranslationScreenCont
     }
 
     @Override
+    public void hideMenu() {
+        favoriteFrame.setClickable(false);
+        starImageView.setVisibility(View.GONE);
+    }
+
+    @Override
     public void showShare() {
 
     }
@@ -150,6 +158,7 @@ public class TranslateFragment extends Fragment implements TranslationScreenCont
 
 
 
+        inputEditText.addTextChangedListener(textWatcher);
 
         //There is some input logic
         subscriptions.add(RxTextView.textChanges(inputEditText)
@@ -180,8 +189,7 @@ public class TranslateFragment extends Fragment implements TranslationScreenCont
     public void showConnectionError() {
         outputTextView.setVisibility(View.GONE);
         connectionErrorView.setVisibility(View.VISIBLE);
-        favoriteFrame.setClickable(false);
-        starImageView.setVisibility(View.GONE);
+        hideMenu();
     }
 
     @Override
@@ -196,5 +204,21 @@ public class TranslateFragment extends Fragment implements TranslationScreenCont
         ignoreInput = false;
         return filter;
     }
+
+
+    private TextWatcher textWatcher = new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {}
+
+        @Override
+        public void afterTextChanged(Editable s) {
+            if (s.length() == 0){
+                presenter.clear();
+            }
+        }
+    };
 
 }

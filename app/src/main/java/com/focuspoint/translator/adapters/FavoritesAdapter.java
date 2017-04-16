@@ -86,7 +86,7 @@ public class FavoritesAdapter extends RecyclerView.Adapter{
 
             inputTextView.setText(translation.getInput());
             outputTextView.setText(translation.getOutput());
-            directionTextView.setText(translation.getDirection());
+            directionTextView.setText(translation.getDirection().toUpperCase());
 
             favoriteFrame.setOnClickListener(v -> {
 
