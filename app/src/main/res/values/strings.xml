@@ -8,4 +8,5 @@
 
 
     <string name="connection_error">Network error:\nPlease check your internet connection</string>
+    <string name="search">Search</string>
 </resources>

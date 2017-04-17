@@ -6,7 +6,10 @@ import com.focuspoint.translator.screen.FavoriteScreenContract;
 import com.focuspoint.translator.screen.Navigator;
 
 import java.lang.ref.WeakReference;
+import java.util.ArrayList;
+import java.util.List;
 
+import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.subscriptions.CompositeSubscription;
 
@@ -37,11 +40,7 @@ public class FavoritePresenter implements FavoriteScreenContract.Presenter{
         if (subscriptions!= null)  subscriptions.unsubscribe();
         subscriptions = new CompositeSubscription();
         this.view = new WeakReference<>(view);
-        //        subscriptions.add(translationInteractor.getOnTranslateSubject()
-//                .subscribe(
-//                        t -> {},//load(),
-//                        this::handleError));
-//
+
 
         subscriptions.add(translationInteractor
                 .getFavorites()
@@ -62,6 +61,14 @@ public class FavoritePresenter implements FavoriteScreenContract.Presenter{
 
     @Override
     public void load() {
+        subscriptions.add(translationInteractor
+                .getFavorites()
+                .observeOn(AndroidSchedulers.mainThread())
+                .map(t -> searchFilter(t, view.get().getSearch()))
+                .first()
+                .subscribe(
+                        translations -> this.view.get().showFavorites(translations),
+                        this::handleError));
     }
 
 
@@ -86,5 +93,21 @@ public class FavoritePresenter implements FavoriteScreenContract.Presenter{
     @Override
     public void deleteTranslation() {
 
+    }
+
+    private List<Translation> searchFilter(List<Translation> translations, String filter){
+
+        if (filter.isEmpty()) return translations;
+
+        filter = filter.toLowerCase();
+
+        List <Translation> result = new ArrayList<>();
+        for (Translation translation : translations){
+            if (translation.getInput().toLowerCase().contains(filter)
+                    || translation.getOutput().toLowerCase().contains(filter)){
+                result.add(translation);
+            }
+        }
+        return result;
     }
 }

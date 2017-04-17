@@ -7,11 +7,15 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
+import android.widget.ImageView;
 
 import com.focuspoint.translator.App;
 import com.focuspoint.translator.R;
@@ -21,7 +25,9 @@ import com.focuspoint.translator.models.Translation;
 import com.focuspoint.translator.screen.HistoryScreenContract;
 import com.focuspoint.translator.screen.Navigator;
 import com.focuspoint.translator.screen.activity.MainActivity;
+import com.focuspoint.translator.utils.KeyboardLayout;
 import com.google.gson.internal.LinkedTreeMap;
+import com.jakewharton.rxbinding.widget.RxTextView;
 
 import java.lang.annotation.RetentionPolicy;
 import java.security.cert.TrustAnchor;
@@ -43,6 +49,13 @@ public class HistoryFragment extends Fragment implements HistoryScreenContract.V
 
     @BindView(R.id.toolbar) Toolbar toolbar;
     @BindView(R.id.recycler_view) RecyclerView recyclerView;
+
+    @BindView(R.id.keyboard_layout)
+    KeyboardLayout keyboardLayout;
+    @BindView(R.id.search_image_view)
+    ImageView searchImageView;
+    @BindView(R.id.search_edit_text)
+    EditText searchEditText;
 
 
     @Inject
@@ -79,6 +92,11 @@ public class HistoryFragment extends Fragment implements HistoryScreenContract.V
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(adapter);
 
+        keyboardLayout.setOnOpenKeyboardListener(() -> searchEditText.setCursorVisible(true));
+        keyboardLayout.setOnCloseKeyboardListener(() -> searchEditText.setCursorVisible(false));
+
+        searchEditText.addTextChangedListener(searchWatcher);
+
         presenter.attach(this);
         presenter.load();
     }
@@ -110,11 +128,29 @@ public class HistoryFragment extends Fragment implements HistoryScreenContract.V
 
     @Override
     public String getSearch() {
-        return null;
+        return searchEditText.getEditableText().toString();
     }
 
     @Override
     public void goTo(Navigator screen) {
         MainActivity.from(this).goToFragment(Navigator.SCREEN_TRANSLATION);
     }
+
+
+    private TextWatcher searchWatcher = new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+            presenter.load();
+        }
+    };
 }

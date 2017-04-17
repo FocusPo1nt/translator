@@ -7,11 +7,16 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.focuspoint.translator.App;
 import com.focuspoint.translator.R;
@@ -22,6 +27,7 @@ import com.focuspoint.translator.screen.FavoriteScreenContract;
 import com.focuspoint.translator.screen.HistoryScreenContract;
 import com.focuspoint.translator.screen.Navigator;
 import com.focuspoint.translator.screen.activity.MainActivity;
+import com.focuspoint.translator.utils.KeyboardLayout;
 
 import java.lang.annotation.RetentionPolicy;
 import java.sql.Statement;
@@ -41,8 +47,10 @@ import rx.subscriptions.CompositeSubscription;
 public class FavoritesFragment extends Fragment implements FavoriteScreenContract.View{
 
     @BindView(R.id.toolbar) Toolbar toolbar;
-    @BindView(R.id.recycler_view)
-    RecyclerView recyclerView;
+    @BindView(R.id.recycler_view) RecyclerView recyclerView;
+    @BindView(R.id.keyboard_layout) KeyboardLayout keyboardLayout;
+    @BindView(R.id.search_image_view) ImageView searchImageView;
+    @BindView(R.id.search_edit_text) EditText searchEditText;
 
 
     @Inject
@@ -65,7 +73,7 @@ public class FavoritesFragment extends Fragment implements FavoriteScreenContrac
         App.from(getContext()).getComponent().inject(this);
         subscriptions = new CompositeSubscription();
         View v = inflater.inflate(R.layout.fragment_history, container, false);
-        ButterKnife.bind(this,v);
+        ButterKnife.bind(this, v);
 
         initViews();
         return v;
@@ -78,6 +86,11 @@ public class FavoritesFragment extends Fragment implements FavoriteScreenContrac
 
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(adapter);
+
+        keyboardLayout.setOnOpenKeyboardListener(() -> searchEditText.setCursorVisible(true));
+        keyboardLayout.setOnCloseKeyboardListener(() -> searchEditText.setCursorVisible(false));
+
+        searchEditText.addTextChangedListener(searchWatcher);
 
         presenter.attach(this);
         presenter.load();
@@ -110,7 +123,7 @@ public class FavoritesFragment extends Fragment implements FavoriteScreenContrac
 
     @Override
     public String getSearch() {
-        return null;
+        return searchEditText.getEditableText().toString();
     }
 
     @Override
@@ -118,5 +131,20 @@ public class FavoritesFragment extends Fragment implements FavoriteScreenContrac
         MainActivity.from(this).goToFragment(screen);
     }
 
+    private TextWatcher searchWatcher = new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+            presenter.load();
+        }
+    };
 }
