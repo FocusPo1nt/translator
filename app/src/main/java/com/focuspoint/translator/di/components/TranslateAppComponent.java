@@ -1,7 +1,6 @@
 package com.focuspoint.translator.di.components;
 
 import com.focuspoint.translator.di.modules.DBModule;
-import com.focuspoint.translator.screen.FavoriteScreenContract;
 import com.focuspoint.translator.screen.activity.SourceLanguageActivity;
 import com.focuspoint.translator.screen.activity.MainActivity;
 import com.focuspoint.translator.di.modules.DataModule;
@@ -10,6 +9,8 @@ import com.focuspoint.translator.screen.activity.TargetLanguageActivity;
 import com.focuspoint.translator.screen.fragment.FavoritesFragment;
 import com.focuspoint.translator.screen.fragment.HistoryFragment;
 import com.focuspoint.translator.screen.fragment.TranslateFragment;
+import com.focuspoint.translator.screen.fragment.TranslationListFragment;
+
 
 import javax.inject.Singleton;
 import dagger.Component;
@@ -31,4 +32,6 @@ public interface TranslateAppComponent {
     void inject (TranslateFragment translateFragment);
     void inject (HistoryFragment historyFragment);
     void inject (FavoritesFragment favoritesFragment);
+    void inject (TranslationListFragment favoritesFragment);
+
 }

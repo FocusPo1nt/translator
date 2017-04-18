@@ -15,7 +15,7 @@ import com.focuspoint.translator.presenters.HistoryPresenter;
 import com.focuspoint.translator.presenters.LanguagePresenter;
 import com.focuspoint.translator.presenters.TranslationPresenter;
 import com.focuspoint.translator.screen.FavoriteScreenContract;
-import com.focuspoint.translator.screen.HistoryScreenContract;
+import com.focuspoint.translator.screen.TranslationListContract;
 import com.focuspoint.translator.screen.LanguageScreenContract;
 import com.focuspoint.translator.screen.TranslationScreenContract;
 
@@ -23,7 +23,6 @@ import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
-import retrofit2.Retrofit;
 
 /**
  * Created by root on 30.03.17.
@@ -77,13 +76,13 @@ public class AppModule {
 
     @Provides
     @Singleton
-    HistoryScreenContract.Presenter provideHistoryPresenter (ITranslationInteractor interactor) {
+    TranslationListContract.HistoryPresenter provideHistoryPresenter (ITranslationInteractor interactor) {
         return new HistoryPresenter(interactor);
     }
 
     @Provides
     @Singleton
-    FavoriteScreenContract.Presenter provideFavoritePresenter (ITranslationInteractor interactor) {
+    TranslationListContract.FavoritePresenter provideFavoritePresenter (ITranslationInteractor interactor) {
         return new FavoritePresenter(interactor);
     }
 

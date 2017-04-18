@@ -4,10 +4,12 @@ import com.focuspoint.translator.interactors.interfaces.ITranslationInteractor;
 import com.focuspoint.translator.models.Translation;
 import com.focuspoint.translator.screen.FavoriteScreenContract;
 import com.focuspoint.translator.screen.Navigator;
+import com.focuspoint.translator.screen.TranslationListContract;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
@@ -17,11 +19,11 @@ import rx.subscriptions.CompositeSubscription;
  *
  */
 
-public class FavoritePresenter implements FavoriteScreenContract.Presenter{
+public class FavoritePresenter implements TranslationListContract.FavoritePresenter{
 
     private CompositeSubscription subscriptions;
 
-    private WeakReference<FavoriteScreenContract.View> view;
+    private WeakReference<TranslationListContract.FavoriteView> view;
     private ITranslationInteractor translationInteractor;
 
     public FavoritePresenter(ITranslationInteractor translationInteractor){
@@ -36,7 +38,7 @@ public class FavoritePresenter implements FavoriteScreenContract.Presenter{
     }
 
     @Override
-    public void attach(FavoriteScreenContract.View view) {
+    public void attach(TranslationListContract.FavoriteView view) {
         if (subscriptions!= null)  subscriptions.unsubscribe();
         subscriptions = new CompositeSubscription();
         this.view = new WeakReference<>(view);
@@ -45,6 +47,7 @@ public class FavoritePresenter implements FavoriteScreenContract.Presenter{
         subscriptions.add(translationInteractor
                 .getFavorites()
                 .observeOn(AndroidSchedulers.mainThread())
+                .map(t -> searchFilter(t, view.getSearch()))
                 .subscribe(
                         translations -> this.view.get().showFavorites(translations),
                         this::handleError));
@@ -109,5 +112,10 @@ public class FavoritePresenter implements FavoriteScreenContract.Presenter{
             }
         }
         return result;
+    }
+
+    @Override
+    public void clearAll() {
+        translationInteractor.clearFavorites();
     }
 }

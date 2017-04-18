@@ -2,21 +2,15 @@ package com.focuspoint.translator.adapters;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
-import android.view.TextureView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.focuspoint.translator.R;
-import com.focuspoint.translator.models.Language;
 import com.focuspoint.translator.models.Translation;
-import com.focuspoint.translator.presenters.BasePresenter;
-import com.focuspoint.translator.screen.HistoryScreenContract;
-import com.focuspoint.translator.screen.TranslationScreenContract;
-import com.focuspoint.translator.screen.fragment.HistoryFragment;
+import com.focuspoint.translator.screen.TranslationListContract;
 
 import java.util.List;
 
@@ -27,14 +21,13 @@ import butterknife.ButterKnife;
  *
  */
 
-public class HistoryAdapter extends RecyclerView.Adapter {
+public class TranslationListAdapter extends RecyclerView.Adapter {
 
     private List<Translation> list;
-//    private HistoryScreenContract.View fragment;
 
-    private HistoryScreenContract.Presenter presenter;
+    private TranslationListContract.Presenter presenter;
 
-    public HistoryAdapter (List<Translation> list, HistoryScreenContract.Presenter presenter){
+    public TranslationListAdapter(List<Translation> list, TranslationListContract.Presenter presenter){
         this.list = list;
         this.presenter = presenter;
     }

@@ -46,4 +46,8 @@ public interface ITranslationInteractor {
     void clearCurrent();
 
     void setCurrent(Translation translation);
+
+    void clearFavorites ();
+
+    void clearHistory();
 }

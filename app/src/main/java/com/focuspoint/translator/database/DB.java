@@ -6,6 +6,7 @@ import com.focuspoint.translator.network.TranslateApiService;
 import com.google.gson.internal.LinkedTreeMap;
 import com.pushtorefresh.storio.sqlite.StorIOSQLite;
 import com.pushtorefresh.storio.sqlite.operations.put.PutResult;
+import com.pushtorefresh.storio.sqlite.queries.DeleteQuery;
 import com.pushtorefresh.storio.sqlite.queries.Query;
 
 import java.util.List;
@@ -59,9 +60,6 @@ public class DB {
                 .asRxObservable();
     }
 
-
-
-
     public Observable <Translation> translate(Translation translation){
         System.out.println("db request " + translation);
         return database.get()
@@ -75,6 +73,7 @@ public class DB {
                 .asRxObservable()
                 .doOnNext(translation1 -> System.out.println("db result " + translation1));
     }
+
 
 
 
@@ -95,6 +94,28 @@ public class DB {
                 .object(translation)
                 .prepare()
                 .executeAsBlocking();
+    }
+
+    public void clearHistory(){
+        database
+                .delete()
+                .byQuery(DeleteQuery.builder()
+                        .table(Translations.TABLE)
+                        .build())
+                .prepare()
+                .executeAsBlocking();
+    }
+
+    public void clearFavorites(){
+        database
+                .delete()
+                .byQuery(DeleteQuery.builder()
+                        .table(Translations.TABLE)
+                        .where(Translations.FAVORITE + " = 1")
+                        .build())
+                .prepare()
+                .executeAsBlocking();
+
     }
 
 

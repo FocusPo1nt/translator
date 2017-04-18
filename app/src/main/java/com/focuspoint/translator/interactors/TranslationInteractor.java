@@ -200,29 +200,27 @@ public class TranslationInteractor implements ITranslationInteractor {
 
     @Override
     public Observable<List<Translation>> getHistory() {
-        return database.getTranslations()
-                .withLatestFrom(languageInteractor.loadLanguages(), (list, map) -> {
 
-                    for (Translation translation: list){
-                        translation.setSourceLanguage(map.get(translation.getSource()));
-                        translation.setTargetLanguage(map.get(translation.getTarget()));
-                    }
-                    return list;
-                });
-//                .first();
+        return Observable.combineLatest(database.getTranslations(), languageInteractor.loadLanguages(), (list, map) -> {
+
+            for (Translation translation: list){
+                translation.setSourceLanguage(map.get(translation.getSource()));
+                translation.setTargetLanguage(map.get(translation.getTarget()));
+            }
+            return list;
+        });
     }
 
     @Override
     public Observable<List<Translation>> getFavorites() {
-        return database.getFavorites()
-                .withLatestFrom(languageInteractor.loadLanguages(), (list, map) -> {
-                    for (Translation translation: list){
-                        translation.setSourceLanguage(map.get(translation.getSource()));
-                        translation.setTargetLanguage(map.get(translation.getTarget()));
-                    }
-                    return list;
-                });
-//                .first();
+        return Observable.combineLatest(database.getFavorites(), languageInteractor.loadLanguages(), (list, map) -> {
+
+            for (Translation translation: list){
+                translation.setSourceLanguage(map.get(translation.getSource()));
+                translation.setTargetLanguage(map.get(translation.getTarget()));
+            }
+            return list;
+        });
     }
 
     @Override
@@ -258,7 +256,21 @@ public class TranslationInteractor implements ITranslationInteractor {
 
     @Override
     public void setCurrent(Translation translation) {
+        translation.setDate(System.currentTimeMillis());
+        database.saveDB(translation);
         model.setCurrentTranslation(translation);
+
         translationSubject.onNext(model.getCurrentTranslation());
+    }
+
+
+    @Override
+    public void clearFavorites() {
+        database.clearFavorites();
+    }
+
+    @Override
+    public void clearHistory() {
+        database.clearHistory();
     }
 }

@@ -29,7 +29,6 @@ public class KeyboardLayout extends ConstraintLayout{
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
 
-        System.out.println(lastHeight + " / " + getHeight() + " / " + maxHeight);
 
 
         if (lastHeight != 0 && lastHeight != getHeight()){

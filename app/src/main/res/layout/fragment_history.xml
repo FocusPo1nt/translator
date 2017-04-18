@@ -27,10 +27,17 @@
             android:layout_height="match_parent"
             android:gravity="center">
         <TextView
+            android:id="@+id/title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="История"
             />
+
+            <ImageView
+                android:id="@+id/clear_history"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@drawable/delete"/>
 
         </LinearLayout>
     </android.support.v7.widget.Toolbar>

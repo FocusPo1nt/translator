@@ -3,7 +3,7 @@ package com.focuspoint.translator.presenters;
 
 import com.focuspoint.translator.interactors.interfaces.ITranslationInteractor;
 import com.focuspoint.translator.models.Translation;
-import com.focuspoint.translator.screen.HistoryScreenContract;
+import com.focuspoint.translator.screen.TranslationListContract;
 import com.focuspoint.translator.screen.Navigator;
 
 import java.lang.ref.WeakReference;
@@ -17,11 +17,11 @@ import rx.subscriptions.CompositeSubscription;
  * Created by root on 15.04.17.
  */
 
-public class HistoryPresenter implements HistoryScreenContract.Presenter{
+public class HistoryPresenter implements TranslationListContract.HistoryPresenter{
 
     private CompositeSubscription subscriptions;
 
-    private WeakReference<HistoryScreenContract.View> view;
+    private WeakReference<TranslationListContract.HistoryView> view;
     private ITranslationInteractor translationInteractor;
 
     public HistoryPresenter(ITranslationInteractor translationInteractor){
@@ -36,7 +36,7 @@ public class HistoryPresenter implements HistoryScreenContract.Presenter{
     }
 
     @Override
-    public void attach(HistoryScreenContract.View view) {
+    public void attach(TranslationListContract.HistoryView view) {
         if (subscriptions!= null)  subscriptions.unsubscribe();
         subscriptions = new CompositeSubscription();
         this.view = new WeakReference<>(view);
@@ -44,13 +44,17 @@ public class HistoryPresenter implements HistoryScreenContract.Presenter{
 
         subscriptions.add(translationInteractor
                 .getHistory()
+
                 .observeOn(AndroidSchedulers.mainThread())
                 .map(t -> searchFilter(t, view.getSearch()))
+
                 .subscribe(
                         translations -> this.view.get().showHistory(translations),
                         this::handleError)
         );
     }
+
+
 
     private void handleError(Throwable error) {
         System.out.println(error);
@@ -63,10 +67,13 @@ public class HistoryPresenter implements HistoryScreenContract.Presenter{
 
     @Override
     public void load() {
+
         subscriptions.add(translationInteractor
                 .getHistory()
                 .observeOn(AndroidSchedulers.mainThread())
+                .doOnNext(t -> System.out.println("gethistory without filter " + t.size()))
                 .map(t -> searchFilter(t, view.get().getSearch()))
+                .doOnNext(t -> System.out.println("gethistory after filter " + t.size()))
                 .first()
                 .subscribe(
                         translations -> this.view.get().showHistory(translations),
@@ -112,5 +119,11 @@ public class HistoryPresenter implements HistoryScreenContract.Presenter{
             }
         }
         return result;
+    }
+
+
+    @Override
+    public void clearAll() {
+        translationInteractor.clearHistory();
     }
 }
