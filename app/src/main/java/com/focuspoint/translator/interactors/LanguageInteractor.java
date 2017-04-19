@@ -53,8 +53,7 @@ public class LanguageInteractor implements ILanguageInteractor {
                 Observable.just(languageMap),
                 database.getLanguages().first().doOnNext(map -> languageMap = map),
                 loadFromApi().onErrorResumeNext(throwable -> Observable.just(defaultMap).doOnNext(map -> System.out.println("ON ERROR LANGUAGE " + map))))
-                .first(map -> map!= null && !map.isEmpty())
-                .doOnNext(map -> System.out.println("MAP FINAL RESULT " + map));
+                .first(map -> map!= null && !map.isEmpty());
     }
 
     private Observable<Map<String, Language>> loadFromApi(){
