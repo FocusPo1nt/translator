@@ -51,6 +51,8 @@ public class TranslateFragment extends Fragment implements TranslationScreenCont
     @BindView(R.id.favorite_frame) FrameLayout favoriteFrame;
     @BindView(R.id.connection_error_view) TextView connectionErrorView;
     @BindView(R.id.clear_frame) FrameLayout clearFrame;
+    @BindView(R.id.share_frame)
+    protected FrameLayout shareFrame;
 
 
 
@@ -179,6 +181,8 @@ public class TranslateFragment extends Fragment implements TranslationScreenCont
 
         favoriteFrame.setOnClickListener(v -> presenter.changeFavorites());
 
+        shareFrame.setOnClickListener(v -> share());
+
         reverseImageView.setOnClickListener(v -> presenter.reverseLanguages());
 
         clearFrame.setOnClickListener(v -> presenter.clear());
@@ -222,4 +226,11 @@ public class TranslateFragment extends Fragment implements TranslationScreenCont
         }
     };
 
+    private void share(){
+        Intent sendIntent = new Intent();
+        sendIntent.setAction(Intent.ACTION_SEND);
+        sendIntent.putExtra(Intent.EXTRA_TEXT, outputTextView.getText());
+        sendIntent.setType("text/plain");
+        startActivity(sendIntent);
+    }
 }
