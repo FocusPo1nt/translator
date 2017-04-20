@@ -36,7 +36,7 @@ import butterknife.ButterKnife;
 import rx.subscriptions.CompositeSubscription;
 
 /**
- * Created by root on 18.04.17.
+ * Base class for history and favorites fragments
  */
 
 public abstract class TranslationListFragment extends Fragment implements TranslationListContract.View {
@@ -118,12 +118,6 @@ public abstract class TranslationListFragment extends Fragment implements Transl
 
 
     @Override
-    public void showError(Throwable e) {
-
-    }
-
-
-    @Override
     public String getSearch() {
         return searchEditText.getEditableText().toString();
     }
@@ -136,14 +130,10 @@ public abstract class TranslationListFragment extends Fragment implements Transl
 
     private TextWatcher searchWatcher = new TextWatcher() {
         @Override
-        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-        }
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
 
         @Override
-        public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-        }
+        public void onTextChanged(CharSequence s, int start, int before, int count) {}
 
         @Override
         public void afterTextChanged(Editable s) {

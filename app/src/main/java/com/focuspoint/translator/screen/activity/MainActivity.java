@@ -71,7 +71,7 @@ public class MainActivity extends AppCompatActivity {
         return (MainActivity) fragment.getActivity();
     }
 
-    //return to main screen if '<' pressed;
+    //return to translation screen if '<' pressed;
     @Override
     public void onBackPressed() {
         if (viewPager.getCurrentItem() != 0){

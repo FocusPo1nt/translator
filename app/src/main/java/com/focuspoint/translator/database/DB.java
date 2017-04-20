@@ -20,7 +20,8 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Func1;
 
 /**
- * Database class with tables
+ * Class that deals with the StorIO & rxjava;
+ * Contains current database version;
  */
 
 public class DB {
@@ -32,6 +33,7 @@ public class DB {
     public DB(StorIOSQLite storIOSQLite){
         this.database = storIOSQLite;
     }
+
 
 
     //    region TRANSLATIONS
@@ -62,6 +64,7 @@ public class DB {
 
     public Observable <Translation> translate(Translation translation){
         System.out.println("db request " + translation);
+        //TODO сделать экранирование спец символов;
         return database.get()
                 .object(Translation.class)
                 .withQuery(Query.builder()

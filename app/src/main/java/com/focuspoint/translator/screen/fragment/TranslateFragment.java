@@ -206,6 +206,7 @@ public class TranslateFragment extends Fragment implements TranslationScreenCont
     }
 
 
+
     private TextWatcher textWatcher = new TextWatcher() {
         @Override
         public void beforeTextChanged(CharSequence s, int start, int count, int after) {}

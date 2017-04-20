@@ -58,7 +58,7 @@ public class LanguageInteractor implements ILanguageInteractor {
 
     private Observable<Map<String, Language>> loadFromApi(){
         return apiService
-                .getLangs("ru") //TODO add user language
+                .getLangs("ru") //TODO set user language
                 .map(LanguagesRM::obtainLanguages)
                 .doOnNext(map -> database.saveDB(new ArrayList<>(map.values())))
                 .doOnNext(map -> this.languageMap = map);
