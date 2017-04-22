@@ -6,7 +6,13 @@
         <item name="colorPrimary">#5677fc</item>
         <item name="colorPrimaryDark">#455ede</item>
         <item name="colorAccent">#40c4ff</item>
+    </style>
 
+
+    <style name="ButtonStyle">
+        <item name="android:layout_width">30dp</item>
+        <item name="android:layout_height">30dp</item>
+        <item name="android:layout_gravity">center</item>
     </style>
 
     <style name="AppTheme.NoActionBar">

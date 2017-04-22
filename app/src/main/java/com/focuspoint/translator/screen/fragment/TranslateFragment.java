@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -42,7 +43,8 @@ import rx.subscriptions.CompositeSubscription;
 public class TranslateFragment extends Fragment implements TranslationScreenContract.View{
 
 
-    @BindView(R.id.toolbar) Toolbar toolbar;
+    @BindView(R.id.toolbar)
+    Toolbar toolbar;
     @BindView(R.id.from_language) TextView sourceLanguageView;
     @BindView(R.id.to_language) TextView targetLanguageView;
     @BindView(R.id.input_edit_text) EditText inputEditText;
