@@ -22,6 +22,7 @@ import com.focuspoint.translator.models.Language;
 import com.focuspoint.translator.screen.TranslationScreenContract;
 import com.focuspoint.translator.screen.activity.SourceLanguageActivity;
 import com.focuspoint.translator.screen.activity.TargetLanguageActivity;
+import com.focuspoint.translator.utils.KeyboardLayout;
 import com.jakewharton.rxbinding.widget.RxTextView;
 
 
@@ -51,6 +52,9 @@ public class TranslateFragment extends Fragment implements TranslationScreenCont
     @BindView(R.id.favorite_frame) FrameLayout favoriteFrame;
     @BindView(R.id.connection_error_view) TextView connectionErrorView;
     @BindView(R.id.clear_frame) FrameLayout clearFrame;
+    @BindView(R.id.keyboard_layout) KeyboardLayout keyboardLayout;
+
+
     @BindView(R.id.share_frame)
     protected FrameLayout shareFrame;
 
@@ -187,6 +191,7 @@ public class TranslateFragment extends Fragment implements TranslationScreenCont
 
         clearFrame.setOnClickListener(v -> presenter.clear());
 
+        keyboardLayout.setKeyboardClose(() -> presenter.onKeyboardClose());
     }
 
     @Override
@@ -200,6 +205,7 @@ public class TranslateFragment extends Fragment implements TranslationScreenCont
     public void onDestroy() {
         super.onDestroy();
         subscriptions.unsubscribe();
+        presenter.onExitTranslationScreen();
         presenter.detach();
     }
 

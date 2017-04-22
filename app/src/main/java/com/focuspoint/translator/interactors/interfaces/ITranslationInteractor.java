@@ -39,6 +39,8 @@ public interface ITranslationInteractor {
 
     Observable <Translation> reverseLanguages();
 
+    Observable <Translation> addCurrentToHistory();
+
     void setFavorite(Translation translation, boolean favorite);
 
     Observable<Boolean> changeCurrentFavorite();

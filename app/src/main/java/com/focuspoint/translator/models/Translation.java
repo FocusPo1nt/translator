@@ -29,13 +29,18 @@ public class Translation {
     @StorIOSQLiteColumn(name = DB.Translations.TARGET)
     String target;
 
-    @StorIOSQLiteColumn(name = DB.Translations.FAVORITE)
-    boolean favorite;
+    @StorIOSQLiteColumn(name = DB.Translations.STORAGE)
+    int storage;
 
 
     private Language sourceLanguage;
 
     private Language targetLanguage;
+
+
+    public static int STORAGE_DEFAULT = 0;
+    public static int STORAGE_HISTORY = 1;
+    public static int STORAGE_FAVORITE = 2;
 
 
     public static final String DEFAULT_INPUT = "«Hello world!»";
@@ -163,13 +168,17 @@ public class Translation {
     }
 
 
-    public Translation setFavorite(boolean favorite) {
-        this.favorite = favorite;
+    public Translation setStorage(int storage) {
+        this.storage = storage;
         return this;
     }
 
+    public void setFavorite(boolean favorite){
+        storage = favorite? STORAGE_FAVORITE : STORAGE_HISTORY;
+    }
+
     public boolean isFavorite() {
-        return favorite;
+        return storage == STORAGE_FAVORITE;
     }
 
 

@@ -2,10 +2,8 @@ package com.focuspoint.translator.database;
 
 import com.focuspoint.translator.models.Language;
 import com.focuspoint.translator.models.Translation;
-import com.focuspoint.translator.network.TranslateApiService;
 import com.google.gson.internal.LinkedTreeMap;
 import com.pushtorefresh.storio.sqlite.StorIOSQLite;
-import com.pushtorefresh.storio.sqlite.operations.put.PutResult;
 import com.pushtorefresh.storio.sqlite.queries.DeleteQuery;
 import com.pushtorefresh.storio.sqlite.queries.Query;
 
@@ -15,9 +13,6 @@ import java.util.Map;
 import javax.inject.Inject;
 
 import rx.Observable;
-import rx.Single;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Func1;
 
 /**
  * Class that deals with the StorIO & rxjava;
@@ -38,11 +33,13 @@ public class DB {
 
     //    region TRANSLATIONS
 
-    public Observable <List<Translation>> getTranslations(){
+    public Observable <List<Translation>> getHistory(){
         return database.get()
                 .listOfObjects(Translation.class)
                 .withQuery(Query.builder()
                         .table(Translations.TABLE)
+                        .where(Translations.STORAGE + " = " + Translation.STORAGE_HISTORY + " OR " +
+                                Translations.STORAGE + " = " + Translation.STORAGE_FAVORITE)
                         .orderBy(Translations.DATE + " DESC")
                         .build())
                 .prepare()
@@ -55,7 +52,7 @@ public class DB {
                 .listOfObjects(Translation.class)
                 .withQuery(Query.builder()
                         .table(Translations.TABLE)
-                        .where(Translations.FAVORITE + " = 1")
+                        .where(Translations.STORAGE + " = " + Translation.STORAGE_FAVORITE)
                         .orderBy(Translations.DATE + " DESC")
                         .build())
                 .prepare()
@@ -114,7 +111,7 @@ public class DB {
                 .delete()
                 .byQuery(DeleteQuery.builder()
                         .table(Translations.TABLE)
-                        .where(Translations.FAVORITE + " = 1")
+                        .where(Translations.STORAGE + " = 1")
                         .build())
                 .prepare()
                 .executeAsBlocking();
@@ -176,7 +173,7 @@ public class DB {
         public static final String SOURCE = "source";
         public static final String TARGET = "target";
         public static final String DATE = "date";
-        public static final String FAVORITE = "favorite";
+        public static final String STORAGE = "storage";
     }
 
     //Table that link source with available target languages;

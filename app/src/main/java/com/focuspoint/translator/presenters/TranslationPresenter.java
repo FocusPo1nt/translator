@@ -94,20 +94,13 @@ public class TranslationPresenter implements TranslationScreenContract.Presenter
 
     @Override
     public void reverseLanguages() {
+
         translationInteractor.reverseLanguages()
             .subscribe(
                 translation -> {},
                 throwable -> System.out.println(throwable.toString()));
     }
 
-    private void showTranslation(Translation translation){
-        view.get().showInput(translation.getInput());
-        view.get().showOutput(translation.getOutputWithWatermark());
-        view.get().showSource(translation.getSourceLanguage());
-        view.get().showTarget(translation.getTargetLanguage());
-        view.get().showAddToFavorites(translation.isFavorite());
-        if (translation.getOutput().isEmpty()) view.get().hideMenu();
-    }
 
 
     @Override
@@ -121,6 +114,24 @@ public class TranslationPresenter implements TranslationScreenContract.Presenter
     }
 
 
+    @Override
+    public void clear() {
+        translationInteractor.clearCurrent();
+    }
+
+
+    @Override
+    public void onKeyboardClose() {
+        subscriptions.add(translationInteractor.addCurrentToHistory()
+                .subscribe(t -> {}, this::handleError));
+    }
+
+    @Override
+    public void onExitTranslationScreen() {
+        subscriptions.add(translationInteractor.addCurrentToHistory()
+                .subscribe(t -> {}, this::handleError));
+    }
+
     private void handleError(Throwable e){
         System.out.println("presenter" + e);
         if (e instanceof UnknownHostException){
@@ -128,9 +139,15 @@ public class TranslationPresenter implements TranslationScreenContract.Presenter
         }
     }
 
-
-    @Override
-    public void clear() {
-        translationInteractor.clearCurrent();
+    private void showTranslation(Translation translation){
+        view.get().showInput(translation.getInput());
+        view.get().showOutput(translation.getOutputWithWatermark());
+        view.get().showSource(translation.getSourceLanguage());
+        view.get().showTarget(translation.getTargetLanguage());
+        view.get().showAddToFavorites(translation.isFavorite());
+        if (translation.getOutput().isEmpty()) view.get().hideMenu();
     }
+
+
+
 }

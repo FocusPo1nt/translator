@@ -95,8 +95,8 @@ public abstract class TranslationListFragment extends Fragment implements Transl
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(adapter);
 
-        keyboardLayout.setOnOpenKeyboardListener(() -> searchEditText.setCursorVisible(true));
-        keyboardLayout.setOnCloseKeyboardListener(() -> searchEditText.setCursorVisible(false));
+        keyboardLayout.setKeyboardOpen(() -> searchEditText.setCursorVisible(true));
+        keyboardLayout.setKeyboardClose(() -> searchEditText.setCursorVisible(false));
 
         searchEditText.addTextChangedListener(searchWatcher);
 

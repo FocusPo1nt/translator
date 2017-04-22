@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
+
+<com.focuspoint.translator.utils.KeyboardLayout
+    android:id="@+id/keyboard_layout"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
@@ -220,4 +222,4 @@
 
 
 
-</android.support.constraint.ConstraintLayout>
+</com.focuspoint.translator.utils.KeyboardLayout>

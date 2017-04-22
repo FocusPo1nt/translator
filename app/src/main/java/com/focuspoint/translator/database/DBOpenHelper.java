@@ -42,7 +42,7 @@ public class DBOpenHelper extends SQLiteOpenHelper{
                 + DB.Translations.DIRECTION  + " TEXT KEY, "
                 + DB.Translations.TARGET + " TEXT, "
                 + DB.Translations.OUTPUT     + " TEXT, "
-                + DB.Translations.FAVORITE     + " INTEGER, "
+                + DB.Translations.STORAGE + " INTEGER, "
                 + DB.Translations.DATE   + " INTEGER);");
 
         //no need;

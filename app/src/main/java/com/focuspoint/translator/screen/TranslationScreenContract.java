@@ -56,9 +56,12 @@ public class TranslationScreenContract {
         /**on change source and target languages;*/
         void reverseLanguages();
 
+        void onKeyboardClose();
+
+        void onExitTranslationScreen();
+
         /**on add/remove favorite;*/
         void changeFavorites();
-
 
         void clear();
 
