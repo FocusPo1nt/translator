@@ -1,7 +1,5 @@
 package com.focuspoint.translator.presenters;
 
-import android.widget.Toast;
-
 import com.focuspoint.translator.interactors.interfaces.ILanguageInteractor;
 import com.focuspoint.translator.interactors.interfaces.ITranslationInteractor;
 import com.focuspoint.translator.models.Language;
@@ -26,6 +24,7 @@ public class TranslationPresenter implements TranslationScreenContract.Presenter
     private CompositeSubscription subscriptions;
     private WeakReference<TranslationScreenContract.View> view;
 
+    private boolean inputChanged; //TODO try without this state;
 
 
     public TranslationPresenter(ITranslationInteractor translationInteractor, ILanguageInteractor languageInteractor){
@@ -41,7 +40,7 @@ public class TranslationPresenter implements TranslationScreenContract.Presenter
 
         subscriptions.add(translationInteractor.getOnTranslateSubject()
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(this::showTranslation));
+                .subscribe(this::showTranslation, this::handleError));
 
         subscriptions.add(translationInteractor.getOnSourceSubject()
                 .subscribe(translation -> view.get().showSource(translation.getSourceLanguage())));
@@ -61,10 +60,11 @@ public class TranslationPresenter implements TranslationScreenContract.Presenter
 
     @Override
     public void onInputChanged(String text) {
+        inputChanged = true;
         subscriptions.add(translationInteractor.onInputChanged(text)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
-                        translation -> {},
+                        translation -> inputChanged = false,
                         this::handleError));
     }
 
@@ -73,8 +73,6 @@ public class TranslationPresenter implements TranslationScreenContract.Presenter
         subscriptions.add(translationInteractor.getLastTranslation()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .doOnNext(translation -> System.out.println("load in presenter " + translation))
-                .doOnError(throwable -> System.out.println("presenter EROROR"))
                 .subscribe(
                         this::showTranslation,
                         this::handleError)
@@ -133,21 +131,21 @@ public class TranslationPresenter implements TranslationScreenContract.Presenter
     }
 
     private void handleError(Throwable e){
-        System.out.println("presenter" + e);
+
         if (e instanceof UnknownHostException){
             view.get().showConnectionError();
         }
     }
 
     private void showTranslation(Translation translation){
-        view.get().showInput(translation.getInput());
+
+
+        if (!inputChanged) view.get().showInput(translation.getInput());
         view.get().showOutput(translation.getOutputWithWatermark());
         view.get().showSource(translation.getSourceLanguage());
         view.get().showTarget(translation.getTargetLanguage());
         view.get().showAddToFavorites(translation.isFavorite());
         if (translation.getOutput().isEmpty()) view.get().hideMenu();
     }
-
-
 
 }

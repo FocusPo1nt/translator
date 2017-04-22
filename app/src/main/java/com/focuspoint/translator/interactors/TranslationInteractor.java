@@ -8,7 +8,9 @@ import com.focuspoint.translator.models.Model;
 import com.focuspoint.translator.models.Translation;
 import com.focuspoint.translator.network.TranslateApiService;
 
+import java.sql.Time;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 
@@ -83,7 +85,8 @@ public class TranslationInteractor implements ITranslationInteractor {
                     database.saveDB(result);
                     translating = false;
                     translationSubject.onNext(result);
-        });
+                });
+
     }
 
 
@@ -120,11 +123,7 @@ public class TranslationInteractor implements ITranslationInteractor {
 
     @Override
     public Observable<Translation> getOnTranslateSubject() {
-        System.out.println("FROM " + this.hashCode());
-        System.out.println("GET TRANSLATION SUBJECT " + targetSubject.hashCode());
-        Observable<Translation> observable = translationSubject;//.doOnNext(translation -> System.out.println("DOONEXT TRANSLATION " + translationSubject.hashCode()));
-        System.out.println("GET TRANSLATION OBSERVABLE " + observable.hashCode());
-        return observable;
+        return translationSubject;
     }
 
     @Override
@@ -196,11 +195,9 @@ public class TranslationInteractor implements ITranslationInteractor {
 
     @Override
     public Observable <Translation> addCurrentToHistory() {
-        if (translating) return Observable.error(
-                new IllegalStateException("Cant add to history when translating"));
-
-        return getLastTranslation()
+        return  getLastTranslation()
                 .filter(translation -> !translation.getInput().isEmpty())
+                .delay(1, TimeUnit.SECONDS)
                 .doOnNext(translation -> translation.setFavorite(translation.isFavorite()))
                 .doOnNext(translation ->  database.saveDB(translation));
     }
@@ -294,6 +291,7 @@ public class TranslationInteractor implements ITranslationInteractor {
                 .flatMap(this::translate)
                 .flatMap(translation -> addCurrentToHistory());
     }
+
 
     private PublishSubject<Translation> translationSubject = PublishSubject.create();
 

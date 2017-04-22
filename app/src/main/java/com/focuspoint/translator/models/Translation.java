@@ -9,7 +9,7 @@ import com.pushtorefresh.storio.sqlite.annotations.StorIOSQLiteType;
  */
 
 @StorIOSQLiteType(table = DB.Translations.TABLE)
-public class Translation {
+public class Translation implements Cloneable{
 
     @StorIOSQLiteColumn(name = DB.Translations.INPUT, key = true)
     String input;
@@ -34,7 +34,6 @@ public class Translation {
 
 
     private Language sourceLanguage;
-
     private Language targetLanguage;
 
 
@@ -43,8 +42,8 @@ public class Translation {
     public static int STORAGE_FAVORITE = 2;
 
 
-    public static final String DEFAULT_INPUT = "«Hello world!»";
-    public static final String DEFAULT_OUTPUT= "«Здравствуй, мир!»";
+    private static final String DEFAULT_INPUT = "«Hello world!»";
+    private static final String DEFAULT_OUTPUT= "«Здравствуй, мир!»";
 
 
     public Translation(Language sourceLanguage, Language targetLanguage, String input, String output){
@@ -210,4 +209,17 @@ public class Translation {
         return translation;
     }
 
+    public Translation copy(){
+        Translation clone = new Translation();
+        clone.input = input;
+        clone.output = output;
+        clone.storage = storage;
+        clone.source = source;
+        clone.target = target;
+        clone.targetLanguage = targetLanguage;
+        clone.sourceLanguage = sourceLanguage;
+        clone.date = date;
+        clone.direction = direction;
+        return clone;
+    }
 }
