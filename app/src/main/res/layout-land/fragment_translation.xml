@@ -29,6 +29,7 @@
 
             <TextView
                 android:id="@+id/from_language"
+                style="@style/ToolbarText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textAlignment="textEnd"
@@ -37,6 +38,7 @@
 
             <ImageView
                 android:id="@+id/reverse_image_view"
+                android:tint="#ffffff"
                 android:layout_width="20dp"
                 android:layout_height="20dp"
                 android:layout_margin="5dp"
@@ -44,6 +46,7 @@
 
             <TextView
                 android:id="@+id/to_language"
+                style="@style/ToolbarText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textAlignment="textStart"
@@ -53,10 +56,11 @@
     </android.support.v7.widget.Toolbar>
 
 
-    <EditText
+    <com.focuspoint.translator.utils.MultilineDoneEditText
         android:id="@+id/input_edit_text"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:imeOptions="actionDone"
         android:hint="Type text"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="@id/center"
