@@ -71,9 +71,7 @@ public class HistoryPresenter implements TranslationListContract.HistoryPresente
         subscriptions.add(translationInteractor
                 .getHistory()
                 .observeOn(AndroidSchedulers.mainThread())
-                .doOnNext(t -> System.out.println("gethistory without filter " + t.size()))
                 .map(t -> searchFilter(t, view.get().getSearch()))
-                .doOnNext(t -> System.out.println("gethistory after filter " + t.size()))
                 .first()
                 .subscribe(
                         translations -> this.view.get().showHistory(translations),

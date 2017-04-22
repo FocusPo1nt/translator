@@ -25,9 +25,7 @@ public interface ITranslationInteractor {
 
     Observable <Translation> onInputChanged(String input);
 
-    Observable <Translation> onSourceChanged(Language language);
-
-    Observable <Translation> onTargetChanged (Language language);
+    Observable <Translation> changeCurrentLanguage (Language source, Language target);
 
     Observable <Translation> getOnTranslateSubject();
 

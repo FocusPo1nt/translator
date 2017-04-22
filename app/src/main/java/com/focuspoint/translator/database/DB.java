@@ -29,8 +29,6 @@ public class DB {
         this.database = storIOSQLite;
     }
 
-
-
     //    region TRANSLATIONS
 
     public Observable <List<Translation>> getHistory(){
@@ -96,30 +94,34 @@ public class DB {
                 .executeAsBlocking();
     }
 
+    //TODO don't remove from database;
     public void clearHistory(){
         database
                 .delete()
                 .byQuery(DeleteQuery.builder()
                         .table(Translations.TABLE)
+                        .where(Translations.STORAGE + " = " + Translation.STORAGE_HISTORY)
                         .build())
                 .prepare()
                 .executeAsBlocking();
     }
 
+    //TODO don't remove from database;
     public void clearFavorites(){
         database
                 .delete()
                 .byQuery(DeleteQuery.builder()
                         .table(Translations.TABLE)
-                        .where(Translations.STORAGE + " = 1")
+                        .where(Translations.STORAGE + " = " + Translation.STORAGE_FAVORITE)
                         .build())
                 .prepare()
                 .executeAsBlocking();
-
     }
 
 
     //    endregion
+
+    //    region LANGUAGES
 
     public Observable <Map<String, Language>> getLanguages(){
         return database.get()
@@ -137,10 +139,6 @@ public class DB {
                     return map;
                 });
     }
-
-
-    //    region LANGUAGES
-
 
 
 

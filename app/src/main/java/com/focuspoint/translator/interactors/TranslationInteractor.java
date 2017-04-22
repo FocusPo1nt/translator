@@ -19,7 +19,6 @@ import rx.subjects.PublishSubject;
 
 /**
  * Interactor implementation;
- * handles current Translation state;
  */
 
 
@@ -61,6 +60,8 @@ public class TranslationInteractor implements ITranslationInteractor {
     public Observable<Translation> translate(Translation translation) {
         translating = true;
 
+        translation.prepareForSQLstorage();
+        System.out.println(translation.getInput());
         Observable<Translation> rawTranslationObserver =  Observable
                 .concat(
                         translateFromDB(translation),
@@ -95,31 +96,26 @@ public class TranslationInteractor implements ITranslationInteractor {
                 .flatMap(this::translate);
     }
 
-    @Override
-    public Observable<Translation> onSourceChanged(Language language) {
-        return getLastTranslation()
-                .doOnNext(translation -> translation.setSourceLanguage(language))
-                .doOnNext(translation -> sourceSubject.onNext(translation))
-                .flatMap(this::translate)
-                .flatMap(translation -> addCurrentToHistory());
-    }
 
     @Override
-    public Observable<Translation> onTargetChanged(Language language) {
+    public Observable<Translation> changeCurrentLanguage(Language source, Language target){
         return getLastTranslation()
-                .doOnNext(translation -> translation.setTargetLanguage(language))
-                .doOnNext(translation -> targetSubject.onNext(translation))
-                .flatMap(this::translate)
-                .flatMap(translation -> addCurrentToHistory());
+                .flatMap(t -> {
+                    // check if need reverse;
+                    if ((t.getSourceLanguage().equals(target) || t.getTargetLanguage().equals(source))
+                            && !t.getSource().equals(t.getTarget())){
+                        return reverseLanguages();
+                    }else{
+                        if (source!=null){
+                            return onSourceChanged(source);
+                        }else{
+                            return onTargetChanged(target);
+                        }
+                    }
+                });
     }
 
-    private PublishSubject<Translation> translationSubject = PublishSubject.create();
 
-    private PublishSubject<Translation> sourceSubject = PublishSubject.create();
-
-    private PublishSubject<Translation> targetSubject = PublishSubject.create();
-
-    private PublishSubject<Translation> favoriteSubject = PublishSubject.create();
 
 
     @Override
@@ -157,35 +153,7 @@ public class TranslationInteractor implements ITranslationInteractor {
                 .flatMap(translation -> addCurrentToHistory());
     }
 
-    private Observable<Translation> translateFromDB(Translation translation) {
-        return database.translate(translation)
-                .first();
-    }
 
-    private Observable<Translation> translateFromApi(Translation translation){
-        return apiService
-                .translate(translation.getInput(), translation.getDirection())
-                .subscribeOn(Schedulers.io())
-                .map(translationRM -> translation
-                        .setOutput(translationRM.text.get(0))
-                        .setStorage(Translation.STORAGE_DEFAULT));
-    }
-
-
-    private Observable<Translation> getLastFromDB(){
-
-        return Observable.combineLatest(
-                database.getLastTranslation().first(),
-                languageInteractor.loadLanguages(), (result, map) ->{
-                    if (result != null) {
-                        result.setSourceLanguage(map.get(result.getSource()));
-                        result.setTargetLanguage(map.get(result.getTarget()));
-                    }
-                    return result;
-                })
-                .first();
-
-    }
 
 
     @Override
@@ -228,18 +196,22 @@ public class TranslationInteractor implements ITranslationInteractor {
 
     @Override
     public Observable <Translation> addCurrentToHistory() {
-        if (translating) return Observable.error(new Throwable("Cant add to history when translating"));
+        if (translating) return Observable.error(
+                new IllegalStateException("Cant add to history when translating"));
 
         return getLastTranslation()
+                .filter(translation -> !translation.getInput().isEmpty())
                 .doOnNext(translation -> translation.setFavorite(translation.isFavorite()))
                 .doOnNext(translation ->  database.saveDB(translation));
     }
 
     @Override
     public Observable<Boolean> changeCurrentFavorite() {
-        if (translating) return Observable.error(new Throwable("Cant add to favorite when translating"));
+        if (translating) return Observable.error(
+                new IllegalStateException("Cant add to favorite when translating"));
 
         return getLastTranslation()
+                .filter(translation -> !translation.getInput().isEmpty())
                 .doOnNext(translation -> translation.setFavorite(!translation.isFavorite()))
                 .doOnNext(translation ->  database.saveDB(translation))
                 .map(Translation::isFavorite);
@@ -274,4 +246,60 @@ public class TranslationInteractor implements ITranslationInteractor {
     public void clearHistory() {
         database.clearHistory();
     }
+
+
+    private Observable<Translation> translateFromDB(Translation translation) {
+        return database.translate(translation)
+                .first();
+    }
+
+    private Observable<Translation> translateFromApi(Translation translation){
+        return apiService
+                .translate(translation.getInput(), translation.getDirection())
+                .subscribeOn(Schedulers.io())
+                .map(translationRM -> translation
+                        .setOutput(translationRM.text.get(0))
+                        .setStorage(Translation.STORAGE_DEFAULT));
+    }
+
+
+    private Observable<Translation> getLastFromDB(){
+
+        return Observable.combineLatest(
+                database.getLastTranslation().first(),
+                languageInteractor.loadLanguages(), (result, map) ->{
+                    if (result != null) {
+                        result.setSourceLanguage(map.get(result.getSource()));
+                        result.setTargetLanguage(map.get(result.getTarget()));
+                    }
+                    return result;
+                })
+                .first();
+
+    }
+
+
+    private Observable<Translation> onSourceChanged(Language language) {
+        return getLastTranslation()
+                .doOnNext(translation -> translation.setSourceLanguage(language))
+                .doOnNext(translation -> sourceSubject.onNext(translation))
+                .flatMap(this::translate)
+                .flatMap(translation -> addCurrentToHistory());
+    }
+
+    private Observable<Translation> onTargetChanged(Language language) {
+        return getLastTranslation()
+                .doOnNext(translation -> translation.setTargetLanguage(language))
+                .doOnNext(translation -> targetSubject.onNext(translation))
+                .flatMap(this::translate)
+                .flatMap(translation -> addCurrentToHistory());
+    }
+
+    private PublishSubject<Translation> translationSubject = PublishSubject.create();
+
+    private PublishSubject<Translation> sourceSubject = PublishSubject.create();
+
+    private PublishSubject<Translation> targetSubject = PublishSubject.create();
+
+    private PublishSubject<Translation> favoriteSubject = PublishSubject.create();
 }

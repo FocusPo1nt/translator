@@ -98,4 +98,9 @@ public class Language{
         map.put(target.getCode(), target);
         return map;
     }
+
+    public boolean equals(Language language) {
+        if (language == null) return false;
+        return  language.getCode().equals(getCode());
+    }
 }

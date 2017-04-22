@@ -192,8 +192,11 @@ public class Translation {
         }else{
             return super.equals(obj);
         }
+    }
 
-
+    //TODO create escaping;
+    public void prepareForSQLstorage(){
+        input = input.replace("'","").replace(";","");
     }
 
 

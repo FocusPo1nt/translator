@@ -55,8 +55,8 @@ public class TranslateFragment extends Fragment implements TranslationScreenCont
     @BindView(R.id.keyboard_layout) KeyboardLayout keyboardLayout;
 
 
-    @BindView(R.id.share_frame)
-    protected FrameLayout shareFrame;
+    @BindView(R.id.share_frame) protected FrameLayout shareFrame;
+    @BindView(R.id.share_image) protected ImageView shareImageView;
 
 
 
@@ -104,6 +104,7 @@ public class TranslateFragment extends Fragment implements TranslationScreenCont
         outputTextView.setVisibility(View.VISIBLE);
         favoriteFrame.setClickable(true);
         starImageView.setVisibility(View.VISIBLE);
+        shareImageView.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -150,12 +151,10 @@ public class TranslateFragment extends Fragment implements TranslationScreenCont
     public void hideMenu() {
         favoriteFrame.setClickable(false);
         starImageView.setVisibility(View.GONE);
+        shareImageView.setVisibility(View.GONE);
     }
 
-    @Override
-    public void showShare() {
 
-    }
 
     private void initViews(){
 
@@ -166,9 +165,9 @@ public class TranslateFragment extends Fragment implements TranslationScreenCont
 
         inputEditText.addTextChangedListener(textWatcher);
 
-        //There is some input logic
+        //There is some input logic;
         subscriptions.add(RxTextView.textChanges(inputEditText)
-                .debounce(1, TimeUnit.SECONDS)
+                .debounce(500, TimeUnit.MILLISECONDS)
                 .filter(charSequence -> validateLastInput())
                 .subscribe(text -> presenter.onInputChanged(text.toString()))
         );

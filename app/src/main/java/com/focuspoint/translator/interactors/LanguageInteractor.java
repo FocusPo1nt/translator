@@ -63,12 +63,4 @@ public class LanguageInteractor implements ILanguageInteractor {
                 .doOnNext(map -> database.saveDB(new ArrayList<>(map.values())))
                 .doOnNext(map -> this.languageMap = map);
     }
-
-
-
-    private PublishSubject<Language> sourceSubject =  PublishSubject.create();
-
-
-    private PublishSubject<Language> targetSubject =  PublishSubject.create();
-
 }

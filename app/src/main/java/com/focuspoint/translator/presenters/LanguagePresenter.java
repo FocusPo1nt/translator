@@ -7,13 +7,14 @@ import com.focuspoint.translator.screen.LanguageScreenContract;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 
 /**
- *
  */
 
 public class LanguagePresenter implements LanguageScreenContract.Presenter {
@@ -45,9 +46,12 @@ public class LanguagePresenter implements LanguageScreenContract.Presenter {
     public void loadSourceLanguages() {
         subscriptions.add(languageInteractor.loadLanguages()
                 .subscribeOn(Schedulers.io())
-                .map(map -> new ArrayList<>(map.values()))
-                .doOnNext(list -> list.sort(
-                        (l1, l2) -> l1.getDescription().compareTo(l2.getDescription())))
+                .map(map -> {
+                    List<Language> list = new ArrayList<>(map.values());
+                    Collections.sort(list,
+                            (l1, l2) -> l1.getDescription().compareTo(l2.getDescription()));
+                    return list;
+                })
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                         languages -> view.get().showLanguages(languages),
@@ -60,9 +64,12 @@ public class LanguagePresenter implements LanguageScreenContract.Presenter {
 
         subscriptions.add(languageInteractor.loadLanguages()
                 .subscribeOn(Schedulers.io())
-                .map(map -> new ArrayList<>(map.values()))
-                .doOnNext(list -> list.sort(
-                        (l1, l2) -> l1.getDescription().compareTo(l2.getDescription())))
+                .map(map -> {
+                    List<Language> list = new ArrayList<>(map.values());
+                    Collections.sort(list,
+                            (l1, l2) -> l1.getDescription().compareTo(l2.getDescription()));
+                    return list;
+                })
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                         languages -> view.get().showLanguages(languages),
@@ -72,17 +79,14 @@ public class LanguagePresenter implements LanguageScreenContract.Presenter {
 
 
     @Override
-    public void onSourceChanged(Language language) {
-        translationInteractor.onSourceChanged(language)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(
-                        translation -> {}, System.out::println);
+    public void onSourceChanged(Language source) {
+        subscriptions.add(translationInteractor.changeCurrentLanguage(source, null)
+                .subscribe(translation -> {}, System.out::println));
     }
 
     @Override
-    public void onTargetChanged(Language language) {
-        translationInteractor.onTargetChanged(language)
-                .subscribe(
-                        translation -> {}, System.out::println);
+    public void onTargetChanged(Language target) {
+        subscriptions.add(translationInteractor.changeCurrentLanguage(null, target)
+                .subscribe(translation -> {}, System.out::println));
     }
 }
