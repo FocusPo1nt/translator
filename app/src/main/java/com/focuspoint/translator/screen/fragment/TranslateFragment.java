@@ -192,7 +192,12 @@ public class TranslateFragment extends Fragment implements TranslationScreenCont
 
         clearFrame.setOnClickListener(v -> presenter.clear());
 
-        keyboardLayout.setKeyboardClose(() -> presenter.onKeyboardClose());
+        keyboardLayout.setKeyboardClose(() -> {
+            presenter.onKeyboardClose();
+            inputEditText.setCursorVisible(false);
+        });
+
+        keyboardLayout.setKeyboardOpen(() -> inputEditText.setCursorVisible(true));
     }
 
     @Override
