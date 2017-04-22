@@ -2,24 +2,18 @@ package com.focuspoint.translator.interactors;
 
 import com.focuspoint.translator.database.DB;
 import com.focuspoint.translator.interactors.interfaces.ILanguageInteractor;
-import com.focuspoint.translator.interactors.interfaces.ITranslationInteractor;
 import com.focuspoint.translator.models.Language;
-import com.focuspoint.translator.models.Translation;
 import com.focuspoint.translator.models.responseModels.LanguagesRM;
 import com.focuspoint.translator.network.TranslateApiService;
-import com.google.gson.internal.LinkedTreeMap;
 
 import java.util.ArrayList;
+import java.util.Locale;
 import java.util.Map;
 
 import javax.inject.Inject;
 
-import retrofit2.Retrofit;
 import rx.Observable;
-import rx.Subscriber;
-import rx.functions.Action1;
-import rx.functions.Func1;
-import rx.subjects.PublishSubject;
+
 
 
 /**
@@ -58,7 +52,7 @@ public class LanguageInteractor implements ILanguageInteractor {
 
     private Observable<Map<String, Language>> loadFromApi(){
         return apiService
-                .getLangs("ru") //TODO set user language
+                .getLangs(Locale.getDefault().getLanguage()) //TODO check for user change language
                 .map(LanguagesRM::obtainLanguages)
                 .doOnNext(map -> database.saveDB(new ArrayList<>(map.values())))
                 .doOnNext(map -> this.languageMap = map);
