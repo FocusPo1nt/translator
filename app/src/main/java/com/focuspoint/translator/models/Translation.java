@@ -130,8 +130,6 @@ public class Translation implements Cloneable{
 
         sb.append(getDirection()).append(" ");
         if (output!= null) sb.append(output).append(" ");
-        sb.append("soutce = " + sourceLanguage).append(" ");
-        sb.append("target = " + targetLanguage);
 
         return sb.toString();
     }
@@ -227,8 +225,9 @@ public class Translation implements Cloneable{
     }
 
 
-    public void setDictionary(String dictionary) {
+    public Translation setDictionary(String dictionary) {
         this.dictionary = dictionary;
+        return this;
     }
 
     public String getDictionary() {

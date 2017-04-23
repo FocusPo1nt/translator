@@ -30,7 +30,7 @@ public class TranslationScreenContract {
 
         void showAddToFavorites(boolean favorite);
 
-        void showConnectionError();
+        void showError();
 
         String getInput();
 

@@ -57,7 +57,7 @@ public class HistoryPresenter implements TranslationListContract.HistoryPresente
 
 
     private void handleError(Throwable error) {
-        System.out.println(error);
+        System.out.println("history presenter " + error);
     }
 
     @Override

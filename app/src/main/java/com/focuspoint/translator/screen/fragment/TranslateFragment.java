@@ -8,14 +8,17 @@ import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.Layout;
 import android.text.TextWatcher;
+import android.view.InputEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.focuspoint.translator.App;
 import com.focuspoint.translator.R;
@@ -26,6 +29,7 @@ import com.focuspoint.translator.screen.activity.SourceLanguageActivity;
 import com.focuspoint.translator.screen.activity.TargetLanguageActivity;
 import com.focuspoint.translator.utils.KeyboardLayout;
 import com.jakewharton.rxbinding.widget.RxTextView;
+import com.jakewharton.rxbinding.widget.TextViewEditorActionEvent;
 
 
 import java.util.concurrent.TimeUnit;
@@ -34,6 +38,7 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import rx.functions.Func1;
 import rx.subscriptions.CompositeSubscription;
 
 /**
@@ -174,6 +179,10 @@ public class TranslateFragment extends Fragment implements TranslationScreenCont
                 .subscribe(text -> presenter.onInputChanged(text.toString()))
         );
 
+        inputEditText.setOnFocusChangeListener((v, hasFocus) -> {
+            if (!hasFocus) presenter.onKeyboardClose();
+        });
+
         sourceLanguageView.setOnClickListener(v -> {
             Intent intent = new Intent(getContext(), SourceLanguageActivity.class);
             getActivity().startActivity(intent);
@@ -192,16 +201,13 @@ public class TranslateFragment extends Fragment implements TranslationScreenCont
 
         clearFrame.setOnClickListener(v -> presenter.clear());
 
-        keyboardLayout.setKeyboardClose(() -> {
-            presenter.onKeyboardClose();
-            inputEditText.setCursorVisible(false);
-        });
+        keyboardLayout.setKeyboardClose(() -> inputEditText.setCursorVisible(false));
 
         keyboardLayout.setKeyboardOpen(() -> inputEditText.setCursorVisible(true));
     }
 
     @Override
-    public void showConnectionError() {
+    public void showError() {
         outputTextView.setVisibility(View.GONE);
         connectionErrorView.setVisibility(View.VISIBLE);
         hideMenu();

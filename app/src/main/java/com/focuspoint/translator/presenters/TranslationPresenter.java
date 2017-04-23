@@ -63,8 +63,9 @@ public class TranslationPresenter implements TranslationScreenContract.Presenter
         inputChanged = true;
         subscriptions.add(translationInteractor.onInputChanged(text)
                 .observeOn(AndroidSchedulers.mainThread())
+                .doOnEach(t -> inputChanged=false)
                 .subscribe(
-                        translation -> inputChanged = false,
+                        translation -> {},
                         this::handleError));
     }
 
@@ -92,11 +93,9 @@ public class TranslationPresenter implements TranslationScreenContract.Presenter
 
     @Override
     public void reverseLanguages() {
-
         translationInteractor.reverseLanguages()
-            .subscribe(
-                translation -> {},
-                throwable -> System.out.println(throwable.toString()));
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(translation -> {}, this::handleError);
     }
 
 
@@ -131,15 +130,23 @@ public class TranslationPresenter implements TranslationScreenContract.Presenter
     }
 
     private void handleError(Throwable e){
-
+        System.out.println("from presenter" + e.toString());
         if (e instanceof UnknownHostException){
-            view.get().showConnectionError();
+            view.get().showError();
         }
     }
 
     private void showTranslation(Translation translation){
 
-        if (!inputChanged) view.get().showInput(translation.getInput());
+
+        if (translation == null) {
+            view.get().showError();
+            return;
+        }
+        System.out.println("Show Translatioin " + translation.toString());
+        if (!inputChanged || view.get().getInput().isEmpty()){
+            view.get().showInput(translation.getInput());
+        }
         view.get().showOutput(translation.getOutputWithWatermark() + "\n\n" + translation.getDictionaryWithWatermark());
         view.get().showSource(translation.getSourceLanguage());
         view.get().showTarget(translation.getTargetLanguage());

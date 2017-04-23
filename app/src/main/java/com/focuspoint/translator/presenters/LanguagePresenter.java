@@ -81,12 +81,16 @@ public class LanguagePresenter implements LanguageScreenContract.Presenter {
     @Override
     public void onSourceChanged(Language source) {
         subscriptions.add(translationInteractor.changeCurrentLanguage(source, null)
-                .subscribe(translation -> {}, System.out::println));
+                .subscribe(translation -> {}, this::handleError));
     }
 
     @Override
     public void onTargetChanged(Language target) {
         subscriptions.add(translationInteractor.changeCurrentLanguage(null, target)
-                .subscribe(translation -> {}, System.out::println));
+                .subscribe(translation -> {}, this::handleError));
+    }
+
+    private void handleError(Throwable t){
+        System.out.println("language presenter " + t);
     }
 }
