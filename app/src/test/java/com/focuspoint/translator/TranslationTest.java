@@ -7,7 +7,6 @@ import com.focuspoint.translator.interactors.interfaces.IErrorInteractor;
 import com.focuspoint.translator.models.Language;
 import com.focuspoint.translator.models.Model;
 import com.focuspoint.translator.models.Translation;
-import com.focuspoint.translator.models.responseModels.DictionaryRM;
 import com.focuspoint.translator.models.responseModels.TranslationRM;
 import com.focuspoint.translator.network.DictionaryApiService;
 import com.focuspoint.translator.network.TranslateApiService;
@@ -15,32 +14,22 @@ import com.focuspoint.translator.presenters.TranslationPresenter;
 import com.focuspoint.translator.screen.TranslationScreenContract;
 
 import org.junit.After;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 
-import java.net.UnknownHostException;
 import java.util.ArrayList;
-import java.util.Map;
-
-import retrofit2.HttpException;
 import rx.Observable;
 import rx.Scheduler;
 import rx.android.plugins.RxAndroidPlugins;
 import rx.android.plugins.RxAndroidSchedulersHook;
-import rx.observers.TestSubscriber;
 import rx.schedulers.Schedulers;
 import rx.subjects.PublishSubject;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
