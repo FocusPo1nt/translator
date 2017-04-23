@@ -10,12 +10,15 @@
         android:icon="@drawable/translator_icon"
         android:label="@string/app_name"
         android:supportsRtl="true"
+
         android:theme="@style/AppTheme">
 
         <activity
             android:name=".screen.activity.MainActivity"
             android:label="@string/app_name"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="adjustResize|stateVisible"
+            >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

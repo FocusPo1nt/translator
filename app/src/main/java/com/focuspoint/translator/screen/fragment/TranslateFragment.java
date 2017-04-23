@@ -9,6 +9,7 @@ import android.text.Editable;
 import android.text.Layout;
 import android.text.TextWatcher;
 import android.view.InputEvent;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -179,8 +180,11 @@ public class TranslateFragment extends Fragment implements TranslationScreenCont
                 .subscribe(text -> presenter.onInputChanged(text.toString()))
         );
 
-        inputEditText.setOnFocusChangeListener((v, hasFocus) -> {
-            if (!hasFocus) presenter.onKeyboardClose();
+        inputEditText.setOnEditorActionListener((v, actionId, event) -> {
+            if (actionId == EditorInfo.IME_ACTION_DONE){
+                presenter.onKeyboardClose();
+            }
+            return false;
         });
 
         sourceLanguageView.setOnClickListener(v -> {
