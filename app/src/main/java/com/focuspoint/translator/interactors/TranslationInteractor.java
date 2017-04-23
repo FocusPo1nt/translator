@@ -1,6 +1,7 @@
 package com.focuspoint.translator.interactors;
 
 import com.focuspoint.translator.database.DB;
+import com.focuspoint.translator.interactors.interfaces.IErrorInteractor;
 import com.focuspoint.translator.interactors.interfaces.ILanguageInteractor;
 import com.focuspoint.translator.interactors.interfaces.ITranslationInteractor;
 import com.focuspoint.translator.models.Language;
@@ -31,18 +32,21 @@ public class TranslationInteractor implements ITranslationInteractor {
     private ILanguageInteractor languageInteractor;
     private TranslateApiService translateApiService;
     private DictionaryApiService dictionaryApiService;
+    private IErrorInteractor errorInteractor;
     private Model model;
     private DB database;
     private boolean translating;
 
     @Inject
-    public TranslationInteractor(ILanguageInteractor languageInteractor, TranslateApiService apiService, Model model, DB database, DictionaryApiService dictionaryApiService) {
+    public TranslationInteractor
+            (ILanguageInteractor languageInteractor, TranslateApiService apiService, Model model,
+             DB database, DictionaryApiService dictionaryApiService, IErrorInteractor errorInteractor) {
         this.languageInteractor = languageInteractor;
         this.translateApiService = apiService;
         this.dictionaryApiService = dictionaryApiService;
         this.model = model;
         this.database = database;
-//        initHistoryObserver();
+        this.errorInteractor = errorInteractor;
     }
 
 
@@ -85,10 +89,7 @@ public class TranslationInteractor implements ITranslationInteractor {
                     }
                     return result;
                 })
-                .doOnError(e -> {
-                    System.out.println("null -> translationSubject");
-                    translationSubject.onNext(null);
-                })
+                .doOnError(e -> errorInteractor.onError(e))
                 .doOnNext(result -> {
                     result.setDate(System.currentTimeMillis());
                     model.setCurrentTranslation(result);
@@ -332,15 +333,4 @@ public class TranslationInteractor implements ITranslationInteractor {
             database.save(translation);
         }
     }
-
-//
-//    private void initHistoryObserver() {
-//        System.out.println("============================");
-//        getOnTranslateSubject().subscribeOn(Schedulers.io())
-//                .doOnNext(t -> System.out.println("NEXT TO OBSERVER"))
-//                .debounce(3, TimeUnit.SECONDS)
-//                .doOnNext(t -> System.out.println("NEED TO ADD"))
-//                .flatMap(t -> addCurrentToHistory())
-//                .subscribe();
-//    }
 }

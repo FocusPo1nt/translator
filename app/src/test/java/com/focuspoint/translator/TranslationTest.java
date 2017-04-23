@@ -3,6 +3,7 @@ package com.focuspoint.translator;
 import com.focuspoint.translator.database.DB;
 import com.focuspoint.translator.interactors.LanguageInteractor;
 import com.focuspoint.translator.interactors.TranslationInteractor;
+import com.focuspoint.translator.interactors.interfaces.IErrorInteractor;
 import com.focuspoint.translator.models.Language;
 import com.focuspoint.translator.models.Model;
 import com.focuspoint.translator.models.Translation;
@@ -75,6 +76,9 @@ public class TranslationTest {
     @Mock
     DictionaryApiService dictionaryApiService;
 
+    @Mock
+    IErrorInteractor errorInteractor;
+
 
 
     @Before
@@ -89,9 +93,10 @@ public class TranslationTest {
 
         model = new Model();
 
-        translationInteractor = new TranslationInteractor(languageInteractor, apiService, model, database, dictionaryApiService);
+        translationInteractor = new TranslationInteractor(languageInteractor, apiService, model,
+                database, dictionaryApiService, errorInteractor);
 
-        presenter = new TranslationPresenter(translationInteractor, languageInteractor);
+        presenter = new TranslationPresenter(translationInteractor, languageInteractor, errorInteractor);
     }
 
 
@@ -124,9 +129,10 @@ public class TranslationTest {
         when(translationInteractorMock.getOnSourceSubject()).thenReturn(subject);
         when(translationInteractorMock.getOnTargetSubject()).thenReturn(subject);
         when(translationInteractorMock.getOnTranslateSubject()).thenReturn(subject);
+        when(errorInteractor.getErrorObservable()).thenReturn(subject.asObservable());
 
 
-        TranslationPresenter presenter = new TranslationPresenter(translationInteractorMock, languageInteractor);
+        TranslationPresenter presenter = new TranslationPresenter(translationInteractorMock, languageInteractor, errorInteractor);
         presenter.attach(view);
 
 

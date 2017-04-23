@@ -4,8 +4,10 @@ import android.app.Application;
 
 import com.focuspoint.translator.App;
 import com.focuspoint.translator.database.DB;
+import com.focuspoint.translator.interactors.ErrorInteractor;
 import com.focuspoint.translator.interactors.LanguageInteractor;
 import com.focuspoint.translator.interactors.TranslationInteractor;
+import com.focuspoint.translator.interactors.interfaces.IErrorInteractor;
 import com.focuspoint.translator.interactors.interfaces.ILanguageInteractor;
 import com.focuspoint.translator.interactors.interfaces.ITranslationInteractor;
 import com.focuspoint.translator.models.Model;
@@ -53,24 +55,35 @@ public class AppModule {
 
     @Provides
     @Singleton
-    ITranslationInteractor provideTranslationInteractor(ILanguageInteractor interactor, TranslateApiService apiService, Model model, DB db, DictionaryApiService dictionaryApiService) {
-        return new TranslationInteractor( interactor, apiService, model, db, dictionaryApiService);
+    ITranslationInteractor provideTranslationInteractor
+            (ILanguageInteractor interactor, TranslateApiService apiService, Model model, DB db,
+             DictionaryApiService dictionaryApiService, IErrorInteractor errorInteractor) {
+        return new TranslationInteractor( interactor, apiService, model, db, dictionaryApiService, errorInteractor);
     }
+    @Provides
+    @Singleton
+    IErrorInteractor provideErrorInteractor() {
+        return new ErrorInteractor();
+    }
+
+
 
     //endregion
 
     //region Presenters
     @Provides
     @Singleton
-    LanguageScreenContract.Presenter provideLanguagePresenter (ILanguageInteractor interactor, ITranslationInteractor translationInteractor) {
+    LanguageScreenContract.Presenter provideLanguagePresenter (ILanguageInteractor interactor,
+                                                               ITranslationInteractor translationInteractor) {
         return new LanguagePresenter(interactor, translationInteractor);
     }
 
 
     @Provides
     @Singleton
-    TranslationScreenContract.Presenter provideTranslationPresenter (ITranslationInteractor interactor, ILanguageInteractor languageInteractor) {
-        return new TranslationPresenter(interactor, languageInteractor);
+    TranslationScreenContract.Presenter provideTranslationPresenter
+            (ITranslationInteractor interactor, ILanguageInteractor languageInteractor, IErrorInteractor errorInteractor) {
+        return new TranslationPresenter(interactor, languageInteractor, errorInteractor);
     }
 
 

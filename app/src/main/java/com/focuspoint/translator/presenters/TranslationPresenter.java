@@ -1,5 +1,6 @@
 package com.focuspoint.translator.presenters;
 
+import com.focuspoint.translator.interactors.interfaces.IErrorInteractor;
 import com.focuspoint.translator.interactors.interfaces.ILanguageInteractor;
 import com.focuspoint.translator.interactors.interfaces.ITranslationInteractor;
 import com.focuspoint.translator.models.Language;
@@ -21,15 +22,19 @@ public class TranslationPresenter implements TranslationScreenContract.Presenter
 
     private ITranslationInteractor translationInteractor;
     private ILanguageInteractor languageInteractor;
+    private IErrorInteractor errorInteractor;
     private CompositeSubscription subscriptions;
     private WeakReference<TranslationScreenContract.View> view;
 
     private boolean inputChanged; //TODO try without this state;
 
 
-    public TranslationPresenter(ITranslationInteractor translationInteractor, ILanguageInteractor languageInteractor){
+    public TranslationPresenter(ITranslationInteractor translationInteractor, ILanguageInteractor languageInteractor,
+                                IErrorInteractor errorInteractor){
         this.translationInteractor = translationInteractor;
         this.languageInteractor = languageInteractor;
+        this.errorInteractor = errorInteractor;
+
     }
 
     @Override
@@ -50,6 +55,10 @@ public class TranslationPresenter implements TranslationScreenContract.Presenter
 
         subscriptions.add(translationInteractor.getOnFavoriteSubject()
                 .subscribe(translation -> view.get().showAddToFavorites(translation.isFavorite())));
+
+        subscriptions.add(errorInteractor.getErrorObservable()
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(this::handleError, this::handleError));
     }
 
     @Override
@@ -139,10 +148,6 @@ public class TranslationPresenter implements TranslationScreenContract.Presenter
     private void showTranslation(Translation translation){
 
 
-        if (translation == null) {
-            view.get().showError();
-            return;
-        }
         System.out.println("Show Translatioin " + translation.toString());
         if (!inputChanged || view.get().getInput().isEmpty()){
             view.get().showInput(translation.getInput());
