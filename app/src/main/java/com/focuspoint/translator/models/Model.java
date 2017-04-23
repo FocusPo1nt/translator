@@ -34,6 +34,14 @@ public class Model {
 
     }
 
+    public void setDictionary(String dictionary){
+        if (currentTranslation != null){
+            currentTranslation.setDictionary(dictionary);
+        }
+
+    }
+
+
     public void setCurrentInput(String input){
         if (currentTranslation != null){
             currentTranslation.setInput(input);

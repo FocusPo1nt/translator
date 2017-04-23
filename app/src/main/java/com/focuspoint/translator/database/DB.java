@@ -86,7 +86,7 @@ public class DB {
                 .asRxObservable();
     }
 
-    public void saveDB(Translation translation){
+    public void save(Translation translation){
         database
                 .put()
                 .object(translation)
@@ -167,6 +167,7 @@ public class DB {
         public static final String TABLE = "translations";
         public static final String INPUT = "_input";
         public static final String OUTPUT = "output";
+        public static final String DICTIONARY = "dictionary";
         public static final String DIRECTION = "direction";
         public static final String SOURCE = "source";
         public static final String TARGET = "target";

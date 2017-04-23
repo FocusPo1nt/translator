@@ -9,6 +9,7 @@ import com.focuspoint.translator.interactors.TranslationInteractor;
 import com.focuspoint.translator.interactors.interfaces.ILanguageInteractor;
 import com.focuspoint.translator.interactors.interfaces.ITranslationInteractor;
 import com.focuspoint.translator.models.Model;
+import com.focuspoint.translator.network.DictionaryApiService;
 import com.focuspoint.translator.network.TranslateApiService;
 import com.focuspoint.translator.presenters.FavoritePresenter;
 import com.focuspoint.translator.presenters.HistoryPresenter;
@@ -52,8 +53,8 @@ public class AppModule {
 
     @Provides
     @Singleton
-    ITranslationInteractor provideTranslationInteractor(ILanguageInteractor interactor, TranslateApiService apiService, Model model, DB db) {
-        return new TranslationInteractor( interactor, apiService, model, db);
+    ITranslationInteractor provideTranslationInteractor(ILanguageInteractor interactor, TranslateApiService apiService, Model model, DB db, DictionaryApiService dictionaryApiService) {
+        return new TranslationInteractor( interactor, apiService, model, db, dictionaryApiService);
     }
 
     //endregion

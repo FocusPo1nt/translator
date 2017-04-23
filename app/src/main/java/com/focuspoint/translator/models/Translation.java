@@ -17,6 +17,9 @@ public class Translation implements Cloneable{
     @StorIOSQLiteColumn(name = DB.Translations.OUTPUT)
     String output;
 
+    @StorIOSQLiteColumn(name = DB.Translations.DICTIONARY)
+    String dictionary;
+
     @StorIOSQLiteColumn(name = DB.Translations.DATE)
     long date;
 
@@ -107,7 +110,7 @@ public class Translation implements Cloneable{
 
     /**Add constant text to the end of translation result;*/
     public String getOutputWithWatermark(){
-        String watermark = "\n\nПереведено сервисом\n«Яндекс Переводчик»\nhttp://translate.yandex.ru/";
+        String watermark = "\n\nПереведено сервисом\n«Яндекс Переводчик»\nhttp://translate.yandex.ru";
         String result = "";
         if (!output.isEmpty() && !output.contains(watermark)){
             result = output + watermark;
@@ -222,4 +225,28 @@ public class Translation implements Cloneable{
         clone.direction = direction;
         return clone;
     }
+
+
+    public void setDictionary(String dictionary) {
+        this.dictionary = dictionary;
+    }
+
+    public String getDictionary() {
+        return dictionary;
+    }
+
+
+    /**Add constant text to the end of translation result;*/
+    public String getDictionaryWithWatermark(){
+
+
+        String watermark = "\n\nРеализовано с помощью сервиса \n«Яндекс Словарь»\nhttps://tech.yandex.ru/dictionary/";
+        String result = "";
+        if (dictionary != null && !dictionary.isEmpty() && !dictionary.contains(watermark)){
+            result = dictionary + watermark;
+        }
+        return result;
+    }
+
+
 }

@@ -1,8 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
+    <color name="transparent">#00000000</color>
+
     <color name="colorPrimary">#5677fc</color>
     <color name="colorPrimaryDark">#455ede</color>
     <color name="colorAccent">#40c4ff</color>
 
     <color name="toolbarText">#e6e7ed</color>
+    <color name="tabSelected">#e6e7ed</color>
+
+
 </resources>

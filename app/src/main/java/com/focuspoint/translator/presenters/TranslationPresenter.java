@@ -139,12 +139,12 @@ public class TranslationPresenter implements TranslationScreenContract.Presenter
 
     private void showTranslation(Translation translation){
 
-
         if (!inputChanged) view.get().showInput(translation.getInput());
-        view.get().showOutput(translation.getOutputWithWatermark());
+        view.get().showOutput(translation.getOutputWithWatermark() + "\n\n" + translation.getDictionaryWithWatermark());
         view.get().showSource(translation.getSourceLanguage());
         view.get().showTarget(translation.getTargetLanguage());
         view.get().showAddToFavorites(translation.isFavorite());
+
         if (translation.getOutput().isEmpty()) view.get().hideMenu();
     }
 

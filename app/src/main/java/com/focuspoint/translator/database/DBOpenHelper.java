@@ -40,6 +40,7 @@ public class DBOpenHelper extends SQLiteOpenHelper{
                 + DB.Translations.INPUT + " TEXT KEY, "
                 + DB.Translations.SOURCE + " TEXT, "
                 + DB.Translations.DIRECTION  + " TEXT KEY, "
+                + DB.Translations.DICTIONARY  + " TEXT, "
                 + DB.Translations.TARGET + " TEXT, "
                 + DB.Translations.OUTPUT     + " TEXT, "
                 + DB.Translations.STORAGE + " INTEGER, "

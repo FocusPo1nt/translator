@@ -6,9 +6,9 @@ import com.focuspoint.translator.interactors.interfaces.ITranslationInteractor;
 import com.focuspoint.translator.models.Language;
 import com.focuspoint.translator.models.Model;
 import com.focuspoint.translator.models.Translation;
+import com.focuspoint.translator.network.DictionaryApiService;
 import com.focuspoint.translator.network.TranslateApiService;
 
-import java.sql.Time;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -27,16 +27,17 @@ import rx.subjects.PublishSubject;
 public class TranslationInteractor implements ITranslationInteractor {
 
     private ILanguageInteractor languageInteractor;
-    private TranslateApiService apiService;
+    private TranslateApiService translateApiService;
+    private DictionaryApiService dictionaryApiService;
     private Model model;
     private DB database;
     private boolean translating;
 
     @Inject
-    public TranslationInteractor(ILanguageInteractor languageInteractor, TranslateApiService apiService, Model model, DB database) {
-        System.out.println("CONSTRUCTOR " + hashCode());
+    public TranslationInteractor(ILanguageInteractor languageInteractor, TranslateApiService apiService, Model model, DB database, DictionaryApiService dictionaryApiService) {
         this.languageInteractor = languageInteractor;
-        this.apiService = apiService;
+        this.translateApiService = apiService;
+        this.dictionaryApiService = dictionaryApiService;
         this.model = model;
         this.database = database;
     }
@@ -82,10 +83,10 @@ public class TranslationInteractor implements ITranslationInteractor {
                 .doOnNext(result -> {
                     result.setDate(System.currentTimeMillis());
                     model.setCurrentTranslation(result);
-                    database.saveDB(result);
-                    translating = false;
+                    saveDB(result);
                     translationSubject.onNext(result);
-                });
+                })
+                .doOnEach(t -> translating = false);
 
     }
 
@@ -185,7 +186,7 @@ public class TranslationInteractor implements ITranslationInteractor {
         if (translating) return;
 
         translation.setFavorite(favorite);
-        database.saveDB(translation);
+        saveDB(translation);
 
         if (model.getCurrentTranslation()!=null){
             if (model.getCurrentTranslation().equals(translation))
@@ -197,9 +198,10 @@ public class TranslationInteractor implements ITranslationInteractor {
     public Observable <Translation> addCurrentToHistory() {
         return  getLastTranslation()
                 .filter(translation -> !translation.getInput().trim().isEmpty())
+                .filter(translation -> !translation.getOutput().trim().isEmpty())
                 .delay(500, TimeUnit.MILLISECONDS)
                 .doOnNext(translation -> translation.setFavorite(translation.isFavorite()))
-                .doOnNext(translation ->  database.saveDB(translation));
+                .doOnNext(this::saveDB);
     }
 
     @Override
@@ -210,7 +212,7 @@ public class TranslationInteractor implements ITranslationInteractor {
         return getLastTranslation()
                 .filter(translation -> !translation.getInput().isEmpty())
                 .doOnNext(translation -> translation.setFavorite(!translation.isFavorite()))
-                .doOnNext(translation ->  database.saveDB(translation))
+                .doOnNext(this::saveDB)
                 .map(Translation::isFavorite);
     }
 
@@ -219,6 +221,7 @@ public class TranslationInteractor implements ITranslationInteractor {
     public void clearCurrent() {
         model.setCurrentInput("");
         model.setCurrentOutput("");
+        model.setDictionary("");
         model.setFavorite(false);
         translationSubject.onNext(model.getCurrentTranslation());
     }
@@ -227,7 +230,7 @@ public class TranslationInteractor implements ITranslationInteractor {
     @Override
     public void setCurrent(Translation translation) {
         translation.setDate(System.currentTimeMillis());
-        database.saveDB(translation);
+        saveDB(translation);
         model.setCurrentTranslation(translation);
 
         translationSubject.onNext(model.getCurrentTranslation());
@@ -251,12 +254,24 @@ public class TranslationInteractor implements ITranslationInteractor {
     }
 
     private Observable<Translation> translateFromApi(Translation translation){
-        return apiService
-                .translate(translation.getInput(), translation.getDirection())
+
+        return dictionaryApiService.lookup(translation.getInput(), translation.getDirection())
+//                .doOnNext(r -> translation.setDictionary(r.toString())
+                .doOnNext(dictionaryRM -> translation.setDictionary(dictionaryRM.toString()))
+                .flatMap(r -> translateApiService
+                        .translate(translation.getInput(), translation.getDirection()))
+
+
+//
+//        return translateApiService
+//                .translate(translation.getInput(), translation.getDirection())
                 .subscribeOn(Schedulers.io())
                 .map(translationRM -> translation
                         .setOutput(translationRM.text.get(0))
                         .setStorage(Translation.STORAGE_DEFAULT));
+
+
+
     }
 
 
@@ -300,4 +315,13 @@ public class TranslationInteractor implements ITranslationInteractor {
     private PublishSubject<Translation> targetSubject = PublishSubject.create();
 
     private PublishSubject<Translation> favoriteSubject = PublishSubject.create();
+
+    private void  saveDB(Translation translation){
+        if (translation.getOutput() != null
+                && translation.getInput() != null
+                && !translation.getOutput().isEmpty()
+                && !translation.getInput().isEmpty()){
+            database.save(translation);
+        }
+    }
 }
