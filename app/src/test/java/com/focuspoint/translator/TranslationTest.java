@@ -89,7 +89,6 @@ public class TranslationTest {
                 return Schedulers.immediate();
             }
         });
-        System.out.println("init");
 
         model = new Model();
 

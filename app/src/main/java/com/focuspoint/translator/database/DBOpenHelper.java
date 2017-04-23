@@ -6,11 +6,6 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import javax.inject.Inject;
 
-/**
- * OpenHelper class;
- * Database contract;
- * Database version control;
- */
 
 public class DBOpenHelper extends SQLiteOpenHelper{
 
@@ -18,7 +13,7 @@ public class DBOpenHelper extends SQLiteOpenHelper{
     @Inject
     public DBOpenHelper(Context context) {
         super(context, DB.NAME, null, DB.VERSION);
-        getWritableDatabase();
+        getWritableDatabase(); //без этого при первом запуске таблицы не создаются;
     }
 
     @Override
@@ -27,9 +22,7 @@ public class DBOpenHelper extends SQLiteOpenHelper{
     }
 
     @Override
-    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-
-    }
+    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {}
 
     private void createTables(SQLiteDatabase db){
         db.execSQL("CREATE TABLE " + DB.Languages.TABLE + " ("

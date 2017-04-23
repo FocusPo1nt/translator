@@ -8,19 +8,11 @@ import com.focuspoint.translator.screen.fragment.FavoritesFragment;
 import com.focuspoint.translator.screen.fragment.HistoryFragment;
 import com.focuspoint.translator.screen.fragment.TranslateFragment;
 
-import java.util.List;
-
-/**
- * Created by v_banko on 4/7/2017.
- */
 
 public class TranslatePagerAdapter extends FragmentPagerAdapter {
-    private List<Fragment> fragments;
 
-    public TranslatePagerAdapter(FragmentManager fm, List<Fragment> myFrags) {
+    public TranslatePagerAdapter(FragmentManager fm) {
         super(fm);
-        fragments = myFrags;
-
     }
 
     @Override

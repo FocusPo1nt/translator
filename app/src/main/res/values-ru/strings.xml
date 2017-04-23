@@ -7,6 +7,9 @@
     <string name="title_activity_target_language">TargetLanguageActivity</string>
     <string name="history">История</string>
     <string name="favorites">Избранное</string>
+
+    <string name="clear_history">Удаление истории</string>
+    <string name="clear_favorites">Удаление избранного</string>
     <string name="input_text_placeholder">Введите текст</string>
     <string name="are_you_sure">Вы уверены?</string>
     <string name="yes">Да</string>
@@ -17,6 +20,6 @@
 
 
 
-    <string name="connection_error">Проблема связи:\nПожилуйста проверьте интернет соединение</string>
+    <string name="connection_error">Проблема связи:\nПожалуйста, проверьте интернет соединение</string>
     <string name="search">Поиск</string>
 </resources>

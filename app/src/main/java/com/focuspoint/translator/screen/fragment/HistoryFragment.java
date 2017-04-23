@@ -24,6 +24,7 @@ public class HistoryFragment extends TranslationListFragment implements Translat
     @Inject
     TranslationListContract.HistoryPresenter presenter;
     @BindString(R.string.history) String historyTitle;
+    @BindString(R.string.clear_history) String clearHistory;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -53,6 +54,6 @@ public class HistoryFragment extends TranslationListFragment implements Translat
 
     @Override
     protected String getClearMessage() {
-        return historyTitle;
+        return clearHistory;
     }
 }

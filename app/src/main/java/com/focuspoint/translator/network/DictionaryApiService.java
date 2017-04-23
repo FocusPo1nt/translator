@@ -1,9 +1,6 @@
 package com.focuspoint.translator.network;
 
 import com.focuspoint.translator.models.responseModels.DictionaryRM;
-import com.focuspoint.translator.models.responseModels.LanguagesRM;
-import com.focuspoint.translator.models.responseModels.TranslationRM;
-
 import retrofit2.http.GET;
 import retrofit2.http.Query;
 import rx.Observable;

@@ -6,7 +6,6 @@ import com.focuspoint.translator.models.Translation;
 import java.util.List;
 
 import rx.Observable;
-import rx.observables.ConnectableObservable;
 import rx.subjects.PublishSubject;
 
 /**

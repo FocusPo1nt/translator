@@ -17,6 +17,8 @@ import rx.Observable;
 /**
  * Class that deals with the StorIO & rxjava;
  * Contains current database version;
+ *
+ * Мне очень нравится у StorIO возможность подписаться на обновление базы;
  */
 
 public class DB {
@@ -57,9 +59,15 @@ public class DB {
                 .asRxObservable();
     }
 
+
+    /**Search translation in database*/
     public Observable <Translation> translate(Translation translation){
-        System.out.println("db request " + translation);
+
+        //Перед запросом на сервер смотрим базу (вместе с избранным и историей
+        // все ответы с сервера сохраняются в базу)
+
         //TODO сделать экранирование спец символов;
+        //На данный момент символы ' и ; удаляются;
         return database.get()
                 .object(Translation.class)
                 .withQuery(Query.builder()
@@ -68,13 +76,12 @@ public class DB {
                                 + "' AND " + Translations.DIRECTION + " = '" + translation.getDirection() + "'")
                         .build())
                 .prepare()
-                .asRxObservable()
-                .doOnNext(translation1 -> System.out.println("db result " + translation1));
+                .asRxObservable();
     }
 
 
 
-
+    /**obtain translation with max date value*/
     public Observable<Translation> getLastTranslation(){
         return database.get()
              .object(Translation.class)
@@ -96,6 +103,9 @@ public class DB {
 
     //TODO don't remove from database;
     public void clearHistory(){
+        //Сейчас все что соответствует статусу истории удаляется и теряется возможность
+        //брать из базы при отсутствии интернета;
+
         database
                 .delete()
                 .byQuery(DeleteQuery.builder()
@@ -124,6 +134,8 @@ public class DB {
     //    region LANGUAGES
 
     public Observable <Map<String, Language>> getLanguages(){
+
+        //приводим результат из базы к тому же виду, что парсится от сервера;
         return database.get()
                 .listOfObjects(Language.class)
                 .withQuery(Query.builder()
@@ -143,7 +155,6 @@ public class DB {
 
 
     public void saveDB(List<Language> languages){
-        System.out.println("save database");
         database
                 .put()
                 .objects(languages)
@@ -154,6 +165,8 @@ public class DB {
 
     //    endregion
 
+
+    //Названия и поля таблиц
 
     //Table for languages;
     public class Languages{

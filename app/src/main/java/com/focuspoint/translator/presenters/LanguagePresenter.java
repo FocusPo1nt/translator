@@ -14,8 +14,6 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 
-/**
- */
 
 public class LanguagePresenter implements LanguageScreenContract.Presenter {
 

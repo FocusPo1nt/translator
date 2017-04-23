@@ -27,6 +27,7 @@ public class FavoritesFragment extends TranslationListFragment implements Transl
     @Inject
     TranslationListContract.FavoritePresenter presenter;
     @BindString(R.string.favorites) String favoritesTitle;
+    @BindString(R.string.clear_favorites) String clearFavorites;
 
 
     @Override
@@ -58,6 +59,6 @@ public class FavoritesFragment extends TranslationListFragment implements Transl
 
     @Override
     protected String getClearMessage() {
-        return favoritesTitle;
+        return clearFavorites;
     }
 }

@@ -3,12 +3,20 @@
 
     <color name="transparent">#00000000</color>
 
-    <color name="colorPrimary">#5677fc</color>
-    <color name="colorPrimaryDark">#455ede</color>
+    <!--<color name="colorPrimary">#5677fc</color>-->
+    <!--<color name="colorPrimaryDark">#455ede</color>-->
+
+    <color name="colorPrimary">#CFD8DC</color>
+    <color name="colorPrimaryDark">#90A4AE</color>
+
+
     <color name="colorAccent">#40c4ff</color>
 
-    <color name="toolbarText">#e6e7ed</color>
-    <color name="tabSelected">#e6e7ed</color>
+    <color name="toolbarText">#0b0b0b</color>
+    <color name="tabSelected">#e4e9ec</color>
+    <color name="tabUnSelected">#CFD8DC</color>
+    <color name="mainText">#000000</color>
+    <color name="SecondaryText">#262625</color>
 
 
 </resources>

@@ -15,8 +15,11 @@ import java.util.Map;
 
 
 public class LanguagesRM {
-    @SerializedName("langs") public Map <String, String> descriptions;
-    @SerializedName("dirs")  public List <String> dirs;
+    @SerializedName("langs")
+    private Map <String, String> descriptions;
+
+    @SerializedName("dirs")
+    private List <String> dirs;
 
     public Map<String, Language> obtainLanguages(){
         Map <String, Language> map = new LinkedTreeMap<>() ;

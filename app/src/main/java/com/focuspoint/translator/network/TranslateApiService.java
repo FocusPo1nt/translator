@@ -7,10 +7,6 @@ import retrofit2.http.GET;
 import retrofit2.http.Query;
 import rx.Observable;
 
-/**
- * Created by v_banko on 3/29/2017.
- */
-
 public interface TranslateApiService {
 
     String BASE_URL_TRNSL = "https://translate.yandex.net/api/v1.5/tr.json/";

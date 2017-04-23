@@ -13,9 +13,6 @@ import java.util.List;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.subscriptions.CompositeSubscription;
 
-/**
- * Created by root on 15.04.17.
- */
 
 public class HistoryPresenter implements TranslationListContract.HistoryPresenter{
 

@@ -3,19 +3,35 @@
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
-        <item name="colorPrimary">#5677fc</item>
-        <item name="colorPrimaryDark">#455ede</item>
-        <item name="colorAccent">#40c4ff</item>
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+
     </style>
 
     <style name="ToolbarText">
-        <item name="android:textSize">18sp</item>
+        <item name="android:textSize">19sp</item>
         <item name="android:textColor">@color/toolbarText</item>
-        <item name="android:textStyle">bold</item>
         <item name="android:maxLines">1</item>
         <item name="android:ellipsize">end</item>
 
     </style>
+
+    <style name="MainText">
+        <item name="android:textSize">18sp</item>
+        <item name="android:textColor">@color/mainText</item>
+
+    </style>
+
+
+    <style name="SecondaryText">
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">@color/SecondaryText</item>
+
+    </style>
+
+
+
 
 
     <style name="ButtonStyle">

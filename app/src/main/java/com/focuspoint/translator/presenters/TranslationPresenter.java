@@ -148,7 +148,6 @@ public class TranslationPresenter implements TranslationScreenContract.Presenter
     private void showTranslation(Translation translation){
 
 
-        System.out.println("Show Translatioin " + translation.toString());
         if (!inputChanged || view.get().getInput().isEmpty()){
             view.get().showInput(translation.getInput());
         }

@@ -46,7 +46,7 @@ public class LanguageInteractor implements ILanguageInteractor {
         return Observable.concat(
                 Observable.just(languageMap),
                 database.getLanguages().first().doOnNext(map -> languageMap = map),
-                loadFromApi().onErrorResumeNext(throwable -> Observable.just(defaultMap).doOnNext(map -> System.out.println("ON ERROR LANGUAGE " + map))))
+                loadFromApi().onErrorResumeNext(throwable -> Observable.just(defaultMap)))
                 .first(map -> map!= null && !map.isEmpty());
     }
 
@@ -54,7 +54,10 @@ public class LanguageInteractor implements ILanguageInteractor {
         return apiService
                 .getLangs(Locale.getDefault().getLanguage()) //TODO check for user change language
                 .map(LanguagesRM::obtainLanguages)
-                .doOnNext(map -> database.saveDB(new ArrayList<>(map.values())))
-                .doOnNext(map -> this.languageMap = map);
+                .doOnNext(map -> {
+                    database.saveDB(new ArrayList<>(map.values())); //Кешируем список языков в хипе и базе
+                    this.languageMap = map;
+                });
+
     }
 }

@@ -27,13 +27,11 @@ import javax.inject.Singleton;
 import dagger.Module;
 import dagger.Provides;
 
-/**
- * Created by root on 30.03.17.
- */
+/**Module for Interactors and presenters;*/
 
 @Module
 public class AppModule {
-    App application;
+    private App application;
 
     public AppModule(App application) {
         this.application = application;

@@ -7,18 +7,14 @@ import com.focuspoint.translator.interactors.interfaces.ITranslationInteractor;
 import com.focuspoint.translator.models.Language;
 import com.focuspoint.translator.models.Model;
 import com.focuspoint.translator.models.Translation;
-import com.focuspoint.translator.models.responseModels.TranslationRM;
 import com.focuspoint.translator.network.DictionaryApiService;
 import com.focuspoint.translator.network.TranslateApiService;
 
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 
 import rx.Observable;
-
-import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 import rx.subjects.PublishSubject;
 
@@ -35,7 +31,7 @@ public class TranslationInteractor implements ITranslationInteractor {
     private IErrorInteractor errorInteractor;
     private Model model;
     private DB database;
-    private boolean translating;
+    private boolean translating; //флаг который говорит, что идет перевод;
 
     @Inject
     public TranslationInteractor
@@ -54,6 +50,11 @@ public class TranslationInteractor implements ITranslationInteractor {
     @Override
     public Observable<Translation> getLastTranslation() {
 
+        //если в памяти есть перевод возвращаем его
+        //иначе смотрим базу на последнего по дате
+        //иначе берем дефолтного;
+
+
         return Observable
                 .concat(
                         Observable.just(model.getCurrentTranslation()),
@@ -66,21 +67,27 @@ public class TranslationInteractor implements ITranslationInteractor {
 
    /**Translate from DB if exist
     * Translate from Network
-    * Fill raw Translation with Language objects
+    * Fill raw Translation with Language objects;
     * */
     @Override
     public Observable<Translation> translate(Translation translation) {
+
+        //Основной метод на котором происходит заполнение поля output у Translation;
+
+
         translating = true;
 
-        translation.prepareForSQLstorage();
-        System.out.println(translation.getInput());
-        Observable<Translation> rawTranslationObserver =  Observable
+        translation.prepareForSQLstorage(); // сразу удаляем спецсимволы;
+
+        Observable<Translation> rawTranslationObserver =  Observable // тут собственно переводим;
                 .concat(
-                        translateFromDB(translation),
-                        translateFromApi(translation))
+                        translateFromDB(translation), // если есть то из базы;
+                        translateFromApi(translation)) // если нет то с сервера;
                 .first(raw -> raw != null);
 
 
+
+        // далее заполняем перевод обьектами языка (с описанием и кодом языка);
         return Observable.combineLatest(
                 rawTranslationObserver, languageInteractor.loadLanguages(), (result, map) ->{
                     if (result != null) {
@@ -89,14 +96,14 @@ public class TranslationInteractor implements ITranslationInteractor {
                     }
                     return result;
                 })
-                .doOnError(e -> errorInteractor.onError(e))
+                .doOnError(e -> errorInteractor.onError(e)) // если была ошибка передаем в глобальный перехватчик;
                 .doOnNext(result -> {
                     result.setDate(System.currentTimeMillis());
                     model.setCurrentTranslation(result);
                     saveDB(result);
-                    translationSubject.onNext(result);
+                    translationSubject.onNext(result); // рассылаем результат всем подписчикам;
                 })
-                .doOnEach(t -> translating = false);
+                .doOnEach(t -> translating = false); // при любом раскладе сбрасываем флаг;
 
     }
 
@@ -113,9 +120,13 @@ public class TranslationInteractor implements ITranslationInteractor {
 
     @Override
     public Observable<Translation> changeCurrentLanguage(Language source, Language target){
+
+        //Проверяем может нужно поменять местами языки
+        //Если нет вызываем одноименные методы
+
         return getLastTranslation()
                 .flatMap(t -> {
-                    // check if need reverse;
+
                     if ((t.getSourceLanguage().equals(target) || t.getTargetLanguage().equals(source))
                             && !t.getSource().equals(t.getTarget())){
                         return reverseLanguages();
@@ -159,6 +170,8 @@ public class TranslationInteractor implements ITranslationInteractor {
 
     @Override
     public Observable<List<Translation>> getHistory() {
+        //Берем из базы и заполняем обьектами Language;
+
 
         return Observable.combineLatest(database.getHistory(), languageInteractor.loadLanguages(), (list, map) -> {
 
@@ -198,15 +211,16 @@ public class TranslationInteractor implements ITranslationInteractor {
     @Override
     public Observable <Translation> addCurrentToHistory() {
         return  getLastTranslation()
-                .doOnNext(t -> System.out.println(" TO HISTORY " + t))
                 .filter(translation -> !translation.getInput().trim().isEmpty())
                 .filter(translation -> !translation.getOutput().trim().isEmpty())
-                .doOnNext(translation -> translation.setFavorite(translation.isFavorite()))
+                .doOnNext(translation -> translation.setFavorite(translation.isFavorite())) // получает статус в истории либо избранный;
                 .doOnNext(this::saveDB);
     }
 
     @Override
     public Observable<Boolean> changeCurrentFavorite() {
+
+        // пока идет перевод - текущий перевод нет смысла добавлять в избранное;
         if (translating) return Observable.error(
                 new IllegalStateException("Cant add to favorite when translating"));
 
@@ -257,15 +271,13 @@ public class TranslationInteractor implements ITranslationInteractor {
     private Observable<Translation> translateFromApi(Translation translation){
 
         return dictionaryApiService.lookup(translation.getInput(), translation.getDirection())
-//                .doOnNext(r -> translation.setDictionary(r.toString())
                 .subscribeOn(Schedulers.io())
-                .doOnNext(dictionaryRM -> translation.setDictionary(dictionaryRM.toString()))
-                .map(dictionaryRM -> translation.setDictionary(dictionaryRM.toString()))
-                .onErrorReturn(throwable -> translation.setDictionary(null))
-                .flatMap(t -> translateApiService.translate(t.getInput(), t.getDirection()))
-                .map(translationRM -> translation
-                        .setOutput(translationRM.text.get(0))
-                        .setStorage(Translation.STORAGE_DEFAULT));
+                .map(dictionaryRM -> translation.setDictionary(dictionaryRM.toString())) // Парсим ответ;
+                .onErrorReturn(throwable -> translation.setDictionary(null)) // Игнорируем ошибки словаря;
+                .flatMap(t -> translateApiService.translate(t.getInput(), t.getDirection())) //Идем за переводом;
+                .map(translationRM -> translation // парсим;
+                        .setOutput(translationRM.text.get(0)) // с сервера всегда возвращается одно значение;
+                        .setStorage(Translation.STORAGE_DEFAULT)); // указываем стандартный статус. Он не показывается в истории и избранном;
     }
 
 
@@ -289,29 +301,28 @@ public class TranslationInteractor implements ITranslationInteractor {
         return getLastTranslation()
                 .doOnNext(translation -> translation.setSourceLanguage(language))
                 .doOnNext(translation -> sourceSubject.onNext(translation))
-                .flatMap(this::translate)
-                .flatMap(translation -> addCurrentToHistory());
+                .flatMap(this::translate) // переводим;
+                .flatMap(translation -> addCurrentToHistory()); // добавляем в историю;
     }
 
     private Observable<Translation> onTargetChanged(Language language) {
         return getLastTranslation()
                 .doOnNext(translation -> translation.setTargetLanguage(language))
                 .doOnNext(translation -> targetSubject.onNext(translation))
-                .flatMap(this::translate)
-                .flatMap(translation -> addCurrentToHistory());
+                .flatMap(this::translate) // переводим;
+                .flatMap(translation -> addCurrentToHistory()); // в историю;
     }
 
 
     @Override
     public Observable<Translation> reverseLanguages() {
-        System.out.println("reverse languages");
         return getLastTranslation()
                 .doOnNext(Translation::reverseLanguages)
                 .doOnNext(translation -> model.setCurrentTranslation(translation))
                 .doOnNext(translation -> targetSubject.onNext(translation))
                 .doOnNext(translation -> sourceSubject.onNext(translation))
-                .flatMap(this::translate)
-                .flatMap(translation -> addCurrentToHistory());
+                .flatMap(this::translate) // переводим;
+                .flatMap(translation -> addCurrentToHistory()); // в историю;
     }
 
 
@@ -324,12 +335,10 @@ public class TranslationInteractor implements ITranslationInteractor {
     private PublishSubject<Translation> favoriteSubject = PublishSubject.create();
 
     private void  saveDB(Translation translation){
-        System.out.println("TRY TO SAVE");
         if (translation.getOutput() != null
                 && translation.getInput() != null
                 && !translation.getOutput().isEmpty()
                 && !translation.getInput().isEmpty()){
-            System.out.println("SAVE " + translation + " " + translation.getSource());
             database.save(translation);
         }
     }

@@ -6,6 +6,8 @@
     <string name="select_language">Select language</string>
     <string name="title_activity_target_language">TargetLanguageActivity</string>
     <string name="history">History</string>
+    <string name="clear_history">Clear history?</string>
+    <string name="clear_favorites">Clear favorites?</string>
     <string name="favorites">Favorites</string>
     <string name="input_text_placeholder">Input text</string>
     <string name="are_you_sure">Are you sure?</string>

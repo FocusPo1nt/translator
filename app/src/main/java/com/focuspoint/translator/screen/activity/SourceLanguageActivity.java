@@ -12,7 +12,6 @@ import javax.inject.Inject;
 
 public class SourceLanguageActivity extends LanguageActivity {
 
-
     @Inject LanguageScreenContract.Presenter presenter;
 
 

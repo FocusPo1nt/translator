@@ -4,12 +4,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.Toolbar;
 import android.text.Editable;
-import android.text.Layout;
 import android.text.TextWatcher;
-import android.view.InputEvent;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,18 +15,15 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.focuspoint.translator.App;
 import com.focuspoint.translator.R;
 import com.focuspoint.translator.models.Language;
-import com.focuspoint.translator.models.Translation;
 import com.focuspoint.translator.screen.TranslationScreenContract;
 import com.focuspoint.translator.screen.activity.SourceLanguageActivity;
 import com.focuspoint.translator.screen.activity.TargetLanguageActivity;
 import com.focuspoint.translator.utils.KeyboardLayout;
 import com.jakewharton.rxbinding.widget.RxTextView;
-import com.jakewharton.rxbinding.widget.TextViewEditorActionEvent;
 
 
 import java.util.concurrent.TimeUnit;
@@ -39,7 +32,6 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import rx.functions.Func1;
 import rx.subscriptions.CompositeSubscription;
 
 /**

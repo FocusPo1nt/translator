@@ -24,9 +24,6 @@ import dagger.Module;
 import dagger.Provides;
 
 
-/**
- *
- */
 @Module
 public class DBModule {
 
@@ -36,9 +33,7 @@ public class DBModule {
         this.application = application;
     }
 
-
-
-
+    //Для данного задания достаточно автоматически сгенерированных ресолверов;
 
     @Provides
     @Singleton

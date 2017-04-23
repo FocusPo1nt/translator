@@ -62,7 +62,7 @@ public class MainActivity extends AppCompatActivity {
         unbinder = ButterKnife.bind(this);
         App.from(this).getComponent().inject(this);
 
-        pagerAdapter = new TranslatePagerAdapter(getSupportFragmentManager(), new ArrayList<>());
+        pagerAdapter = new TranslatePagerAdapter(getSupportFragmentManager());
         viewPager.setAdapter(pagerAdapter);
         viewPager.setOffscreenPageLimit(2);
 

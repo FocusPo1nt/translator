@@ -67,6 +67,7 @@ public abstract class TranslationListFragment extends Fragment implements Transl
     @BindString(R.string.are_you_sure) String areYousure;
 
 
+
     protected CompositeSubscription subscriptions;
     protected TranslationListAdapter adapter;
 

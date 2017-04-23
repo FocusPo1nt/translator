@@ -18,7 +18,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
- *
+ * Adapter for history and favorites screens;
  */
 
 public class TranslationListAdapter extends RecyclerView.Adapter {
@@ -38,12 +38,10 @@ public class TranslationListAdapter extends RecyclerView.Adapter {
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View root = LayoutInflater.from(parent.getContext()).inflate(R.layout.translation_view, parent, false);
         return new TranslationViewHolder(root) {};
-
     }
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-
         ((TranslationViewHolder)holder).setTranslation(list.get(position));
     }
 
@@ -52,6 +50,8 @@ public class TranslationListAdapter extends RecyclerView.Adapter {
         return this.list.size();
     }
 
+
+    //Если нужно сделать анимацию списка, я бы добавил ее сюда;
     public void replaceData(List<Translation> list) {
         this.list.clear();
         this.list.addAll(list);
@@ -59,10 +59,7 @@ public class TranslationListAdapter extends RecyclerView.Adapter {
     }
 
 
-    public class TranslationViewHolder extends RecyclerView.ViewHolder {
-
-
-
+    class TranslationViewHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.favorite_frame) FrameLayout favoriteFrame;
         @BindView(R.id.translation_frame) FrameLayout translationFrame;
         @BindView(R.id.star_image) ImageView starImageView;
@@ -71,16 +68,12 @@ public class TranslationListAdapter extends RecyclerView.Adapter {
         @BindView(R.id.direction_text_view) TextView directionTextView;
 
 
-        public TranslationViewHolder(View itemView) {
+        TranslationViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
         }
 
-
         public void setTranslation(Translation translation){
-
-
-
             starImageView.setImageResource(
                     translation.isFavorite() ? R.drawable.star_a : R.drawable.star_p);
 
@@ -91,17 +84,12 @@ public class TranslationListAdapter extends RecyclerView.Adapter {
             favoriteFrame.setOnClickListener(v -> {
 
                 //TODO do with presenter
-                System.out.println(translation);
                 starImageView.setImageResource(
                         translation.isFavorite() ?  R.drawable.star_p : R.drawable.star_a);
                 presenter.setFavorite(translation, !translation.isFavorite());
             });
 
             translationFrame.setOnClickListener(v -> presenter.choose(translation));
-
         }
     }
-
-
-
 }

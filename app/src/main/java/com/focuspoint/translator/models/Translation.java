@@ -110,6 +110,7 @@ public class Translation implements Cloneable{
 
     /**Add constant text to the end of translation result;*/
     public String getOutputWithWatermark(){
+        //надо сделать константой;
         String watermark = "\n\nПереведено сервисом\n«Яндекс Переводчик»\nhttp://translate.yandex.ru";
         String result = "";
         if (!output.isEmpty() && !output.contains(watermark)){
@@ -137,7 +138,6 @@ public class Translation implements Cloneable{
 
     /**input <-> output   source <-> target*/
     public void reverseLanguages(){
-        System.out.println("before native reverse " + this.toString());
         Language bufferLanguage = sourceLanguage;
         sourceLanguage = targetLanguage;
         targetLanguage = bufferLanguage;
@@ -148,15 +148,10 @@ public class Translation implements Cloneable{
         source = target;
         target = bufferCode;
         getDirection();
-        System.out.println("after native reverse " + this.toString());
     }
 
     public void setDate(long date) {
         this.date = date;
-    }
-
-    public long getDate() {
-        return date;
     }
 
     public String getSource() {
@@ -210,34 +205,16 @@ public class Translation implements Cloneable{
         return translation;
     }
 
-    public Translation copy(){
-        Translation clone = new Translation();
-        clone.input = input;
-        clone.output = output;
-        clone.storage = storage;
-        clone.source = source;
-        clone.target = target;
-        clone.targetLanguage = targetLanguage;
-        clone.sourceLanguage = sourceLanguage;
-        clone.date = date;
-        clone.direction = direction;
-        return clone;
-    }
-
 
     public Translation setDictionary(String dictionary) {
         this.dictionary = dictionary;
         return this;
     }
 
-    public String getDictionary() {
-        return dictionary;
-    }
 
 
     /**Add constant text to the end of translation result;*/
     public String getDictionaryWithWatermark(){
-
 
         String watermark = "\n\nРеализовано с помощью сервиса \n«Яндекс Словарь»\nhttps://tech.yandex.ru/dictionary/";
         String result = "";

@@ -15,10 +15,6 @@ import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.subscriptions.CompositeSubscription;
 
-/**
- *
- */
-
 public class FavoritePresenter implements TranslationListContract.FavoritePresenter{
 
     private CompositeSubscription subscriptions;

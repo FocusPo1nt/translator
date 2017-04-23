@@ -5,10 +5,6 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
-/**
- * Created by root on 23.04.17.
- */
-
 public class DictionaryRM {
     @SerializedName(Values.DEF) public List<DicDef> defList;
 

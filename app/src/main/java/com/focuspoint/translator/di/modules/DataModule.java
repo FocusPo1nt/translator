@@ -19,7 +19,7 @@ import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
- *
+ *Module for data providers;
  */
 
 @Module
@@ -41,9 +41,8 @@ public class DataModule {
     @Provides
     @Singleton
     OkHttpClient provideOkHttpClient() {
-        OkHttpClient okHttpClient = new OkHttpClient.Builder()
+        return new OkHttpClient.Builder()
                 .build();
-        return okHttpClient;
     }
 
     @Provides
@@ -69,9 +68,6 @@ public class DataModule {
                 .client(okHttpClient)
                 .build();
     }
-
-
-
 
     @Provides
     @Singleton

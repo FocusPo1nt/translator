@@ -15,9 +15,7 @@ import com.focuspoint.translator.screen.fragment.TranslationListFragment;
 import javax.inject.Singleton;
 import dagger.Component;
 
-/**
- *
- */
+
 @Singleton
 @Component(modules = {
         AppModule.class,
