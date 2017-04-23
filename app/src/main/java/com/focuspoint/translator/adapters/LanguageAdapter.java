@@ -36,7 +36,11 @@ public class LanguageAdapter extends RecyclerView.Adapter {
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         TextView languageText = (TextView) (holder.itemView.findViewById(R.id.language_text_view));
-        languageText.setText(list.get(position).getDescription());
+        TextView codeText =  (TextView) (holder.itemView.findViewById(R.id.code_text_view));
+        Language language = list.get(position);
+
+        languageText.setText(language.getDescription());
+        codeText.setText(language.getCode());
         holder.itemView.setOnClickListener(v -> onClickSubject.onNext(list.get(position)));
     }
 

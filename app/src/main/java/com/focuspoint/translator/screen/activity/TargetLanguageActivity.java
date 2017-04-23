@@ -28,7 +28,6 @@ public class TargetLanguageActivity extends LanguageActivity {
         App.from(this).getComponent().inject(this);
 
         initViews();
-
         presenter.attach(this);
         presenter.loadTargetLanguages();
     }

@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
+import android.text.Layout;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,11 +16,11 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.focuspoint.translator.App;
 import com.focuspoint.translator.R;
 import com.focuspoint.translator.models.Language;
+import com.focuspoint.translator.models.Translation;
 import com.focuspoint.translator.screen.TranslationScreenContract;
 import com.focuspoint.translator.screen.activity.SourceLanguageActivity;
 import com.focuspoint.translator.screen.activity.TargetLanguageActivity;
@@ -27,7 +28,6 @@ import com.focuspoint.translator.utils.KeyboardLayout;
 import com.jakewharton.rxbinding.widget.RxTextView;
 
 
-import java.net.UnknownHostException;
 import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
@@ -44,12 +44,12 @@ public class TranslateFragment extends Fragment implements TranslationScreenCont
 
 
     @BindView(R.id.toolbar)
-    Toolbar toolbar;
+    LinearLayout toolbar;
     @BindView(R.id.from_language) TextView sourceLanguageView;
     @BindView(R.id.to_language) TextView targetLanguageView;
     @BindView(R.id.input_edit_text) EditText inputEditText;
     @BindView(R.id.output_text_view) TextView outputTextView;
-    @BindView(R.id.reverse_image_view) ImageView reverseImageView;
+    @BindView(R.id.reverse_view) View reverseView;
     @BindView(R.id.star_image) ImageView starImageView;
     @BindView(R.id.favorite_frame) FrameLayout favoriteFrame;
     @BindView(R.id.connection_error_view) TextView connectionErrorView;
@@ -186,9 +186,9 @@ public class TranslateFragment extends Fragment implements TranslationScreenCont
 
         favoriteFrame.setOnClickListener(v -> presenter.changeFavorites());
 
-        shareFrame.setOnClickListener(v -> share());
+        shareFrame.setOnClickListener(v -> presenter.share());
 
-        reverseImageView.setOnClickListener(v -> presenter.reverseLanguages());
+        reverseView.setOnClickListener(v -> presenter.reverseLanguages());
 
         clearFrame.setOnClickListener(v -> presenter.clear());
 
@@ -238,10 +238,12 @@ public class TranslateFragment extends Fragment implements TranslationScreenCont
         }
     };
 
-    private void share(){
+
+    @Override
+    public void share(String output) {
         Intent sendIntent = new Intent();
         sendIntent.setAction(Intent.ACTION_SEND);
-        sendIntent.putExtra(Intent.EXTRA_TEXT, outputTextView.getText());
+        sendIntent.putExtra(Intent.EXTRA_TEXT, output);
         sendIntent.setType("text/plain");
         startActivity(sendIntent);
     }

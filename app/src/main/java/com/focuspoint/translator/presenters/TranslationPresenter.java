@@ -148,4 +148,10 @@ public class TranslationPresenter implements TranslationScreenContract.Presenter
         if (translation.getOutput().isEmpty()) view.get().hideMenu();
     }
 
+    @Override
+    public void share() {
+        subscriptions.add(translationInteractor.getLastTranslation()
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(t -> view.get().share(t.getOutput()), this::handleError));
+    }
 }

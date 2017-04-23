@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.focuspoint.translator.R;
@@ -30,9 +31,14 @@ public abstract class LanguageActivity extends AppCompatActivity implements Lang
     @BindView(R.id.recycler_view)
     protected RecyclerView recyclerView;
 
+    @BindView(R.id.title)
+    protected TextView title;
+
+
     protected Unbinder unbinder;
     protected LanguageAdapter adapter;
     protected CompositeSubscription subscriptions;
+    protected Toolbar toolbar;
 
 
     protected void initViews(){
@@ -40,7 +46,7 @@ public abstract class LanguageActivity extends AppCompatActivity implements Lang
 
         setContentView(R.layout.activity_language);
         unbinder = ButterKnife.bind(this);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 

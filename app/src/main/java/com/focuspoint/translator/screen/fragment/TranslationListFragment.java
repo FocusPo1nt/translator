@@ -9,6 +9,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
+import android.text.Layout;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,6 +17,7 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -42,7 +44,7 @@ import rx.subscriptions.CompositeSubscription;
 
 public abstract class TranslationListFragment extends Fragment implements TranslationListContract.View {
     @BindView(R.id.toolbar)
-    protected Toolbar toolbar;
+    protected LinearLayout toolbar;
     @BindView(R.id.recycler_view)
     protected RecyclerView recyclerView;
 

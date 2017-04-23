@@ -196,8 +196,8 @@ public class TranslationInteractor implements ITranslationInteractor {
     @Override
     public Observable <Translation> addCurrentToHistory() {
         return  getLastTranslation()
-                .filter(translation -> !translation.getInput().isEmpty())
-                .delay(1, TimeUnit.SECONDS)
+                .filter(translation -> !translation.getInput().trim().isEmpty())
+                .delay(500, TimeUnit.MILLISECONDS)
                 .doOnNext(translation -> translation.setFavorite(translation.isFavorite()))
                 .doOnNext(translation ->  database.saveDB(translation));
     }

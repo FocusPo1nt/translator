@@ -35,6 +35,8 @@ public class TranslationScreenContract {
         String getInput();
 
         void hideMenu();
+
+        void share(String output);
     }
 
     public interface Presenter extends BasePresenter <View>{
@@ -62,6 +64,8 @@ public class TranslationScreenContract {
         void changeFavorites();
 
         void clear();
+        
+        void share();
 
     }
 }

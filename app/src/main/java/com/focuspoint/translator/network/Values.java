@@ -10,5 +10,6 @@ public class Values {
     public static final String TEXT = "text";
     public static final String LANG = "lang";
     public static final String CODE = "code";
+    public static final String DEF = "def";
 
 }

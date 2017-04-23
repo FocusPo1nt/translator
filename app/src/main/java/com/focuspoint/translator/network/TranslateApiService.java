@@ -21,10 +21,6 @@ public interface TranslateApiService {
     Observable<LanguagesRM> getLangs(
             @Query(Values.UI) String language);
 
-    @GET("detect?" + API_KEY_REST)
-    Observable<TranslationRM> detect(
-            @Query(Values.TEXT) String text);
-
     @GET("translate?" + API_KEY_REST)
     Observable<TranslationRM> translate(
             @Query(Values.TEXT) String text,
